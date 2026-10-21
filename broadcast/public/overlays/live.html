@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <title>Live indicator</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: transparent;
+        overflow: hidden;
+      }
+
+      .live {
+        --step: 70ms;
+        position: absolute;
+        top: 56px;
+        right: 64px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        color: #fff;
+        font: 700 40px/1 -apple-system, "Helvetica Neue", Arial, sans-serif;
+        text-shadow:
+          0 1px 2px rgb(0 0 0 / 0.45),
+          0 0 12px rgb(0 0 0 / 0.25);
+      }
+
+      .dot {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #e3172d;
+        box-shadow: 0 1px 4px rgb(0 0 0 / 0.35);
+        opacity: 0;
+        transform: scale(0.4);
+        transition:
+          opacity 300ms ease,
+          transform 300ms cubic-bezier(0.4, 0, 1, 1);
+        transition-delay: calc(4 * var(--step) + 200ms);
+      }
+
+      .word {
+        display: flex;
+        gap: 0.06em;
+        /* Clip only at the top so letters slide up behind an edge. */
+        clip-path: inset(0 -1em -1em -1em);
+      }
+
+      .letter {
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(-0.8em);
+        transition:
+          opacity 380ms ease,
+          transform 380ms cubic-bezier(0.4, 0, 1, 1);
+        transition-delay: calc(var(--i) * var(--step));
+      }
+
+      .is-on .dot {
+        opacity: 1;
+        transform: none;
+        transition-timing-function: ease, cubic-bezier(0.2, 0.7, 0.2, 1);
+        transition-delay: 0ms;
+      }
+
+      .is-on .letter {
+        opacity: 1;
+        transform: none;
+        transition-timing-function: ease, cubic-bezier(0.2, 0.7, 0.2, 1);
+        transition-delay: calc(120ms + var(--i) * var(--step));
+      }
+    </style>
+  </head>
+  <body>
+    <div class="live">
+      <span class="dot"></span>
+      <span class="word">
+        <span class="letter" style="--i: 0">L</span>
+        <span class="letter" style="--i: 1">I</span>
+        <span class="letter" style="--i: 2">V</span>
+        <span class="letter" style="--i: 3">E</span>
+      </span>
+    </div>
+    <script type="module">
+      import { connect } from "/overlay-client.js";
+
+      const root = document.querySelector(".live");
+      connect({ on: { state: ({ state }) => root.classList.toggle("is-on", state.live.mode === "on") } });
+    </script>
+  </body>
+</html>

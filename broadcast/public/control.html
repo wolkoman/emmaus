@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Livestream control</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+        background: #16181c;
+        color: #e8e8ea;
+      }
+      body {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px 16px;
+      }
+      .layout {
+        display: grid;
+        gap: 16px;
+        align-items: start;
+      }
+      @media (min-width: 1000px) {
+        .layout {
+          grid-template-columns: minmax(0, 1fr) 400px;
+        }
+        aside {
+          position: sticky;
+          top: 16px;
+        }
+      }
+      aside {
+        height: min(80vh, 720px);
+        display: flex;
+        flex-direction: column;
+      }
+      aside section {
+        height: 100%;
+        box-sizing: border-box;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      /* Asking cameras a question with answer buttons, in a modal opened next to Send. */
+      dialog.ask {
+        width: min(480px, calc(100vw - 32px));
+        box-sizing: border-box;
+        padding: 20px;
+        border: 1px solid #3a3f46;
+        border-radius: 12px;
+        background: #1f2227;
+        color: inherit;
+      }
+      dialog.ask::backdrop {
+        background: rgb(0 0 0 / 0.5);
+      }
+      .ask form {
+        display: grid;
+        gap: 12px;
+      }
+      .ask h2 {
+        margin: 0;
+      }
+      .ask label,
+      .ask fieldset {
+        display: grid;
+        gap: 6px;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 14px;
+        color: #9aa0a8;
+      }
+      .ask legend {
+        padding: 0 0 6px;
+      }
+      .ask-error {
+        margin: 0;
+        min-height: 18px;
+        font-size: 13px;
+        color: #ffb4b9;
+      }
+      .ask-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+      .ask-actions .primary {
+        background: #1f3b5a;
+        border-color: #3d6fa3;
+      }
+      .ask-to {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .ask-to button {
+        padding: 6px 10px;
+        font-size: 13px;
+      }
+      .ask-to button[aria-pressed="true"] {
+        background: #1f3b5a;
+        border-color: #3d6fa3;
+      }
+      aside h2 {
+        margin-bottom: 12px;
+      }
+      #chat {
+        flex: 1;
+        min-height: 0;
+      }
+      h1 {
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .status {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #d33;
+      }
+      .status.connected {
+        background: #3c6;
+      }
+      section {
+        background: #1f2227;
+        border: 1px solid #2c3036;
+        border-radius: 10px;
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+      h2 {
+        font-size: 16px;
+        margin: 0 0 4px;
+      }
+      a {
+        color: #8ab4ff;
+      }
+      .field {
+        margin-top: 14px;
+      }
+      .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 6px;
+      }
+      .buttons code {
+        flex-basis: 100%;
+      }
+      button {
+        font: inherit;
+        font-size: 15px;
+        padding: 10px 18px;
+        border-radius: 8px;
+        border: 1px solid #3a3f46;
+        background: #2a2e34;
+        color: inherit;
+        cursor: pointer;
+      }
+      input {
+        flex: 1;
+        font: inherit;
+        font-size: 15px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid #3a3f46;
+        background: #16181c;
+        color: inherit;
+      }
+      button.active {
+        background: #e3172d;
+        border-color: #e3172d;
+        color: #fff;
+      }
+      .error {
+        margin: 0 0 16px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        background: #4a1d22;
+        color: #ffd7da;
+        opacity: 0;
+        transition: opacity 300ms ease;
+      }
+      .error.shown {
+        opacity: 1;
+      }
+      code {
+        display: block;
+        font-size: 12px;
+        color: #9aa0a8;
+        margin-top: 4px;
+        word-break: break-all;
+      }
+    </style>
+  </head>
+  <body>
+    <h1><span class="status"></span> Livestream control</h1>
+    <p class="error" role="alert"></p>
+    <div class="layout">
+      <main></main>
+      <aside>
+        <section>
+          <h2>Chat</h2>
+          <div id="chat"></div>
+        </section>
+      </aside>
+    </div>
+
+    <dialog class="ask">
+      <form method="dialog">
+        <h2>Ask cameras</h2>
+        <label>
+          Question
+          <input name="text" maxlength="500" placeholder="e.g. Ready to start?" required autofocus />
+        </label>
+        <fieldset>
+          <legend>Who should answer</legend>
+          <div class="ask-to"></div>
+        </fieldset>
+        <label>
+          Answer buttons, separated by commas
+          <input name="options" value="Yes, No" />
+        </label>
+        <p class="ask-error" role="alert"></p>
+        <div class="ask-actions">
+          <button type="button" value="cancel" class="ask-cancel">Cancel</button>
+          <button class="primary">Ask</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script type="module">
+      import { connect } from "/overlay-client.js";
+      import { mountChat } from "/chat.js";
+
+      const main = document.querySelector("main");
+      const { schema, overlays } = await fetch("/api/state").then((res) => res.json());
+      const updaters = []; // (state) => void, one per field
+      let state = null;
+
+      const client = connect({
+        client: "director",
+        onStatus: (connected) => document.querySelector(".status").classList.toggle("connected", connected),
+        on: {
+          state: (message) => {
+            state = message.state;
+            updaters.forEach((update) => update(state));
+            chat.refresh();
+          },
+          error: ({ error }) => showError(error),
+          chatHistory: ({ messages }) => chat.setMessages(messages),
+          chatMessage: ({ message }) => chat.add(message),
+          chatUpdate: ({ message }) => chat.update(message),
+          typing: ({ clients }) => chat.setTyping(clients),
+        },
+      });
+
+      const askButton = Object.assign(document.createElement("button"), { type: "button", textContent: "Ask" });
+
+      const chat = mountChat(document.querySelector("#chat"), {
+        me: "director",
+        actions: [askButton],
+        clients: () => ["director", ...Object.keys(schema.cameras)],
+        connection: client,
+        aliasOf: (id) => state?.cameras[id] ?? "",
+      });
+
+      // --- Ask: a question to some cameras, answered with one tap on their phones ---
+
+      const askDialog = document.querySelector("dialog.ask");
+      const ask = askDialog.querySelector("form");
+      askButton.onclick = () => {
+        askDialog.querySelector(".ask-error").textContent = "";
+        askDialog.showModal();
+      };
+      askDialog.querySelector(".ask-cancel").onclick = () => askDialog.close();
+
+      const recipients = Object.keys(schema.cameras).map((cam) => {
+        const button = Object.assign(document.createElement("button"), { type: "button" });
+        button.dataset.cam = cam;
+        button.setAttribute("aria-pressed", "false");
+        button.onclick = () => button.setAttribute("aria-pressed", button.getAttribute("aria-pressed") !== "true");
+        return button;
+      });
+      ask.querySelector(".ask-to").append(...recipients);
+      updaters.push((current) => {
+        for (const button of recipients) {
+          const alias = current.cameras[button.dataset.cam];
+          button.textContent = alias ? `${alias} (${button.dataset.cam})` : button.dataset.cam;
+        }
+      });
+
+      // Recipients and answers stay as they were for the next question; only the question is cleared.
+      ask.onsubmit = (event) => {
+        event.preventDefault();
+        const to = recipients.filter((b) => b.getAttribute("aria-pressed") === "true").map((b) => b.dataset.cam);
+        if (to.length === 0) return (askDialog.querySelector(".ask-error").textContent = "Choose who should answer");
+        const options = ask.elements.options.value.split(",").map((option) => option.trim()).filter(Boolean);
+        client.ask(ask.elements.text.value, to, options);
+        ask.elements.text.value = "";
+        askDialog.close();
+      };
+
+      let errorTimer;
+      function showError(error) {
+        const el = document.querySelector(".error");
+        el.textContent = error;
+        el.classList.add("shown");
+        clearTimeout(errorTimer);
+        errorTimer = setTimeout(() => el.classList.remove("shown"), 6000);
+      }
+
+      // --- One renderer per field kind; each returns its element and a state updater. ---
+
+      function choiceField(section, name, field) {
+        if (field.readOnly) {
+          const value = document.createElement("strong");
+          return { el: value, update: (current) => (value.textContent = current) };
+        }
+        const buttons = field.values.map((value) => {
+          const button = document.createElement("button");
+          button.textContent = value;
+          button.onclick = () => client.set(section, { [name]: value });
+          return button;
+        });
+        const row = document.createElement("div");
+        row.className = "buttons";
+        row.append(...buttons, ...field.values.map((value) => apiUrl(section, name, value)));
+        return {
+          el: row,
+          update: (current) => buttons.forEach((b, i) => b.classList.toggle("active", field.values[i] === current)),
+        };
+      }
+
+      function timeField(section, name, field) {
+        const form = document.createElement("form");
+        form.className = "buttons";
+        const input = Object.assign(document.createElement("input"), { type: "time" });
+        const button = Object.assign(document.createElement("button"), { textContent: "Set" });
+        form.onsubmit = (event) => {
+          event.preventDefault();
+          client.set(section, { [name]: input.value });
+          input.blur();
+        };
+        form.append(input, button, apiUrl(section, name, field.initial));
+        return {
+          el: form,
+          update: (current) => {
+            if (document.activeElement !== input) input.value = current;
+          },
+        };
+      }
+
+      function textField(section, name, field) {
+        const form = document.createElement("form");
+        form.className = "buttons";
+        const input = Object.assign(document.createElement("input"), { maxLength: field.maxLength, placeholder: "Name" });
+        const button = Object.assign(document.createElement("button"), { textContent: "Set" });
+        form.onsubmit = (event) => {
+          event.preventDefault();
+          client.set(section, { [name]: input.value.trim() });
+          input.blur();
+        };
+        form.append(input, button);
+        return {
+          el: form,
+          update: (current) => {
+            if (document.activeElement !== input) input.value = current;
+          },
+        };
+      }
+
+      const renderers = { choice: choiceField, time: timeField, text: textField };
+
+      /** The URL that sets this value, e.g. for a Stream Deck button. */
+      function apiUrl(section, name, value) {
+        return Object.assign(document.createElement("code"), {
+          textContent: `${location.origin}/api/${section}/set?${name}=${value}`,
+        });
+      }
+
+      // --- Page ---
+
+      for (const [section, fields] of Object.entries(schema)) {
+        const el = document.createElement("section");
+        el.innerHTML = `<h2>${section}</h2>`;
+        if (overlays.includes(section)) {
+          const url = `${location.origin}/overlay/${section}`;
+          el.insertAdjacentHTML("beforeend", `<a href="${url}" target="_blank">${url}</a>`);
+        }
+        if (section === "cameras") {
+          const links = Object.keys(fields).map((cam) => `<a href="/camera/${cam.slice(3)}" target="_blank">${cam}</a>`);
+          el.insertAdjacentHTML("beforeend", `<div>Camera pages: ${links.join(" · ")}</div>`);
+        }
+        for (const [name, field] of Object.entries(fields)) {
+          const { el: control, update } = renderers[field.kind](section, name, field);
+          const fieldEl = document.createElement("div");
+          fieldEl.className = "field";
+          fieldEl.append(name, " ", control);
+          el.append(fieldEl);
+          updaters.push((state) => update(state[section][name]));
+        }
+        main.append(el);
+      }
+    </script>
+  </body>
+</html>

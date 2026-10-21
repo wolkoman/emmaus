@@ -40,3 +40,11 @@
   `scripts/dev.mjs` assumes port 3000; when Next falls back to 3001 it still
   reuses a tunnel to 3000, and the render job then fetches the wrong server.
   Publishing saves the issue to production PB before it renders.
+- Livestream broadcast tools (`broadcast/`: OBS overlays, control page,
+  camera pages): every visible state change is animated, at least a short
+  fade; hard cuts look broken on air. This covers elements appearing,
+  disappearing and swapping (overlay modes, pill, trailer, rotating text).
+  Camera switching is done in OBS/ATEM and is out of scope.
+  Everything shown before the livestream keeps the broadcast countdown visible.
+  Pages only render server state; OBS, the ATEM and other systems are server
+  modules (`broadcast/server/`), see the README's "How it fits together".

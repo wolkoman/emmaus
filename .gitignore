@@ -48,3 +48,6 @@ node_modules/
 .ngrok.log
 
 .dev-server.log
+
+# Broadcast media (large, not ours to redistribute)
+/broadcast/public/media/

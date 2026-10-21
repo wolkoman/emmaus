@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#16181c" />
+    <title>Cameras</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+        background: #16181c;
+        color: #e8e8ea;
+      }
+      body {
+        max-width: 480px;
+        margin: 0 auto;
+        padding: 24px 16px calc(24px + env(safe-area-inset-bottom));
+      }
+      h1 {
+        font-size: 22px;
+        margin: 0 0 16px;
+      }
+      nav {
+        display: grid;
+        gap: 12px;
+      }
+      nav a {
+        display: block;
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid #3a3f46;
+        background: #2a2e34;
+        color: inherit;
+        text-decoration: none;
+        font-size: 22px;
+        font-weight: 700;
+      }
+      nav small {
+        display: block;
+        margin-top: 2px;
+        font-size: 15px;
+        font-weight: 400;
+        color: #9aa0a8;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Which camera are you on?</h1>
+    <nav></nav>
+
+    <script type="module">
+      const { state } = await fetch("/api/state").then((res) => res.json());
+      document.querySelector("nav").replaceChildren(
+        ...Object.entries(state.cameras).map(([cam, name]) => {
+          const link = Object.assign(document.createElement("a"), { href: `/camera/${cam.slice(3)}` });
+          link.append(cam.replace("cam", "Camera "));
+          if (name) link.append(Object.assign(document.createElement("small"), { textContent: name }));
+          return link;
+        }),
+      );
+    </script>
+  </body>
+</html>

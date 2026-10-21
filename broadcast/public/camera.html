@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#16181c" />
+    <!-- Opened from the home screen, the page runs without browser bars (the iPhone's only way to "fullscreen"). -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Camera</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+        background: #16181c;
+        color: #e8e8ea;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+          env(safe-area-inset-left);
+        box-sizing: border-box;
+      }
+
+      /* Program = on air (red), preview = next up (green). */
+      .tally {
+        padding: 20px 16px;
+        text-align: center;
+        background: #2a2e34;
+        transition: background-color 250ms ease;
+      }
+      .tally[data-tally="preview"] {
+        background: #1f9d55;
+      }
+      .tally[data-tally="program"] {
+        background: #d0021b;
+      }
+      .tally-state {
+        font-size: 44px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+      }
+      .tally-name {
+        margin-top: 4px;
+        font-size: 18px;
+        opacity: 0.85;
+      }
+
+      /* Settings: a cog in the tally area opens them as a sheet from the bottom. */
+      .tally {
+        position: relative;
+      }
+      .settings-open {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 44px;
+        height: 44px;
+        padding: 10px;
+        border: 0;
+        border-radius: 50%;
+        background: rgb(0 0 0 / 0.2);
+        color: #fff;
+      }
+      .settings-open svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      dialog.settings {
+        width: 100%;
+        max-width: none;
+        margin: auto 0 0;
+        box-sizing: border-box;
+        padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+        border: 0;
+        border-radius: 16px 16px 0 0;
+        background: #1f2227;
+        color: inherit;
+      }
+      dialog.settings::backdrop {
+        background: rgb(0 0 0 / 0.5);
+      }
+      .settings h2 {
+        margin: 0 0 12px;
+        font-size: 18px;
+      }
+      .settings-list {
+        display: grid;
+        gap: 8px;
+      }
+      .settings-list button,
+      .settings-done {
+        font: inherit;
+        font-size: 16px;
+        padding: 14px 16px;
+        border-radius: 10px;
+        border: 1px solid #3a3f46;
+        background: #2a2e34;
+        color: inherit;
+      }
+      .settings-list button {
+        display: flex;
+        justify-content: space-between;
+        text-align: left;
+      }
+      .settings-list button::after {
+        content: "Off";
+        color: #9aa0a8;
+      }
+      .settings-list button[aria-pressed="true"] {
+        background: #1f3b5a;
+        border-color: #3d6fa3;
+      }
+      .settings-list button[aria-pressed="true"]::after {
+        content: "On";
+        color: #e8e8ea;
+      }
+      .settings-done {
+        width: 100%;
+        margin-top: 16px;
+      }
+
+      .connection {
+        padding: 6px 16px 0;
+        font-size: 13px;
+        color: #f5a623;
+        min-height: 18px;
+      }
+      .connection.ok {
+        visibility: hidden;
+      }
+
+      /* What is on air, about once a second; tap to enlarge. */
+      .program {
+        margin: 12px 16px 0;
+      }
+      .program img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: contain;
+        background: #000;
+        border-radius: 8px;
+      }
+      .program figcaption {
+        margin-top: 4px;
+        font-size: 12px;
+        color: #9aa0a8;
+      }
+      .program.stale img {
+        opacity: 0.4;
+      }
+      .program.enlarged {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        margin: 0;
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+          env(safe-area-inset-left);
+        background: #000;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .program.enlarged figcaption {
+        text-align: center;
+      }
+
+      #chat {
+        flex: 1;
+        padding: 12px 16px 16px;
+      }
+
+      /* A question from the director: one big tap instead of typing. Thumb-reachable at the bottom. */
+      .question {
+        position: fixed;
+        inset: auto 0 0 0;
+        z-index: 2;
+        padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+        background: #1f2227;
+        border-top: 1px solid #3a3f46;
+        border-radius: 16px 16px 0 0;
+        box-shadow: 0 -12px 40px rgb(0 0 0 / 0.5);
+        transform: translateY(0);
+        transition: transform 250ms ease;
+      }
+      .question[hidden] {
+        display: block;
+        transform: translateY(110%);
+        pointer-events: none;
+      }
+      .question-from {
+        margin: 0;
+        font-size: 14px;
+        color: #9aa0a8;
+      }
+      .question-text {
+        margin: 4px 0 16px;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.25;
+      }
+      .question-options {
+        display: grid;
+        gap: 10px;
+      }
+      .question-options button {
+        min-height: 72px;
+        font: inherit;
+        font-size: 26px;
+        font-weight: 700;
+        border: 0;
+        border-radius: 12px;
+        color: #fff;
+        background: #2a4a6b;
+      }
+      /* First answer green, second red ("Yes" / "No"), further ones blue. */
+      .question-options button:nth-child(1) {
+        background: #1f9d55;
+      }
+      .question-options button:nth-child(2) {
+        background: #b3261e;
+      }
+      .question-more {
+        margin: 12px 0 0;
+        font-size: 13px;
+        color: #9aa0a8;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="tally" data-tally="off">
+      <div class="tally-state">STANDBY</div>
+      <div class="tally-name"></div>
+      <button type="button" class="settings-open" aria-label="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        </svg>
+      </button>
+    </header>
+    <dialog class="settings">
+      <h2>Settings</h2>
+      <div class="settings-list">
+        <button type="button" data-setting="sounds" aria-pressed="false">Sounds</button>
+        <button type="button" data-setting="speech" aria-pressed="false">Read @mentions aloud</button>
+        <button type="button" data-setting="picture" aria-pressed="false">Program picture</button>
+        <button type="button" data-setting="awake" aria-pressed="false">Keep screen awake</button>
+        <button type="button" class="fullscreen" aria-pressed="false">Fullscreen</button>
+      </div>
+      <button type="button" class="settings-done">Done</button>
+    </dialog>
+    <div class="connection">Connecting…</div>
+    <figure class="program">
+      <img alt="" />
+      <figcaption>No picture from OBS</figcaption>
+    </figure>
+    <section id="chat"></section>
+    <div class="question" role="dialog" aria-live="assertive" hidden>
+      <p class="question-from"></p>
+      <p class="question-text"></p>
+      <div class="question-options"></div>
+      <p class="question-more"></p>
+    </div>
+
+    <script type="module">
+      import { connect } from "/overlay-client.js";
+      import { mountChat } from "/chat.js";
+      import { createKeepAwake } from "/keep-awake.js";
+
+      const me = `cam${location.pathname.split("/").pop()}`;
+      const TALLY_LABEL = { off: "STANDBY", preview: "PREVIEW", program: "LIVE" };
+      let state = null;
+
+      // --- Settings, remembered per device ---
+
+      const settings = { sounds: false, speech: false, picture: true, awake: true };
+      const keepAwake = createKeepAwake();
+      try {
+        Object.assign(settings, JSON.parse(localStorage.getItem("camera-settings")) ?? {});
+      } catch {}
+
+      /** What switching a setting does right away; audio and speech need a tap, so switching on also unlocks them. */
+      const onSettingChange = {
+        sounds: (on) => on && playTone("preview"),
+        speech: (on) => on && speak("Vorlesen ist an"),
+        picture: (on) => showPicture(on),
+        awake: (on) => keepAwake.set(on),
+      };
+
+      const settingsDialog = document.querySelector("dialog.settings");
+      document.querySelector(".settings-open").addEventListener("click", () => settingsDialog.showModal());
+      document.querySelector(".settings-done").addEventListener("click", () => settingsDialog.close());
+      // A tap on the dimmed backdrop (outside the sheet) closes it too.
+      settingsDialog.addEventListener("click", (event) => event.target === settingsDialog && settingsDialog.close());
+
+      for (const button of document.querySelectorAll("[data-setting]")) {
+        const key = button.dataset.setting;
+        button.setAttribute("aria-pressed", settings[key]);
+        button.addEventListener("click", () => {
+          settings[key] = !settings[key];
+          button.setAttribute("aria-pressed", settings[key]);
+          try {
+            localStorage.setItem("camera-settings", JSON.stringify(settings));
+          } catch {}
+          onSettingChange[key](settings[key]);
+        });
+      }
+      // Remembered settings: audio and the keep-awake video may need one tap after loading before they start.
+      keepAwake.set(settings.awake);
+      document.addEventListener(
+        "pointerdown",
+        () => {
+          audio().resume();
+          keepAwake.set(settings.awake);
+        },
+        { once: true },
+      );
+
+      // --- Sounds and speech ---
+
+      let audioContext;
+      function audio() {
+        audioContext ??= new AudioContext();
+        return audioContext;
+      }
+
+      /** Preview: one soft, low blip. Program: two loud, rising beeps. Question: a falling two-note chime. */
+      const TONES = {
+        preview: [{ frequency: 660, at: 0, length: 0.12, volume: 0.08, wave: "sine" }],
+        question: [
+          { frequency: 988, at: 0, length: 0.25, volume: 0.2, wave: "sine" },
+          { frequency: 740, at: 0.18, length: 0.35, volume: 0.2, wave: "sine" },
+        ],
+        program: [
+          { frequency: 880, at: 0, length: 0.16, volume: 0.35, wave: "triangle" },
+          { frequency: 1320, at: 0.2, length: 0.22, volume: 0.35, wave: "triangle" },
+        ],
+      };
+
+      function playTone(kind) {
+        const ctx = audio();
+        for (const tone of TONES[kind]) {
+          const oscillator = new OscillatorNode(ctx, { type: tone.wave, frequency: tone.frequency });
+          const gain = new GainNode(ctx, { gain: 0 });
+          const start = ctx.currentTime + tone.at;
+          gain.gain.linearRampToValueAtTime(tone.volume, start + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.0001, start + tone.length);
+          oscillator.connect(gain).connect(ctx.destination);
+          oscillator.start(start);
+          oscillator.stop(start + tone.length + 0.05);
+        }
+      }
+
+      function speak(text) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "de-DE";
+        speechSynthesis.speak(utterance);
+      }
+
+      // --- Tally ---
+
+      const tally = document.querySelector(".tally");
+      function renderTally() {
+        const value = state.tally[me];
+        if (tally.dataset.tally !== value && value !== "off" && settings.sounds) playTone(value);
+        tally.dataset.tally = value;
+        tally.querySelector(".tally-state").textContent = TALLY_LABEL[value];
+        const alias = state.cameras[me];
+        tally.querySelector(".tally-name").textContent = alias ? `${me} · ${alias}` : me;
+        document.title = `${me.toUpperCase()} ${TALLY_LABEL[value]}`;
+      }
+
+      // --- Program picture ---
+
+      const program = document.querySelector(".program");
+      const STALE_MS = 3000;
+      let lastPictureAt = 0;
+
+      function showPicture(on) {
+        program.hidden = !on;
+        program.classList.remove("enlarged");
+        connection.programPicture(on);
+      }
+
+      program.addEventListener("click", () => program.classList.toggle("enlarged"));
+      setInterval(() => {
+        const stale = Date.now() - lastPictureAt > STALE_MS;
+        program.classList.toggle("stale", stale);
+        program.querySelector("figcaption").textContent = stale ? "No picture from OBS" : "On air";
+      }, 1000);
+
+      // --- Fullscreen (iPhones can't; there the home-screen icon opens without browser bars) ---
+
+      const fullscreen = document.querySelector(".fullscreen");
+      fullscreen.hidden = !document.fullscreenEnabled;
+      fullscreen.addEventListener("click", () =>
+        document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(),
+      );
+      document.addEventListener("fullscreenchange", () =>
+        fullscreen.setAttribute("aria-pressed", document.fullscreenElement !== null),
+      );
+
+      // --- Questions ---
+
+      const questionCard = document.querySelector(".question");
+
+      /** Shows the oldest question this camera hasn't answered yet, if any. */
+      function renderQuestion(messages) {
+        const pending = messages.filter((m) => m.question?.to.includes(me) && !m.question.answers[me]);
+        const [next] = pending;
+        questionCard.hidden = !next;
+        if (!next) return;
+        const more = pending.length - 1;
+        questionCard.querySelector(".question-more").textContent = more ? `${more} more after this` : "";
+        if (questionCard.dataset.id === String(next.id)) return; // already showing it
+        questionCard.dataset.id = next.id;
+        questionCard.querySelector(".question-from").textContent = next.from === "director" ? "Regie" : next.from;
+        questionCard.querySelector(".question-text").textContent = next.text;
+        questionCard.querySelector(".question-options").replaceChildren(
+          ...next.question.options.map((option) => {
+            const button = Object.assign(document.createElement("button"), { type: "button", textContent: option });
+            button.onclick = () => connection.answer(next.id, option);
+            return button;
+          }),
+        );
+      }
+
+      // --- Connection and chat ---
+
+      program.hidden = !settings.picture;
+      const connection = connect({
+        client: me,
+        onStatus: (connected) => {
+          const line = document.querySelector(".connection");
+          line.classList.toggle("ok", connected);
+          line.textContent = connected ? "" : "Connection lost, reconnecting…";
+          if (connected && settings.picture) connection.programPicture(true);
+        },
+        on: {
+          state: (message) => {
+            const first = state === null;
+            state = message.state;
+            if (first) tally.dataset.tally = state.tally[me]; // no sound for the state found on load
+            renderTally();
+            chat.refresh();
+          },
+          chatHistory: ({ messages }) => chat.setMessages(messages),
+          chatMessage: ({ message }) => chat.add(message),
+          chatUpdate: ({ message }) => chat.update(message),
+          typing: ({ clients }) => chat.setTyping(clients),
+          programPicture: ({ image }) => {
+            program.querySelector("img").src = image;
+            lastPictureAt = Date.now();
+          },
+          error: ({ error }) => {
+            const line = document.querySelector(".connection");
+            line.textContent = error;
+            line.classList.remove("ok");
+            setTimeout(() => line.classList.add("ok"), 5000);
+          },
+        },
+      });
+
+      const chat = mountChat(document.querySelector("#chat"), {
+        me,
+        clients: () => ["director", ...Object.keys(state?.cameras ?? {})],
+        connection,
+        aliasOf: (id) => state?.cameras[id] ?? "",
+        onMention: (message, from) => {
+          if (settings.speech) speak(`${from}: ${message.text.replace(/@[\p{L}\p{N}_-]+/gu, "").trim()}`);
+        },
+        onQuestion: (message, from) => {
+          if (settings.sounds) playTone("question");
+          if (settings.speech) speak(`${from}: ${message.text}`);
+        },
+        onChange: renderQuestion,
+      });
+    </script>
+  </body>
+</html>

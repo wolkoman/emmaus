@@ -38,6 +38,15 @@
         "POCKETBASE_URL=http://localhost:8090 PB_PUBLIC_URL=http://localhost:8090 PB_ADMIN_EMAIL=admin@emmaus.local PB_ADMIN_PASSWORD=devpassword NEXT_PUBLIC_BASE_URL=http://localhost:3201 ./node_modules/.bin/next dev -p 3201"
       ],
       "port": 3201
+    },
+    {
+      "name": "broadcast",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": [
+        "run",
+        "broadcast"
+      ],
+      "port": 4321
     }
   ]
 }

@@ -20,7 +20,8 @@
     "pb:smoke": "POCKETBASE_URL=http://localhost:8090 PB_ADMIN_EMAIL=admin@emmaus.local PB_ADMIN_PASSWORD=devpassword tsx scripts/smoke-liturgy-repo-pb.ts",
     "pb:prod:tunnel": "kubectl --context eco port-forward -n emmaus svc/emmaus-pb 8091:80",
     "pb:prod:ui": "open https://db.emmaus.wien/_/",
-    "render:smoke": "tsx scripts/smoke-render-job.ts"
+    "render:smoke": "tsx scripts/smoke-render-job.ts",
+    "broadcast": "bun broadcast/server/main.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",
