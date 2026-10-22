@@ -1,0 +1,16 @@
+name: Daily Stats Recording
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # Daily at 06:00 UTC (08:00 Vienna)
+  workflow_dispatch:
+
+jobs:
+  record-stats:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record stats
+        run: |
+          curl -f -L --max-redirs 0 -X GET \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ vars.SITE_URL }}/redaktion/stats/cron"

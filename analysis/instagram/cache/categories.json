@@ -1,0 +1,146 @@
+{
+  "categories": [
+    {
+      "id": "predigt-homilie-gottesdienst",
+      "name": "Predigt aus der Messe",
+      "description": "Ausschnitte/Zitate aus Homilien während der Hl. Messe (alle Zeiten des Kirchenjahrs). Primärkriterium: der sprechende Priester am Ambo und explizite Predigt‑Kennzeichnung. Sakrament- oder Festbezug bleibt sekundär.",
+      "examples": [
+        "18080733986152868",
+        "18100789939734308",
+        "18178648780330109",
+        "17954850444010533",
+        "18083379605252661"
+      ]
+    },
+    {
+      "id": "liturgie-feiern-prozessionen",
+      "name": "Liturgische Feiern & Prozessionen",
+      "description": "Szenen/Impressionen aus Gottesdiensten und Riten ohne Predigtfokus: Osterfeuer, Palmzweige, Adventkranz, Allerseelen‑Kerzen, Sternsinger‑/Fronleichnamsprozession, Patrozinium, Segnungen. Keine Sakrament‑Feiern als Hauptthema.",
+      "examples": [
+        "18177956947388139",
+        "17884480662472190",
+        "18022580828778401",
+        "18174166936350825",
+        "18260658850293825"
+      ]
+    },
+    {
+      "id": "sakrament-taufe",
+      "name": "Sakrament – Taufe",
+      "description": "Gratulationen, Gruppenfotos und Szenen von Tauffeiern (Familie/Paten/Kind). Ausschluss: Predigtclips – diese gehören zu „Predigt aus der Messe“.",
+      "examples": [
+        "17891649075287448",
+        "17974147268835300",
+        "18084180416116265",
+        "18070236559990243",
+        "17953291748990317"
+      ]
+    },
+    {
+      "id": "sakrament-erstkommunion",
+      "name": "Sakrament – Erstkommunion",
+      "description": "Erstkommunionfeiern und Kinderliturgie rund um die Eucharistie (Kommunionempfang, Dankgebet, Gruppenfotos). Ausschluss: reine Predigtsequenzen zu diesem Anlass.",
+      "examples": [
+        "17874010722266080",
+        "18128851924429582",
+        "18342814606085384",
+        "17867527221390489",
+        "17962838567923486"
+      ]
+    },
+    {
+      "id": "sakrament-firmung",
+      "name": "Sakrament – Firmung",
+      "description": "Firmfeier, Firmlinge, Leitwort/Motto, Gratulationen. Predigtclips zur Firmung bleiben bei „Predigt aus der Messe“.",
+      "examples": [
+        "18081681175758701",
+        "18116156212517870",
+        "17941712708932607",
+        "18387944974193880",
+        "18043382939368100"
+      ]
+    },
+    {
+      "id": "sakrament-ehe-kombi",
+      "name": "Sakrament – Ehe & Kombi‑Feiern",
+      "description": "Trauungen und kombinierte Festgottesdienste (z. B. Hochzeit und Taufe).",
+      "examples": [
+        "17936686227034089",
+        "18310304113213497"
+      ]
+    },
+    {
+      "id": "fastenimpuls-serie",
+      "name": "Fastenimpuls‑Serie (Grafik)",
+      "description": "Fortlaufende Fasten‑Posts „Fastenimpuls – Tag X“ inkl. Sonntags-/Triduum‑Etappen, typischerweise Grafik/Naturmotiv mit Bibelwort und Frage. Keine Predigten/Termine.",
+      "examples": [
+        "18092612678084480",
+        "18068807504558339",
+        "18148821490456026",
+        "18107287660862956",
+        "18098626933819859"
+      ]
+    },
+    {
+      "id": "bibelwort-impuls",
+      "name": "Bibelwort & geistlicher Impuls",
+      "description": "Einzelne Bibelzitate, Kurzgebete, Zitat‑Grafiken oder ermutigende Sprüche außerhalb der Fastenimpuls‑Serie; oft auf Natur/Kirchen‑Motiv.",
+      "examples": [
+        "18079807844189939",
+        "18079084352177420",
+        "17993378723816345",
+        "18122761993510856",
+        "17886201735222350"
+      ]
+    },
+    {
+      "id": "infos-und-wochenmitteilungen",
+      "name": "Infos & Wochenmitteilungen",
+      "description": "Gottesdienstordnungen, Wochenpläne, „Fahrpläne“ zu Festzeiten, Sommerordnung, Termin‑Carousels mit Zeitlisten. Kein einzelnes Event‑Recruiting.",
+      "examples": [
+        "18315336895243971",
+        "18087292069680296",
+        "18457935235103267",
+        "18050357066409079",
+        "18034991513685387"
+      ]
+    },
+    {
+      "id": "einladungen-und-aufrufe",
+      "name": "Einladungen & Aufrufe",
+      "description": "Gezielte Einladungen zu einzelnen Angeboten/Events oder Mitarbeit (z. B. Alpha‑Kurs, Lobpreisabend, Pfarrcafé‑Team, Krippenspiel‑Casting, Sommerfest‑Save‑the‑Date).",
+      "examples": [
+        "17859104865585974",
+        "18096858862690758",
+        "18056928509552338",
+        "17902063938289706",
+        "18167630590350601"
+      ]
+    },
+    {
+      "id": "gemeindeleben-und-rueckblicke",
+      "name": "Gemeindeleben & Rückblicke",
+      "description": "Soziale/ kulturelle Parish‑Momente, Dankposts und Rückschauen außerhalb enger Liturgie: Pfarrball, Kinderfasching, Sommerfest‑Aftermovie, Sternsinger‑Dank, Besuche/Jubiläen, Wallfahrten/Emmausgang (als Gemeinschaftserlebnis), Charity‑Läufe.",
+      "examples": [
+        "18078603101350482",
+        "18008669126838944",
+        "18139506508481265",
+        "18106902655517133",
+        "18218631319305320"
+      ]
+    },
+    {
+      "id": "katechese-liturgie-erklaert",
+      "name": "Katechese & Liturgie erklärt",
+      "description": "Erklärgrafiken/‑reels zu Festen, Riten und Diensten (z. B. Aschermittwoch, Fronleichnam, Maria Empfängnis, Mariä Himmelfahrt), Gebetshaltungen, Lavabo, Ministranten‑Aufgaben, Sonntagsevangelium‑Textfolien, Musik in der Messe.",
+      "examples": [
+        "18090363926027877",
+        "17874542994265111",
+        "18114925558510376",
+        "17894206629218207",
+        "18075944216055115"
+      ]
+    }
+  ],
+  "rationale": "Die Struktur trennt konsequent Content‑Typen mit klarem Redaktionszweck: Predigt‑Clips (Video aus der Messe) vs. liturgische Impressionen ohne Homilie, eigenständige Sakrament‑Feiern (als starke, oft familienrelevante Treiber) sowie zwei klar getrennte Impuls‑Formate: die serielle Fastenimpuls‑Grafikreihe und sonstige Bibel‑/Zitat‑Posts. Für Planung/Performance wurden Informationsformate (Wochenpläne, Messzeiten) von Einladungen/Calls (konkrete Aktivierung) separiert. „Gemeindeleben & Rückblicke“ bündelt soziale Events, Besuche, Dank und Charity‑Aktivitäten außerhalb enger Liturgie. „Katechese & Liturgie erklärt“ fasst erklärende Beiträge zu Festen, Riten und Diensten zusammen – unterscheidbar von reinen Impulsen und von Live‑Liturgie.\nVerworfen wurden feinere Schnitte nach Kirchenjahreszeiten (z. B. eigene Advent-/Oster‑Kategorien), weil das starke Format‑Signal (Predigtclip, Fastenimpuls‑Grafik, Info vs. Einladung) redaktionell aussagekräftiger für Reichweite/Engagement ist. Ebenfalls verworfen wurde eine separate Charity‑Kategorie, da die Menge überschaubar ist und Rückblicke darauf sinnvoll im Gemeindeleben‑Cluster auswertbar bleiben. Die Sakramente wurden verdichtet (eigene Cluster für Taufe, Erstkommunion, Firmung; Ehe/Kombi zusammen), um ausreichend große, nicht überlappende Klassen zu sichern."
+}

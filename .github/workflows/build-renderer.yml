@@ -1,0 +1,41 @@
+name: Build renderer image
+
+# Builds the PDF renderer job image (deploy/renderer) and pushes it to GHCR.
+# The image is pulled by ad-hoc Kubernetes Jobs created from the Next.js app
+# (see docs/pdf-render-jobs.md). Only rebuilds when the renderer changes.
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "deploy/renderer/**"
+      - ".github/workflows/build-renderer.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: deploy/renderer
+          push: true
+          # `latest` is what RENDERER_IMAGE points at by default; the SHA tag
+          # allows pinning/rollback without rebuilding.
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/emmaus-renderer:latest
+            ghcr.io/${{ github.repository_owner }}/emmaus-renderer:${{ github.sha }}

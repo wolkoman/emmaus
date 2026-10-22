@@ -1,0 +1,30 @@
+# Local Pocketbase instance for development.
+# The migrations directory is the same one that gets bundled into the Helm
+# chart (via ConfigMap), so schema stays identical between laptop and prod.
+#
+# Usage:
+#   bun pb:local            # start
+#   bun pb:local:logs       # tail
+#   bun pb:local:reset      # wipe data and start fresh (migrations re-apply)
+#   bun pb:seed             # populate fake liturgy data for feature work
+
+services:
+  pocketbase:
+    image: ghcr.io/muchobien/pocketbase:0.36.9
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./pb_data:/pb_data
+      - ../deploy/helm/pb_migrations:/pb_migrations:ro
+    command:
+      [
+        "serve",
+        "--http=0.0.0.0:8090",
+        "--dir=/pb_data",
+        "--migrationsDir=/pb_migrations",
+      ]
+    environment:
+      # Default superuser is created on first boot. Override via .env if needed.
+      PB_ADMIN_EMAIL: admin@emmaus.local
+      PB_ADMIN_PASSWORD: devpassword
+    restart: unless-stopped

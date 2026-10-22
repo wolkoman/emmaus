@@ -1,0 +1,45 @@
+# Environment files with secrets
+.env
+.env.*
+.env.local
+.env.*.local
+
+# Git
+.git
+.gitignore
+
+# Dependencies
+node_modules
+
+# Testing
+test-results
+/coverage
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# IDE
+.idea
+*.iml
+*.xml
+.vscode
+
+# Build artifacts
+.next
+/build
+
+# OS
+.DS_Store
+
+# Misc
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.vercel
+.magic
+
+# Deployment
+deploy/
+Dockerfile
+.dockerignore
+README.md

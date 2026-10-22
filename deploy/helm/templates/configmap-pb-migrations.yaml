@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-pb-migrations
+data:
+{{- $migrationsDir := .Files.Glob "pb_migrations/*.js" }}
+{{- if $migrationsDir }}
+  {{- range $path, $_ := $migrationsDir }}
+  {{ base $path }}: |-
+{{ $.Files.Get $path | indent 4 }}
+  {{- end }}
+{{- else }}
+  .keep: ""
+{{- end }}

@@ -1,0 +1,50 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/test-results
+/.pnp
+.pnp.js
+.next
+*.iml
+*.xml
+.env
+.idea
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Sentry
+.sentryclirc
+.vercel
+.env
+node_modules/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+.env
+.env*.local
+
+.magic
+
+# Instagram analysis — raw scrape and CSV export
+/instagram-scrape
+/May-*.csv
+
+.ngrok.log
+
+.dev-server.log

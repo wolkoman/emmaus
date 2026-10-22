@@ -1,0 +1,16 @@
+name: Liturgy Reminders
+
+on:
+  schedule:
+    - cron: "0 16 * * *" # Daily at 16:00 UTC (18:00 Vienna in summer, 17:00 in winter)
+  workflow_dispatch:
+
+jobs:
+  send-reminders:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send reminders for tomorrow's readings
+        run: |
+          curl -f -sS -L --max-redirs 0 -X GET \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ vars.SITE_URL }}/api/cron/liturgy-reminders"

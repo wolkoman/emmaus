@@ -1,0 +1,36 @@
+secretName: emmaus-secrets
+
+pb:
+  image:
+    repository: ghcr.io/muchobien/pocketbase
+    tag: "0.36.9"
+  replicaCount: 1
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "50m"
+    limits:
+      memory: "512Mi"
+      cpu: "300m"
+  storage: "1Gi"
+  # PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD are read from the shared `emmaus-secrets`
+  # Secret (see values.secretName). The container entrypoint runs
+  # `pocketbase superuser upsert` on each start when these are set, so changing
+  # the password in the secret rotates it.
+  ingress:
+    host: db.emmaus.wien
+    tlsSecretName: emmaus-pb-tls
+    clusterIssuer: letsencrypt-prod
+  backup:
+    enabled: true
+    # Cron schedule (UTC). Default: 02:17 daily — off-peak, not on the hour to
+    # reduce contention with other nightly jobs.
+    schedule: "17 2 * * *"
+    # Keep the newest N daily backup releases; older ones are pruned.
+    keepCount: 14
+    # GitHub repo to upload release assets to, in "owner/name" form.
+    # Must stay private: the zips hold the whole database.
+    repo: wolkoman/emmaus-backups
+    # Secret must hold GITHUB_TOKEN (PAT with `repo` scope or a fine-grained
+    # token with Contents: read+write on the backup repo).
+    secretName: emmaus-pb-backup

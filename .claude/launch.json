@@ -1,0 +1,43 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "next-dev",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "email-preview",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": [
+        "run",
+        "email",
+        "--port",
+        "3001"
+      ],
+      "port": 3001
+    },
+    {
+      "name": "next-local-pb",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "POCKETBASE_URL=http://localhost:8090 PB_ADMIN_EMAIL=admin@emmaus.local PB_ADMIN_PASSWORD=devpassword NEXT_PUBLIC_BASE_URL=http://localhost:3200 ./node_modules/.bin/next start -p 3200"
+      ],
+      "port": 3200
+    },
+    {
+      "name": "next-dev-local-pb",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "POCKETBASE_URL=http://localhost:8090 PB_PUBLIC_URL=http://localhost:8090 PB_ADMIN_EMAIL=admin@emmaus.local PB_ADMIN_PASSWORD=devpassword NEXT_PUBLIC_BASE_URL=http://localhost:3201 ./node_modules/.bin/next dev -p 3201"
+      ],
+      "port": 3201
+    }
+  ]
+}

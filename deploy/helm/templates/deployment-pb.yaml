@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-pb
+  labels:
+    app: {{ .Release.Name }}-pb
+spec:
+  replicas: {{ .Values.pb.replicaCount }}
+  strategy:
+    # Recreate avoids two pods racing on the same SQLite file (RWO PVC).
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-pb
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-pb
+      annotations:
+        # Restart the pod whenever the migrations ConfigMap changes so new
+        # migrations are applied (PB runs them at startup).
+        checksum/pb-migrations: {{ include (print $.Template.BasePath "/configmap-pb-migrations.yaml") . | sha256sum }}
+    spec:
+      volumes:
+        - name: pb-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-pb-data
+        - name: pb-migrations
+          configMap:
+            name: {{ .Release.Name }}-pb-migrations
+      containers:
+        - name: pb
+          image: "{{ .Values.pb.image.repository }}:{{ .Values.pb.image.tag }}"
+          # Args start with a flag ("-..."), which triggers the muchobien
+          # entrypoint's `create_superuser` step (using PB_ADMIN_EMAIL /
+          # PB_ADMIN_PASSWORD) and then prepends its default serve args.
+          args:
+            - "--migrationsDir=/pb_migrations"
+          ports:
+            - containerPort: 8090
+              name: http
+          resources:
+            requests:
+              memory: {{ .Values.pb.resources.requests.memory }}
+              cpu: {{ .Values.pb.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.pb.resources.limits.memory }}
+              cpu: {{ .Values.pb.resources.limits.cpu }}
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 8090
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 8090
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+          env:
+            - name: PB_ADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secretName }}
+                  key: PB_ADMIN_EMAIL
+            - name: PB_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secretName }}
+                  key: PB_ADMIN_PASSWORD
+          volumeMounts:
+            - name: pb-data
+              mountPath: /pb_data
+            - name: pb-migrations
+              mountPath: /pb_migrations
+              readOnly: true

@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-pb
+  annotations:
+    cert-manager.io/cluster-issuer: {{ .Values.pb.ingress.clusterIssuer }}
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: {{ .Values.pb.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-pb
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - {{ .Values.pb.ingress.host }}
+      secretName: {{ .Values.pb.ingress.tlsSecretName }}

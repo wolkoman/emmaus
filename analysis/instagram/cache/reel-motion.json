@@ -1,0 +1,2598 @@
+{
+  "3622997623313562308": {
+    "duration": 20.15,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3623757780591168951": {
+    "duration": 24.75,
+    "distances": [
+      22,
+      32,
+      32
+    ],
+    "max_distance": 32,
+    "avg_distance": 28.67,
+    "is_static": false
+  },
+  "3625099627276131052": {
+    "duration": 8.98,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3625947837406326887": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3626624409092042214": {
+    "duration": 8.77,
+    "distances": [
+      16,
+      20,
+      10
+    ],
+    "max_distance": 20,
+    "avg_distance": 15.33,
+    "is_static": false
+  },
+  "3628827543419946430": {
+    "duration": 41.35,
+    "distances": [
+      8,
+      12,
+      10
+    ],
+    "max_distance": 12,
+    "avg_distance": 10.0,
+    "is_static": false
+  },
+  "3630215735402527323": {
+    "duration": 28.58,
+    "distances": [
+      30,
+      28,
+      40
+    ],
+    "max_distance": 40,
+    "avg_distance": 32.67,
+    "is_static": false
+  },
+  "3630315240332415237": {
+    "duration": 12.88,
+    "distances": [
+      22,
+      20,
+      28
+    ],
+    "max_distance": 28,
+    "avg_distance": 23.33,
+    "is_static": false
+  },
+  "3631008141718813356": {
+    "duration": 12.12,
+    "distances": [
+      2,
+      2,
+      0
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3631704535190288558": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3633907804977486321": {
+    "duration": 12.88,
+    "distances": [
+      28,
+      30,
+      20
+    ],
+    "max_distance": 30,
+    "avg_distance": 26.0,
+    "is_static": false
+  },
+  "3636084333165589772": {
+    "duration": 36.96,
+    "distances": [
+      30,
+      28,
+      30
+    ],
+    "max_distance": 30,
+    "avg_distance": 29.33,
+    "is_static": false
+  },
+  "3638261066706967662": {
+    "duration": 64.15,
+    "distances": [
+      30,
+      34,
+      32
+    ],
+    "max_distance": 34,
+    "avg_distance": 32.0,
+    "is_static": false
+  },
+  "3640384983282184439": {
+    "duration": 21.15,
+    "distances": [
+      34,
+      22,
+      18
+    ],
+    "max_distance": 34,
+    "avg_distance": 24.67,
+    "is_static": false
+  },
+  "3641111849496269091": {
+    "duration": 25.77,
+    "distances": [
+      8,
+      8,
+      2
+    ],
+    "max_distance": 8,
+    "avg_distance": 6.0,
+    "is_static": false
+  },
+  "3641868633010070335": {
+    "duration": 12.14,
+    "distances": [
+      2,
+      0,
+      2
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3643118437002366013": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3643311703073215400": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3644033825319866055": {
+    "duration": 27.12,
+    "distances": [
+      30,
+      32,
+      38
+    ],
+    "max_distance": 38,
+    "avg_distance": 33.33,
+    "is_static": false
+  },
+  "3645494372024378530": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3646034586551651616": {
+    "duration": 12.14,
+    "distances": [
+      2,
+      2,
+      0
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3646980057507968992": {
+    "duration": 5.13,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3647690340593525298": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3649104908515744548": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3650479655564403642": {
+    "duration": 67.01,
+    "distances": [
+      22,
+      16,
+      22
+    ],
+    "max_distance": 22,
+    "avg_distance": 20.0,
+    "is_static": false
+  },
+  "3651206924289289541": {
+    "duration": 15.14,
+    "distances": [
+      2,
+      2,
+      2
+    ],
+    "max_distance": 2,
+    "avg_distance": 2.0,
+    "is_static": true
+  },
+  "3652033323971325533": {
+    "duration": 20.13,
+    "distances": [
+      6,
+      2,
+      6
+    ],
+    "max_distance": 6,
+    "avg_distance": 4.67,
+    "is_static": true
+  },
+  "3652737403723378296": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3654187394882977965": {
+    "duration": 77.63,
+    "distances": [
+      26,
+      16,
+      26
+    ],
+    "max_distance": 26,
+    "avg_distance": 22.67,
+    "is_static": false
+  },
+  "3656373459920255709": {
+    "duration": 20.15,
+    "distances": [
+      2,
+      4,
+      2
+    ],
+    "max_distance": 4,
+    "avg_distance": 2.67,
+    "is_static": true
+  },
+  "3657108361925841519": {
+    "duration": 20.62,
+    "distances": [
+      2,
+      2,
+      0
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3657835263640707203_3657835203578223331": {
+    "duration": 5.0,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3658228585043642201": {
+    "duration": 15.14,
+    "distances": [
+      2,
+      2,
+      2
+    ],
+    "max_distance": 2,
+    "avg_distance": 2.0,
+    "is_static": true
+  },
+  "3658443710132396946": {
+    "duration": 46.02,
+    "distances": [
+      28,
+      34,
+      28
+    ],
+    "max_distance": 34,
+    "avg_distance": 30.0,
+    "is_static": false
+  },
+  "3659241936507012918": {
+    "duration": 19.8,
+    "distances": [
+      8,
+      8,
+      4
+    ],
+    "max_distance": 8,
+    "avg_distance": 6.67,
+    "is_static": false
+  },
+  "3662112029914045551": {
+    "duration": 30.14,
+    "distances": [
+      2,
+      0,
+      2
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3662893243210020166": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3663611619389491743_3663611487260752761": {
+    "duration": 5.0,
+    "distances": [
+      2,
+      0,
+      2
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3663611619389491743_3663611498904016710": {
+    "duration": 5.0,
+    "distances": [
+      2,
+      2,
+      4
+    ],
+    "max_distance": 4,
+    "avg_distance": 2.67,
+    "is_static": true
+  },
+  "3663611619389491743_3663611507946860395": {
+    "duration": 5.0,
+    "distances": [
+      2,
+      0,
+      2
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3666513518271093786": {
+    "duration": 5.13,
+    "distances": [
+      2,
+      2,
+      0
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3667240524516331919": {
+    "duration": 14.3,
+    "distances": [
+      30,
+      24,
+      28
+    ],
+    "max_distance": 30,
+    "avg_distance": 27.33,
+    "is_static": false
+  },
+  "3668440581512700436": {
+    "duration": 56.65,
+    "distances": [
+      30,
+      34,
+      30
+    ],
+    "max_distance": 34,
+    "avg_distance": 31.33,
+    "is_static": false
+  },
+  "3668711188024429326": {
+    "duration": 25.77,
+    "distances": [
+      10,
+      16,
+      18
+    ],
+    "max_distance": 18,
+    "avg_distance": 14.67,
+    "is_static": false
+  },
+  "3668712812839173757": {
+    "duration": 12.58,
+    "distances": [
+      6,
+      6,
+      4
+    ],
+    "max_distance": 6,
+    "avg_distance": 5.33,
+    "is_static": true
+  },
+  "3670778007875215707": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3670787147448118041": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3673004139546505102": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3673734544721508578": {
+    "duration": 15.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3677379185274771826": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3678838028386997296": {
+    "duration": 10.24,
+    "distances": [
+      8,
+      28,
+      32
+    ],
+    "max_distance": 32,
+    "avg_distance": 22.67,
+    "is_static": false
+  },
+  "3680235390963734980": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3680985998188446880": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3681733637146339777": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3682450392621702024": {
+    "duration": 16.09,
+    "distances": [
+      30,
+      32,
+      30
+    ],
+    "max_distance": 32,
+    "avg_distance": 30.67,
+    "is_static": false
+  },
+  "3683876379611702453": {
+    "duration": 29.72,
+    "distances": [
+      36,
+      28,
+      30
+    ],
+    "max_distance": 36,
+    "avg_distance": 31.33,
+    "is_static": false
+  },
+  "3684519877742558636": {
+    "duration": 292.27,
+    "distances": [
+      10,
+      12,
+      16
+    ],
+    "max_distance": 16,
+    "avg_distance": 12.67,
+    "is_static": false
+  },
+  "3687498204015018604": {
+    "duration": 50.01,
+    "distances": [
+      6,
+      10,
+      12
+    ],
+    "max_distance": 12,
+    "avg_distance": 9.33,
+    "is_static": false
+  },
+  "3689773429477751668": {
+    "duration": 101.03,
+    "distances": [
+      8,
+      4,
+      6
+    ],
+    "max_distance": 8,
+    "avg_distance": 6.0,
+    "is_static": false
+  },
+  "3690445022390634213": {
+    "duration": 12.1,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3691865510010750014": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3692646704683852840": {
+    "duration": 5.0,
+    "distances": [
+      2,
+      2,
+      2
+    ],
+    "max_distance": 2,
+    "avg_distance": 2.0,
+    "is_static": true
+  },
+  "3694025198479512189": {
+    "duration": 25.79,
+    "distances": [
+      34,
+      32,
+      30
+    ],
+    "max_distance": 34,
+    "avg_distance": 32.0,
+    "is_static": false
+  },
+  "3694813342275394862": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      2,
+      2
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3696948924300621557": {
+    "duration": 28.35,
+    "distances": [
+      28,
+      38,
+      36
+    ],
+    "max_distance": 38,
+    "avg_distance": 34.0,
+    "is_static": false
+  },
+  "3697675025842935916": {
+    "duration": 12.12,
+    "distances": [
+      2,
+      2,
+      0
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3698398743644710210": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3700583522179954534": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3704186845684321387": {
+    "duration": 13.63,
+    "distances": [
+      6,
+      22,
+      24
+    ],
+    "max_distance": 24,
+    "avg_distance": 17.33,
+    "is_static": false
+  },
+  "3704916227038364964": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3707122892326742300": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3709253860041950058": {
+    "duration": 40.66,
+    "distances": [
+      28,
+      34,
+      32
+    ],
+    "max_distance": 34,
+    "avg_distance": 31.33,
+    "is_static": false
+  },
+  "3709996261681414776": {
+    "duration": 12.12,
+    "distances": [
+      2,
+      2,
+      0
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3711544163289597413": {
+    "duration": 23.29,
+    "distances": [
+      10,
+      10,
+      14
+    ],
+    "max_distance": 14,
+    "avg_distance": 11.33,
+    "is_static": false
+  },
+  "3712142849442884309": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3714314323117234973": {
+    "duration": 15.39,
+    "distances": [
+      28,
+      30,
+      32
+    ],
+    "max_distance": 32,
+    "avg_distance": 30.0,
+    "is_static": false
+  },
+  "3715055691598982953": {
+    "duration": 12.12,
+    "distances": [
+      2,
+      2,
+      0
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3716517879727566633": {
+    "duration": 27.49,
+    "distances": [
+      32,
+      32,
+      30
+    ],
+    "max_distance": 32,
+    "avg_distance": 31.33,
+    "is_static": false
+  },
+  "3717209041366954419": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3717931904629773224": {
+    "duration": 47.67,
+    "distances": [
+      6,
+      16,
+      16
+    ],
+    "max_distance": 16,
+    "avg_distance": 12.67,
+    "is_static": false
+  },
+  "3718693367527101756": {
+    "duration": 31.79,
+    "distances": [
+      36,
+      32,
+      30
+    ],
+    "max_distance": 36,
+    "avg_distance": 32.67,
+    "is_static": false
+  },
+  "3719395635556920098": {
+    "duration": 26.44,
+    "distances": [
+      30,
+      26,
+      34
+    ],
+    "max_distance": 34,
+    "avg_distance": 30.0,
+    "is_static": false
+  },
+  "3720116859174682605": {
+    "duration": 12.14,
+    "distances": [
+      2,
+      4,
+      2
+    ],
+    "max_distance": 4,
+    "avg_distance": 2.67,
+    "is_static": true
+  },
+  "3721657301892681513": {
+    "duration": 85.29,
+    "distances": [
+      18,
+      16,
+      10
+    ],
+    "max_distance": 18,
+    "avg_distance": 14.67,
+    "is_static": false
+  },
+  "3722291023755140017": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3723156273874465121": {
+    "duration": 68.73,
+    "distances": [
+      16,
+      22,
+      12
+    ],
+    "max_distance": 22,
+    "avg_distance": 16.67,
+    "is_static": false
+  },
+  "3724468364665182010": {
+    "duration": 12.54,
+    "distances": [
+      32,
+      30,
+      32
+    ],
+    "max_distance": 32,
+    "avg_distance": 31.33,
+    "is_static": false
+  },
+  "3725191329581235679": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3727372004811093641": {
+    "duration": 54.36,
+    "distances": [
+      30,
+      34,
+      34
+    ],
+    "max_distance": 34,
+    "avg_distance": 32.67,
+    "is_static": false
+  },
+  "3728092348925153565": {
+    "duration": 51.15,
+    "distances": [
+      22,
+      26,
+      14
+    ],
+    "max_distance": 26,
+    "avg_distance": 20.67,
+    "is_static": false
+  },
+  "3730237109253725023": {
+    "duration": 26.21,
+    "distances": [
+      10,
+      18,
+      18
+    ],
+    "max_distance": 18,
+    "avg_distance": 15.33,
+    "is_static": false
+  },
+  "3730903864271730760": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3733188675841637064": {
+    "duration": 32.92,
+    "distances": [
+      10,
+      16,
+      10
+    ],
+    "max_distance": 16,
+    "avg_distance": 12.0,
+    "is_static": false
+  },
+  "3734649855969976943": {
+    "duration": 19.78,
+    "distances": [
+      28,
+      24,
+      10
+    ],
+    "max_distance": 28,
+    "avg_distance": 20.67,
+    "is_static": false
+  },
+  "3735364158935130853": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3737509535977094799": {
+    "duration": 16.37,
+    "distances": [
+      4,
+      8,
+      6
+    ],
+    "max_distance": 8,
+    "avg_distance": 6.0,
+    "is_static": false
+  },
+  "3738273280407997323": {
+    "duration": 32.44,
+    "distances": [
+      28,
+      18,
+      28
+    ],
+    "max_distance": 28,
+    "avg_distance": 24.67,
+    "is_static": false
+  },
+  "3739675241283849373": {
+    "duration": 17.2,
+    "distances": [
+      32,
+      38,
+      24
+    ],
+    "max_distance": 38,
+    "avg_distance": 31.33,
+    "is_static": false
+  },
+  "3740289047987014695": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3741891777075648112": {
+    "duration": 67.27,
+    "distances": [
+      20,
+      14,
+      10
+    ],
+    "max_distance": 20,
+    "avg_distance": 14.67,
+    "is_static": false
+  },
+  "3743340436099296609": {
+    "duration": 43.42,
+    "distances": [
+      24,
+      28,
+      28
+    ],
+    "max_distance": 28,
+    "avg_distance": 26.67,
+    "is_static": false
+  },
+  "3746052353091718861": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3748398327621502067": {
+    "duration": 60.14,
+    "distances": [
+      18,
+      14,
+      4
+    ],
+    "max_distance": 18,
+    "avg_distance": 12.0,
+    "is_static": false
+  },
+  "3750569343839968700": {
+    "duration": 36.89,
+    "distances": [
+      12,
+      8,
+      6
+    ],
+    "max_distance": 12,
+    "avg_distance": 8.67,
+    "is_static": false
+  },
+  "3751281216692508454": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3753486062220820185": {
+    "duration": 65.85,
+    "distances": [
+      12,
+      12,
+      8
+    ],
+    "max_distance": 12,
+    "avg_distance": 10.67,
+    "is_static": false
+  },
+  "3754983218882618257": {
+    "duration": 26.82,
+    "distances": [
+      14,
+      8,
+      16
+    ],
+    "max_distance": 16,
+    "avg_distance": 12.67,
+    "is_static": false
+  },
+  "3755120075465299149": {
+    "duration": 41.03,
+    "distances": [
+      40,
+      38,
+      6
+    ],
+    "max_distance": 40,
+    "avg_distance": 28.0,
+    "is_static": false
+  },
+  "3755690613753609066": {
+    "duration": 12.12,
+    "distances": [
+      2,
+      2,
+      0
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3757042720687642475": {
+    "duration": 49.83,
+    "distances": [
+      30,
+      28,
+      20
+    ],
+    "max_distance": 30,
+    "avg_distance": 26.0,
+    "is_static": false
+  },
+  "3758560543213705883": {
+    "duration": 91.32,
+    "distances": [
+      8,
+      18,
+      18
+    ],
+    "max_distance": 18,
+    "avg_distance": 14.67,
+    "is_static": false
+  },
+  "3760060484801134179": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3763554945740957160": {
+    "duration": 5.0,
+    "distances": [
+      6,
+      6,
+      0
+    ],
+    "max_distance": 6,
+    "avg_distance": 4.0,
+    "is_static": true
+  },
+  "3763672924633815379": {
+    "duration": 41.4,
+    "distances": [
+      32,
+      26,
+      32
+    ],
+    "max_distance": 32,
+    "avg_distance": 30.0,
+    "is_static": false
+  },
+  "3764368013047753046": {
+    "duration": 32.09,
+    "distances": [
+      30,
+      28,
+      20
+    ],
+    "max_distance": 30,
+    "avg_distance": 26.0,
+    "is_static": false
+  },
+  "3764763988379677885": {
+    "duration": 8.59,
+    "distances": [
+      8,
+      8,
+      2
+    ],
+    "max_distance": 8,
+    "avg_distance": 6.0,
+    "is_static": false
+  },
+  "3765838463166698223": {
+    "duration": 12.12,
+    "distances": [
+      2,
+      2,
+      0
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3769418842653978951": {
+    "duration": 80.36,
+    "distances": [
+      4,
+      10,
+      12
+    ],
+    "max_distance": 12,
+    "avg_distance": 8.67,
+    "is_static": false
+  },
+  "3770115404426180244": {
+    "duration": 14.3,
+    "distances": [
+      12,
+      10,
+      2
+    ],
+    "max_distance": 12,
+    "avg_distance": 8.0,
+    "is_static": false
+  },
+  "3770899891544245125": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3773053734352715564": {
+    "duration": 15.11,
+    "distances": [
+      22,
+      28,
+      30
+    ],
+    "max_distance": 30,
+    "avg_distance": 26.67,
+    "is_static": false
+  },
+  "3773795254550745115": {
+    "duration": 77.51,
+    "distances": [
+      10,
+      18,
+      22
+    ],
+    "max_distance": 22,
+    "avg_distance": 16.67,
+    "is_static": false
+  },
+  "3775229245136931814": {
+    "duration": 50.55,
+    "distances": [
+      14,
+      14,
+      16
+    ],
+    "max_distance": 16,
+    "avg_distance": 14.67,
+    "is_static": false
+  },
+  "3779040236786196109": {
+    "duration": 60.23,
+    "distances": [
+      10,
+      8,
+      10
+    ],
+    "max_distance": 10,
+    "avg_distance": 9.33,
+    "is_static": false
+  },
+  "3781694096843596208": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3782311984159899043": {
+    "duration": 36.06,
+    "distances": [
+      36,
+      28,
+      34
+    ],
+    "max_distance": 36,
+    "avg_distance": 32.67,
+    "is_static": false
+  },
+  "3783103987881715793": {
+    "duration": 24.56,
+    "distances": [
+      14,
+      4,
+      16
+    ],
+    "max_distance": 16,
+    "avg_distance": 11.33,
+    "is_static": false
+  },
+  "3783241730586675466": {
+    "duration": 68.54,
+    "distances": [
+      22,
+      10,
+      14
+    ],
+    "max_distance": 22,
+    "avg_distance": 15.33,
+    "is_static": false
+  },
+  "3784424163126348324": {
+    "duration": 44.0,
+    "distances": [
+      30,
+      26,
+      30
+    ],
+    "max_distance": 30,
+    "avg_distance": 28.67,
+    "is_static": false
+  },
+  "3785465605001151714": {
+    "duration": 26.24,
+    "distances": [
+      32,
+      28,
+      30
+    ],
+    "max_distance": 32,
+    "avg_distance": 30.0,
+    "is_static": false
+  },
+  "3787464120845843036": {
+    "duration": 19.04,
+    "distances": [
+      10,
+      10,
+      6
+    ],
+    "max_distance": 10,
+    "avg_distance": 8.67,
+    "is_static": false
+  },
+  "3788912793484072204": {
+    "duration": 42.03,
+    "distances": [
+      16,
+      36,
+      32
+    ],
+    "max_distance": 36,
+    "avg_distance": 28.0,
+    "is_static": false
+  },
+  "3790447196907586142": {
+    "duration": 13.51,
+    "distances": [
+      36,
+      36,
+      38
+    ],
+    "max_distance": 38,
+    "avg_distance": 36.67,
+    "is_static": false
+  },
+  "3792547309280942448": {
+    "duration": 23.52,
+    "distances": [
+      32,
+      38,
+      22
+    ],
+    "max_distance": 38,
+    "avg_distance": 30.67,
+    "is_static": false
+  },
+  "3793406750406565792": {
+    "duration": 15.14,
+    "distances": [
+      14,
+      14,
+      16
+    ],
+    "max_distance": 16,
+    "avg_distance": 14.67,
+    "is_static": false
+  },
+  "3794143550016168234": {
+    "duration": 59.86,
+    "distances": [
+      26,
+      32,
+      32
+    ],
+    "max_distance": 32,
+    "avg_distance": 30.0,
+    "is_static": false
+  },
+  "3794893280950186783": {
+    "duration": 111.04,
+    "distances": [
+      34,
+      26,
+      30
+    ],
+    "max_distance": 34,
+    "avg_distance": 30.0,
+    "is_static": false
+  },
+  "3796224973074176299": {
+    "duration": 55.98,
+    "distances": [
+      32,
+      6,
+      28
+    ],
+    "max_distance": 32,
+    "avg_distance": 22.0,
+    "is_static": false
+  },
+  "3796976066033002435": {
+    "duration": 77.64,
+    "distances": [
+      14,
+      8,
+      10
+    ],
+    "max_distance": 14,
+    "avg_distance": 10.67,
+    "is_static": false
+  },
+  "3798908917632568173": {
+    "duration": 55.08,
+    "distances": [
+      12,
+      10,
+      6
+    ],
+    "max_distance": 12,
+    "avg_distance": 9.33,
+    "is_static": false
+  },
+  "3799795014851936200": {
+    "duration": 20.31,
+    "distances": [
+      14,
+      2,
+      14
+    ],
+    "max_distance": 14,
+    "avg_distance": 10.0,
+    "is_static": false
+  },
+  "3800576183268916354": {
+    "duration": 64.22,
+    "distances": [
+      24,
+      28,
+      34
+    ],
+    "max_distance": 34,
+    "avg_distance": 28.67,
+    "is_static": false
+  },
+  "3804252076923225705": {
+    "duration": 52.99,
+    "distances": [
+      14,
+      10,
+      4
+    ],
+    "max_distance": 14,
+    "avg_distance": 9.33,
+    "is_static": false
+  },
+  "3805668549487066009": {
+    "duration": 43.14,
+    "distances": [
+      30,
+      24,
+      30
+    ],
+    "max_distance": 30,
+    "avg_distance": 28.0,
+    "is_static": false
+  },
+  "3809685880140139471": {
+    "duration": 107.69,
+    "distances": [
+      18,
+      40,
+      34
+    ],
+    "max_distance": 40,
+    "avg_distance": 30.67,
+    "is_static": false
+  },
+  "3810743916929304108": {
+    "duration": 34.2,
+    "distances": [
+      28,
+      38,
+      32
+    ],
+    "max_distance": 38,
+    "avg_distance": 32.67,
+    "is_static": false
+  },
+  "3813640187566432802": {
+    "duration": 36.89,
+    "distances": [
+      32,
+      34,
+      32
+    ],
+    "max_distance": 34,
+    "avg_distance": 32.67,
+    "is_static": false
+  },
+  "3814377794655074174": {
+    "duration": 15.11,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3815824971805873334": {
+    "duration": 66.62,
+    "distances": [
+      14,
+      22,
+      18
+    ],
+    "max_distance": 22,
+    "avg_distance": 18.0,
+    "is_static": false
+  },
+  "3817144614046752593": {
+    "duration": 30.65,
+    "distances": [
+      4,
+      10,
+      12
+    ],
+    "max_distance": 12,
+    "avg_distance": 8.67,
+    "is_static": false
+  },
+  "3820128189708839622": {
+    "duration": 46.37,
+    "distances": [
+      36,
+      28,
+      28
+    ],
+    "max_distance": 36,
+    "avg_distance": 30.67,
+    "is_static": false
+  },
+  "3821005058847123141": {
+    "duration": 34.92,
+    "distances": [
+      10,
+      16,
+      12
+    ],
+    "max_distance": 16,
+    "avg_distance": 12.67,
+    "is_static": false
+  },
+  "3823784171903243781": {
+    "duration": 11.61,
+    "distances": [
+      8,
+      8,
+      10
+    ],
+    "max_distance": 10,
+    "avg_distance": 8.67,
+    "is_static": false
+  },
+  "3824245790928191684": {
+    "duration": 91.37,
+    "distances": [
+      34,
+      34,
+      24
+    ],
+    "max_distance": 34,
+    "avg_distance": 30.67,
+    "is_static": false
+  },
+  "3825927268141446005": {
+    "duration": 60.07,
+    "distances": [
+      32,
+      28,
+      24
+    ],
+    "max_distance": 32,
+    "avg_distance": 28.0,
+    "is_static": false
+  },
+  "3826695234147658058": {
+    "duration": 4.15,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3829347103528777943": {
+    "duration": 59.45,
+    "distances": [
+      6,
+      16,
+      20
+    ],
+    "max_distance": 20,
+    "avg_distance": 14.0,
+    "is_static": false
+  },
+  "3831079403418120171": {
+    "duration": 20.13,
+    "distances": [
+      38,
+      26,
+      34
+    ],
+    "max_distance": 38,
+    "avg_distance": 32.67,
+    "is_static": false
+  },
+  "3834784069016143043": {
+    "duration": 87.42,
+    "distances": [
+      38,
+      30,
+      30
+    ],
+    "max_distance": 38,
+    "avg_distance": 32.67,
+    "is_static": false
+  },
+  "3835447992501794767": {
+    "duration": 10.49,
+    "distances": [
+      28,
+      24,
+      12
+    ],
+    "max_distance": 28,
+    "avg_distance": 21.33,
+    "is_static": false
+  },
+  "3836812824652051776": {
+    "duration": 4.13,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3837285731639565862": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3837287726324727721": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3837288353624822419": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3837290514513513381": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3838030886604705767": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3838663998699237755": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3839387723665032757": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3839647263967390028": {
+    "duration": 91.95,
+    "distances": [
+      38,
+      22,
+      36
+    ],
+    "max_distance": 38,
+    "avg_distance": 32.0,
+    "is_static": false
+  },
+  "3840114386531025582": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3840949074426426973": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3841211346939930339": {
+    "duration": 92.95,
+    "distances": [
+      26,
+      28,
+      20
+    ],
+    "max_distance": 28,
+    "avg_distance": 24.67,
+    "is_static": false
+  },
+  "3841564016770848946": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3842355000605749687": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3843280235521750355": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3843738794382362783": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3844461311329883318": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3844501242957848224": {
+    "duration": 100.54,
+    "distances": [
+      14,
+      32,
+      34
+    ],
+    "max_distance": 34,
+    "avg_distance": 26.67,
+    "is_static": false
+  },
+  "3845187816984966589": {
+    "duration": 12.12,
+    "distances": [
+      2,
+      2,
+      0
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3845522847544711741": {
+    "duration": 8.0,
+    "distances": [
+      30,
+      30,
+      0
+    ],
+    "max_distance": 30,
+    "avg_distance": 20.0,
+    "is_static": false
+  },
+  "3845912671644605370": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3846305921954047275": {
+    "duration": 15.88,
+    "distances": [
+      36,
+      22,
+      34
+    ],
+    "max_distance": 36,
+    "avg_distance": 30.67,
+    "is_static": false
+  },
+  "3846638770468987041": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3847022591639122455": {
+    "duration": 20.13,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3847412701731821219": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      2,
+      2
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3848109787297108085": {
+    "duration": 12.14,
+    "distances": [
+      2,
+      2,
+      2
+    ],
+    "max_distance": 2,
+    "avg_distance": 2.0,
+    "is_static": true
+  },
+  "3848811573225995191": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3849533017413130224": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3849884240184211256": {
+    "duration": 19.5,
+    "distances": [
+      24,
+      26,
+      26
+    ],
+    "max_distance": 26,
+    "avg_distance": 25.33,
+    "is_static": false
+  },
+  "3850245395620593812": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3850982270853448168": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3851396530322613753": {
+    "duration": 26.28,
+    "distances": [
+      20,
+      32,
+      22
+    ],
+    "max_distance": 32,
+    "avg_distance": 24.67,
+    "is_static": false
+  },
+  "3851710292405556995": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3852042317369041812": {
+    "duration": 4.15,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3852548271453870420": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3853190361355397222": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3853883477691471987": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3854605155702682491": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3855004076392419784": {
+    "duration": 34.69,
+    "distances": [
+      8,
+      16,
+      14
+    ],
+    "max_distance": 16,
+    "avg_distance": 12.67,
+    "is_static": false
+  },
+  "3855331896054280527": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3856060413591206081": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3856458168541196153": {
+    "duration": 10.68,
+    "distances": [
+      32,
+      28,
+      28
+    ],
+    "max_distance": 32,
+    "avg_distance": 29.33,
+    "is_static": false
+  },
+  "3856775597016251198": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3857124355449103564": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3857573089739914514": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3858281188054289829": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3858584229345325974": {
+    "duration": 98.75,
+    "distances": [
+      28,
+      24,
+      10
+    ],
+    "max_distance": 28,
+    "avg_distance": 20.67,
+    "is_static": false
+  },
+  "3858943552047062896": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3859667999020333608": {
+    "duration": 12.14,
+    "distances": [
+      2,
+      2,
+      0
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3860024390499254051": {
+    "duration": 33.36,
+    "distances": [
+      30,
+      30,
+      34
+    ],
+    "max_distance": 34,
+    "avg_distance": 31.33,
+    "is_static": false
+  },
+  "3860391695288670280": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3861133035022584340": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3861854746336620183": {
+    "duration": 12.14,
+    "distances": [
+      2,
+      0,
+      2
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3862247860389916523": {
+    "duration": 4.0,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3862646818308187769": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3863343993757465736": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3864069478418327914": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3864755653944589734": {
+    "duration": 12.14,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3865072466762993567": {
+    "duration": 31.58,
+    "distances": [
+      28,
+      30,
+      32
+    ],
+    "max_distance": 32,
+    "avg_distance": 30.0,
+    "is_static": false
+  },
+  "3865518917389461021": {
+    "duration": 12.14,
+    "distances": [
+      2,
+      2,
+      0
+    ],
+    "max_distance": 2,
+    "avg_distance": 1.33,
+    "is_static": true
+  },
+  "3865879336692025054": {
+    "duration": 84.91,
+    "distances": [
+      28,
+      34,
+      34
+    ],
+    "max_distance": 34,
+    "avg_distance": 32.0,
+    "is_static": false
+  },
+  "3866221684332526240": {
+    "duration": 12.0,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3866648794922606944": {
+    "duration": 20.73,
+    "distances": [
+      28,
+      32,
+      12
+    ],
+    "max_distance": 32,
+    "avg_distance": 24.0,
+    "is_static": false
+  },
+  "3866946113572239458": {
+    "duration": 12.0,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3867144872260391462": {
+    "duration": 24.42,
+    "distances": [
+      8,
+      6,
+      4
+    ],
+    "max_distance": 8,
+    "avg_distance": 6.0,
+    "is_static": false
+  },
+  "3867300959164892045": {
+    "duration": 7.17,
+    "distances": [
+      14,
+      14,
+      10
+    ],
+    "max_distance": 14,
+    "avg_distance": 12.67,
+    "is_static": false
+  },
+  "3867653080263456142": {
+    "duration": 12.0,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3867984072664764550": {
+    "duration": 15.97,
+    "distances": [
+      30,
+      36,
+      28
+    ],
+    "max_distance": 36,
+    "avg_distance": 31.33,
+    "is_static": false
+  },
+  "3868709316312499427": {
+    "duration": 39.12,
+    "distances": [
+      26,
+      24,
+      28
+    ],
+    "max_distance": 28,
+    "avg_distance": 26.0,
+    "is_static": false
+  },
+  "3869350331675422347_3869350211038833189": {
+    "duration": 19.85,
+    "distances": [
+      24,
+      32,
+      34
+    ],
+    "max_distance": 34,
+    "avg_distance": 30.0,
+    "is_static": false
+  },
+  "3870041147033521101": {
+    "duration": 64.34,
+    "distances": [
+      22,
+      20,
+      22
+    ],
+    "max_distance": 22,
+    "avg_distance": 21.33,
+    "is_static": false
+  },
+  "3871643185001096966": {
+    "duration": 41.68,
+    "distances": [
+      26,
+      24,
+      26
+    ],
+    "max_distance": 26,
+    "avg_distance": 25.33,
+    "is_static": false
+  },
+  "3873775845626414366": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3874470852511482241_3874470115144443732": {
+    "duration": 5.0,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3875982483087265784": {
+    "duration": 12.12,
+    "distances": [
+      0,
+      0,
+      0
+    ],
+    "max_distance": 0,
+    "avg_distance": 0.0,
+    "is_static": true
+  },
+  "3876669323914110896": {
+    "duration": 33.22,
+    "distances": [
+      28,
+      38,
+      26
+    ],
+    "max_distance": 38,
+    "avg_distance": 30.67,
+    "is_static": false
+  }
+}

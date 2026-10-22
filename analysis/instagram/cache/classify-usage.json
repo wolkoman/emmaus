@@ -1,0 +1,8 @@
+{
+  "requests": 305,
+  "failedRequests": 0,
+  "promptTokens": 361242,
+  "cachedPromptTokens": 309248,
+  "completionTokens": 49141,
+  "reasoningTokens": 26816
+}

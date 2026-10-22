@@ -1,0 +1,9 @@
+{
+  "name": "emmaus-renderer",
+  "private": true,
+  "type": "module",
+  "description": "One-shot PDF render job: URL -> Chromium -> PDF -> Pocketbase",
+  "dependencies": {
+    "playwright": "1.49.1"
+  }
+}

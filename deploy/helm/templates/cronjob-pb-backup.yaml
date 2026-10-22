@@ -1,0 +1,134 @@
+{{- if .Values.pb.backup.enabled -}}
+# Nightly backup of the Pocketbase SQLite database.
+#
+# Flow:
+#   1. Auth against PB as superuser -> token.
+#   2. Ask PB to create a consistent backup (zip of /pb_data).
+#   3. Download the zip out of PB via its /api/backups/:name endpoint.
+#   4. Create a GitHub release tagged `pb-backup-YYYYMMDD-HHMMSS` and attach the zip.
+#   5. Delete the backup from PB to keep /pb_data from filling up.
+#   6. Prune old backup releases to keep the newest N (default 14).
+#
+# Restore:
+#   - Download the .zip asset from the desired GitHub release.
+#   - `kubectl cp backup.zip emmaus-pb-xxx:/pb_data/backups/`
+#   - `kubectl exec emmaus-pb-xxx -- /usr/local/bin/pocketbase --dir /pb_data restore backup.zip`
+#   - Restart the PB pod.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-pb-backup
+spec:
+  schedule: {{ .Values.pb.backup.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: backup
+              # alpine + curl + jq; tiny and has exactly what we need.
+              image: alpine/curl:8.11.1
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  set -euo pipefail
+                  apk add --no-cache jq >/dev/null
+
+                  pb="http://{{ .Release.Name }}-pb"
+                  api="https://api.github.com/repos/${GITHUB_REPO}"
+                  ts="$(date -u +%Y%m%d-%H%M%S)"
+                  name="emmaus-pb-${ts}.zip"
+
+                  # 1. Auth against PB as superuser.
+                  token=$(curl -fsS -X POST "${pb}/api/collections/_superusers/auth-with-password" \
+                    -H "Content-Type: application/json" \
+                    -d "{\"identity\":\"${PB_ADMIN_EMAIL}\",\"password\":\"${PB_ADMIN_PASSWORD}\"}" \
+                    | jq -r .token)
+                  [ -n "${token}" ] && [ "${token}" != "null" ] || { echo "PB auth failed"; exit 1; }
+
+                  # 2. Create backup inside PB.
+                  curl -fsS -X POST "${pb}/api/backups" \
+                    -H "Authorization: ${token}" \
+                    -H "Content-Type: application/json" \
+                    -d "{\"name\":\"${name}\"}"
+
+                  # PB stores the backup under /pb_data until it is deleted, so cleanup
+                  # must be unconditional: a failed upload previously left the zip behind
+                  # and grew the volume by ~195MB per run until the disk was 82% full.
+                  trap 'curl -fsS -X DELETE "${pb}/api/backups/${name}" -H "Authorization: ${token}" >/dev/null 2>&1 || true' EXIT
+
+                  # 3. Download backup zip. PB /api/backups/:name requires a short-lived file token.
+                  file_token=$(curl -fsS -X POST "${pb}/api/files/token" \
+                    -H "Authorization: ${token}" | jq -r .token)
+                  curl -fsS -o "/tmp/${name}" \
+                    "${pb}/api/backups/${name}?token=${file_token}"
+
+                  size=$(wc -c < "/tmp/${name}")
+                  echo "Backup size: ${size} bytes"
+
+                  # 4. Create GitHub release + upload asset.
+                  tag="pb-backup-${ts}"
+                  release=$(curl -fsS -X POST "${api}/releases" \
+                    -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+                    -H "Accept: application/vnd.github+json" \
+                    -d "{\"tag_name\":\"${tag}\",\"name\":\"${tag}\",\"body\":\"Automated Pocketbase backup (${size} bytes)\",\"prerelease\":true}")
+                  upload_url=$(echo "${release}" | jq -r .upload_url | sed 's/{?[^}]*}//')
+                  release_id=$(echo "${release}" | jq -r .id)
+
+                  # --upload-file streams from disk; --data-binary buffers the whole
+                  # zip in memory and OOM-killed curl once backups passed the limit.
+                  curl -fsS -X POST "${upload_url}?name=${name}" \
+                    -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+                    -H "Content-Type: application/zip" \
+                    --upload-file "/tmp/${name}"
+
+                  # 5. Backup is removed from PB by the EXIT trap installed above.
+
+                  # 6. Prune old releases, keep newest N.
+                  keep={{ .Values.pb.backup.keepCount }}
+                  curl -fsS "${api}/releases?per_page=100" \
+                    -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+                    | jq -r '.[] | select(.tag_name | startswith("pb-backup-")) | "\(.id) \(.tag_name)"' \
+                    | sort -k2 -r \
+                    | awk -v k="${keep}" 'NR>k' \
+                    | while read -r rid rtag; do
+                        [ -z "${rid}" ] && continue
+                        echo "Deleting old release ${rtag}"
+                        curl -fsS -X DELETE "${api}/releases/${rid}" \
+                          -H "Authorization: Bearer ${GITHUB_TOKEN}"
+                        curl -fsS -X DELETE "${api}/git/refs/tags/${rtag}" \
+                          -H "Authorization: Bearer ${GITHUB_TOKEN}" || true
+                      done
+
+                  echo "Backup ${tag} uploaded and old releases pruned."
+              env:
+                - name: GITHUB_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.pb.backup.secretName }}
+                      key: GITHUB_TOKEN
+                - name: GITHUB_REPO
+                  value: {{ .Values.pb.backup.repo | quote }}
+                - name: PB_ADMIN_EMAIL
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.secretName }}
+                      key: PB_ADMIN_EMAIL
+                - name: PB_ADMIN_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.secretName }}
+                      key: PB_ADMIN_PASSWORD
+              resources:
+                requests:
+                  memory: "32Mi"
+                  cpu: "20m"
+                limits:
+                  memory: "256Mi"
+                  cpu: "200m"
+{{- end }}
