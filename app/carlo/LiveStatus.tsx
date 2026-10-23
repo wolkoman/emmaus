@@ -76,7 +76,7 @@ function LinkButton({ href, children }: { href: string; children: ReactNode }) {
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="bg-emmaus inline-flex w-full items-center justify-center rounded-xl px-5 py-3 text-lg font-semibold text-white hover:opacity-90 sm:w-auto"
+      className="inline-flex w-full items-center justify-center rounded-xl bg-white px-5 py-3 text-lg font-semibold text-[#2b6265] hover:bg-white/85 sm:w-auto"
     >
       {children}
     </a>

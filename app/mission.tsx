@@ -119,7 +119,7 @@ function NextLivestreams() {
       <CardFooter className="justify-end">
         <Link href="/carlo">
           <Button>
-            Zum Livestream <PiArrowRightBold />
+            Livestream und alle Infos <PiArrowRightBold />
           </Button>
         </Link>
       </CardFooter>

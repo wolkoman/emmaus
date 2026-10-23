@@ -15,4 +15,4 @@ export const MEETING_START = "2026-11-21T16:00:00Z";
 export const FILM_START = "2026-11-21T18:00:00Z";
 
 /** Ticket shop for the film premiere; while empty the page says tickets are coming soon. */
-export const TICKET_URL = "";
+export const TICKET_URL = "https://www.megaplex.at/film/gasometer/carlo-acutis";
