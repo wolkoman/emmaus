@@ -6,9 +6,14 @@ import React from "react";
 import Responsive from "./Responsive";
 import { Links } from "@/app/(shared)/Links";
 
-export default function Footer() {
+export default function Footer({ dark }: { dark?: boolean }) {
+  const link = dark
+    ? "underline decoration-white/30 underline-offset-2 hover:text-[#aadcd8]"
+    : "hover:text-emmaus underline decoration-black/20 underline-offset-2";
   return (
-    <footer className="mt-24 border-t border-black/5 bg-white/50 backdrop-blur-sm print:hidden">
+    <footer
+      className={`print:hidden ${dark ? "bg-[#1f4a4d] text-white" : "mt-24 border-t border-black/5 bg-white/50 backdrop-blur-sm"}`}
+    >
       <Responsive>
         <div className="grid gap-10 py-14 lg:grid-cols-[1.2fr_1fr_1fr]">
           <div className="flex flex-col items-start gap-3">
@@ -40,15 +45,15 @@ export default function Footer() {
               Tesarekplatz 2, 1100 Wien
               <br />
               Telefon:{" "}
-              <Link href="tel:+4316163400" className="hover:text-emmaus">
+              <Link
+                href="tel:+4316163400"
+                className={dark ? "hover:text-[#aadcd8]" : "hover:text-emmaus"}
+              >
                 +43 1 616 34 00
               </Link>
               <br />
               E-Mail:{" "}
-              <Link
-                href="mailto:kanzlei@emmaus.wien"
-                className="hover:text-emmaus underline decoration-black/20 underline-offset-2"
-              >
+              <Link href="mailto:kanzlei@emmaus.wien" className={link}>
                 kanzlei@emmaus.wien
               </Link>
             </div>
@@ -68,12 +73,11 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col items-start justify-between gap-2 border-t border-black/5 py-5 opacity-70 lg:flex-row lg:items-center">
+        <div
+          className={`flex flex-col items-start justify-between gap-2 border-t py-5 opacity-70 lg:flex-row lg:items-center ${dark ? "border-white/15" : "border-black/5"}`}
+        >
           <div>© Röm.-kath. Pfarre Emmaus am Wienerberg</div>
-          <Link
-            href={Links.Impressum}
-            className="hover:text-emmaus underline decoration-black/20 underline-offset-2"
-          >
+          <Link href={Links.Impressum} className={link}>
             Impressum & Datenschutzerklärung
           </Link>
         </div>

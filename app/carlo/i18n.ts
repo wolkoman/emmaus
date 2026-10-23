@@ -32,7 +32,12 @@ type LiveText = {
   locale: string;
   languageName: string;
   heading: string;
+  /** The poster's headline. */
+  motto: string;
   lead: string;
+  /** Highlighted where it appears in `lead`. */
+  mother: string;
+  live: string;
   programme: {
     mass: string;
     massNote: string;
@@ -59,7 +64,10 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
     locale: "de-AT",
     languageName: "Deutsch",
     heading: "Hl. Carlo Acutis",
-    lead: "Seine Mutter Antonia Salzano Acutis kommt zu uns in die Pfarre Emmaus.",
+    motto: "Jesus erkennen mit dem Heiligen Carlo Acutis",
+    lead: "Seine Mutter Antonia Salzano Acutis kommt zu uns in die Pfarre Emmaus!",
+    mother: "Antonia Salzano Acutis",
+    live: "Live",
     programme: {
       mass: "Hl. Messe zu Ehren des Heiligen Carlo Acutis",
       massNote:
@@ -69,7 +77,10 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       parish: "Pfarre Emmaus am Wienerberg, Tesarekplatz 2, 1100 Wien",
       cinema: "Kino Hollywood Megaplex Gasometer, Guglgasse 11, 1110 Wien",
     },
-    tickets: { link: "Kinokarten", soon: "Kinokarten in Kürze erhältlich" },
+    tickets: {
+      link: "Kinokarten kaufen",
+      soon: "Wird freigeschaltet, sobald Karten erhältlich sind",
+    },
     livestreamHeading: "Livestream der Hl. Messe",
     units: {
       days: { one: "Tag", other: "Tage" },
@@ -88,7 +99,10 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
     locale: "en-GB",
     languageName: "English",
     heading: "Saint Carlo Acutis",
-    lead: "His mother, Antonia Salzano Acutis, is coming to the Emmaus parish in Vienna.",
+    motto: "Recognising Jesus with Saint Carlo Acutis",
+    lead: "His mother, Antonia Salzano Acutis, is coming to the Emmaus parish in Vienna!",
+    mother: "Antonia Salzano Acutis",
+    live: "Live",
     programme: {
       mass: "Holy Mass in honour of Saint Carlo Acutis",
       massNote:
@@ -98,7 +112,10 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       parish: "Emmaus parish church, Tesarekplatz 2, 1100 Vienna",
       cinema: "Hollywood Megaplex Gasometer cinema, Guglgasse 11, 1110 Vienna",
     },
-    tickets: { link: "Cinema tickets", soon: "Cinema tickets available soon" },
+    tickets: {
+      link: "Buy cinema tickets",
+      soon: "Available as soon as tickets go on sale",
+    },
     livestreamHeading: "Livestream of the Holy Mass",
     units: {
       days: { one: "Day", other: "Days" },
@@ -114,14 +131,17 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
     recording: "Watch the recording",
     banner: {
       text: "On Saturday, 21 November, at 16:00 we will livestream a Holy Mass with the mother of Saint Carlo Acutis, celebrated partly in English.",
-      link: "Watch the livestream",
+      link: "Livestream, cinema tickets and all details",
     },
   },
   it: {
     locale: "it-IT",
     languageName: "Italiano",
     heading: "San Carlo Acutis",
-    lead: "Sua madre, Antonia Salzano Acutis, viene a trovarci nella parrocchia Emmaus di Vienna.",
+    motto: "Riconoscere Gesù con San Carlo Acutis",
+    lead: "Sua madre, Antonia Salzano Acutis, viene a trovarci nella parrocchia Emmaus di Vienna!",
+    mother: "Antonia Salzano Acutis",
+    live: "In diretta",
     programme: {
       mass: "Santa Messa in onore di San Carlo Acutis",
       massNote:
@@ -132,8 +152,8 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       cinema: "Cinema Hollywood Megaplex Gasometer, Guglgasse 11, 1110 Vienna",
     },
     tickets: {
-      link: "Biglietti del cinema",
-      soon: "Biglietti disponibili a breve",
+      link: "Acquista i biglietti del cinema",
+      soon: "Disponibile non appena i biglietti saranno in vendita",
     },
     livestreamHeading: "Diretta streaming della Santa Messa",
     units: {
@@ -150,14 +170,17 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
     recording: "Guarda la registrazione",
     banner: {
       text: "Sabato 21 novembre alle 16:00 trasmetteremo in diretta una Santa Messa con la madre di San Carlo Acutis, celebrata in parte in italiano.",
-      link: "Vai alla diretta",
+      link: "Diretta, biglietti del cinema e tutte le informazioni",
     },
   },
   hr: {
     locale: "hr-HR",
     languageName: "Hrvatski",
     heading: "Sveti Carlo Acutis",
-    lead: "Njegova majka Antonia Salzano Acutis dolazi u župu Emmaus u Beču.",
+    motto: "Prepoznati Isusa sa svetim Carlom Acutisom",
+    lead: "Njegova majka Antonia Salzano Acutis dolazi u župu Emmaus u Beču!",
+    mother: "Antonia Salzano Acutis",
+    live: "Uživo",
     programme: {
       mass: "Sveta misa u čast svetog Carla Acutisa",
       massNote:
@@ -167,7 +190,10 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       parish: "Crkva Emmaus, Tesarekplatz 2, 1100 Beč",
       cinema: "Kino Hollywood Megaplex Gasometer, Guglgasse 11, 1110 Beč",
     },
-    tickets: { link: "Ulaznice za kino", soon: "Ulaznice uskoro dostupne" },
+    tickets: {
+      link: "Kupi ulaznice za kino",
+      soon: "Bit će dostupno čim ulaznice budu u prodaji",
+    },
     livestreamHeading: "Prijenos svete mise uživo",
     units: {
       days: { one: "dan", few: "dana", other: "dana" },
@@ -183,7 +209,7 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
     recording: "Pogledajte snimku",
     banner: {
       text: "U subotu, 21. studenoga, u 16 sati uživo prenosimo svetu misu, dijelom na hrvatskom jeziku, s majkom svetog Carla Acutisa.",
-      link: "Prijenos uživo",
+      link: "Prijenos uživo, ulaznice za kino i sve informacije",
     },
   },
 };
@@ -195,6 +221,21 @@ export function formatDay(start: string, lang: LiveLang) {
     month: "long",
     timeZone: "Europe/Vienna",
   });
+}
+
+/** The poster's big date, split into weekday and day with month. */
+export function formatDateParts(start: string, lang: LiveLang) {
+  const date = new Date(start);
+  const { locale } = LIVE_TEXT[lang];
+  const timeZone = "Europe/Vienna";
+  return {
+    weekday: date.toLocaleDateString(locale, { weekday: "long", timeZone }),
+    day: date.toLocaleDateString(locale, {
+      day: "numeric",
+      month: "short",
+      timeZone,
+    }),
+  };
 }
 
 export function formatTime(iso: string, lang: LiveLang) {

@@ -66,7 +66,7 @@ export function AcutisEvent(props: { spaced: boolean }) {
       <div className="mt-3 flex justify-end">
         <Link href="/carlo">
           <Button size="sm">
-            Kinokarten und Livestream <PiArrowRightBold />
+            Livestream, Kinokarten und alle Infos <PiArrowRightBold />
           </Button>
         </Link>
       </div>
