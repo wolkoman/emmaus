@@ -12,6 +12,7 @@ secret() { doppler secrets get "$1" --plain --project emmaus --config prd_cluste
 "${KUBECTL[@]}" create secret generic emmaus-secrets \
   --from-literal=PB_ADMIN_EMAIL="$(secret PB_ADMIN_EMAIL)" \
   --from-literal=PB_ADMIN_PASSWORD="$(secret PB_ADMIN_PASSWORD)" \
+  --from-literal=CRON_SECRET="$(secret CRON_SECRET)" \
   --dry-run=client -o yaml | "${KUBECTL[@]}" replace -f -
 
 "${KUBECTL[@]}" create secret generic emmaus-pb-backup \

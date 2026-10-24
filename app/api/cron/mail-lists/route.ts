@@ -2,7 +2,7 @@ import { updateListFromNewMails } from "@/domain/mail/list-updater";
 import { MAILBOXES } from "@/domain/mail/mailboxes";
 import { NextResponse } from "next/server";
 
-// Triggered every 10 minutes by .github/workflows/mail-lists-cron.yml.
+// Triggered every 10 minutes by the emmaus-mail-lists CronJob (deploy/helm).
 export async function GET(request: Request) {
   if (
     request.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`

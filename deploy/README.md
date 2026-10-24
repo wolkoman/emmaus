@@ -29,7 +29,8 @@ kubectl apply -f deploy/render-trigger-serviceaccount.yaml
 ### 2. Create the secrets
 
 PocketBase and render jobs read `PB_ADMIN_EMAIL` / `PB_ADMIN_PASSWORD` from
-`emmaus-secrets`, the backup CronJob reads `GITHUB_TOKEN` from
+`emmaus-secrets`, the site CronJobs (mail lists, mail digest) read
+`CRON_SECRET` from it, the backup CronJob reads `GITHUB_TOKEN` from
 `emmaus-pb-backup`. Both come from Doppler (`emmaus` / `prd_cluster`). The sync
 script replaces them, so on a fresh cluster create them empty first:
 

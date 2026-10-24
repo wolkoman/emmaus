@@ -34,3 +34,16 @@ pb:
     # Secret must hold GITHUB_TOKEN (PAT with `repo` scope or a fine-grained
     # token with Contents: read+write on the backup repo).
     secretName: emmaus-pb-backup
+
+# Cron endpoints of the website (Vercel), called from the cluster with
+# CRON_SECRET from `emmaus-secrets`.
+siteCrons:
+  siteUrl: https://www.emmaus.wien
+  timeZone: Europe/Vienna
+  jobs:
+    - name: mail-lists
+      schedule: "*/10 * * * *"
+      path: /api/cron/mail-lists
+    - name: mail-digest
+      schedule: "0 7 * * *"
+      path: /api/cron/mail-digest

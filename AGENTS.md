@@ -44,7 +44,10 @@
 - Postfach (`/postfach`): mail status lives in the mailbox as IMAP flags
   (`\Answered`, `$Erledigt`; `$Ausgewertet` = already used for the list), so
   never mark mails `\Seen` or otherwise change flags on read. The lists are
-  updated every 10 minutes by `.github/workflows/mail-lists-cron.yml`.
+  updated every 10 minutes and the digest sent at 07:00 by CronJobs in the
+  eco cluster (`deploy/helm/templates/cronjob-site-crons.yaml`), which call
+  the Vercel endpoints at www.emmaus.wien (the apex redirects, which curl
+  would silently treat as success) with `CRON_SECRET` from `emmaus-secrets`.
 - Local "Veröffentlichen" renders in the eco cluster: Doppler `dev` holds the
   `K8S_*`/`RENDERER_IMAGE` vars (docs/pdf-render-jobs.md); it also needs a
   `NEXT_PUBLIC_SITE_URL` tunnel to the port the dev server actually got.
