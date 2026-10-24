@@ -4,8 +4,8 @@ import { resolveUserFromServer } from "@/app/(shared)/UserHandler";
 import {
   appendToFolder,
   mailboxPassword,
-  markAnswered,
   readMail,
+  setFlag,
 } from "@/domain/mail/imap";
 import {
   canReadMailbox,
@@ -36,11 +36,13 @@ export async function sendMail(mail: OutgoingMail): Promise<void> {
   }
 
   const original = mail.replyTo
-    ? await readMail(
-        mailbox,
-        MAIL_FOLDERS[mail.replyTo.folder].path,
-        mail.replyTo.uid,
-      )
+    ? (
+        await readMail(
+          mailbox,
+          MAIL_FOLDERS[mail.replyTo.folder].path,
+          mail.replyTo.uid,
+        )
+      )?.mail
     : undefined;
   const references = [
     ...[original?.references ?? []].flat(),
@@ -74,10 +76,12 @@ export async function sendMail(mail: OutgoingMail): Promise<void> {
 
   await appendToFolder(mailbox, MAIL_FOLDERS.gesendet.path, raw);
   if (mail.replyTo) {
-    await markAnswered(
+    await setFlag(
       mailbox,
       MAIL_FOLDERS[mail.replyTo.folder].path,
       mail.replyTo.uid,
+      "\\Answered",
+      true,
     );
   }
 }

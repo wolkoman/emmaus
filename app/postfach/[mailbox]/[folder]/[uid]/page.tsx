@@ -1,7 +1,9 @@
 import { Links } from "@/app/(shared)/Links";
 import { requireMailbox } from "@/app/postfach/access";
 import { formatMailDateTime } from "@/app/postfach/format";
+import { MailDoneButton } from "@/app/postfach/MailDoneButton";
 import { MailForm } from "@/app/postfach/MailForm";
+import { STATUS_LABELS, StatusIcon } from "@/app/postfach/StatusIcon";
 import {
   AppCard,
   ContentLoading,
@@ -33,8 +35,9 @@ async function Mail(props: { params: Params }) {
     slug,
     Links.PostfachMail(slug, folder, uid),
   );
-  const mail = await readMail(mailbox, MAIL_FOLDERS[folder].path, uid);
-  if (!mail) notFound();
+  const read = await readMail(mailbox, MAIL_FOLDERS[folder].path, uid);
+  if (!read) notFound();
+  const { mail, status } = read;
 
   const sender = mail.headers.get("x-emmaus-sender");
   const facts: [string, string | undefined][] = [
@@ -48,6 +51,21 @@ async function Mail(props: { params: Params }) {
   return (
     <div className="flex max-w-3xl flex-col gap-6 px-4 py-8 lg:px-8">
       <PageHeading title={mail.subject || "(kein Betreff)"} />
+      {folder === "posteingang" && (
+        <AppCard className="flex flex-wrap items-center justify-between gap-3 px-5 py-3">
+          <span className="flex items-center gap-2 text-sm font-medium">
+            <StatusIcon status={status} />
+            {STATUS_LABELS[status]}
+          </span>
+          {status !== "beantwortet" && (
+            <MailDoneButton
+              mailbox={mailbox.slug}
+              uid={uid}
+              done={status === "erledigt"}
+            />
+          )}
+        </AppCard>
+      )}
       <AppCard>
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 border-b border-neutral-200 p-5 text-sm">
           {facts

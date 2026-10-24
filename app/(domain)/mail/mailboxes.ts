@@ -7,6 +7,12 @@ export interface Mailbox {
   competence: CpPersonCompetences;
   /** Name of the env var with the mailbox password (World4you IMAP/SMTP). */
   passwordEnv: string;
+  /** Free-text list kept up to date from received mails. */
+  list?: {
+    title: string;
+    /** Until someone edits them on the list page. */
+    defaultInstructions: string;
+  };
 }
 
 export const MAILBOXES: Mailbox[] = [
@@ -16,6 +22,14 @@ export const MAILBOXES: Mailbox[] = [
     address: "events@emmaus.wien",
     competence: CpPersonCompetences.MailEvents,
     passwordEnv: "EVENTS_MAIL_PASSWORD",
+    list: {
+      title: "Anmeldungen",
+      defaultInstructions:
+        "Anmeldeliste. Eine Zeile pro Anmeldung: Name, Anzahl Personen. " +
+        "Besonderheiten (Kinder mit Alter, Essenswünsche, Zustieg, offene " +
+        "Fragen) in Klammern dahinter. Abmeldungen streichen, Änderungen " +
+        "in der bestehenden Zeile nachtragen.",
+    },
   },
 ];
 

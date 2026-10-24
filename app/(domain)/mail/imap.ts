@@ -1,8 +1,15 @@
 import { Mailbox } from "@/domain/mail/mailboxes";
-import { ImapFlow } from "imapflow";
+import { FetchMessageObject, ImapFlow } from "imapflow";
 import { ParsedMail, simpleParser } from "mailparser";
 
 const PAGE_SIZE = 100;
+
+/** IMAP keywords, so Thunderbird & co. see the same state as the website. */
+export const DONE_FLAG = "$Erledigt";
+export const LISTED_FLAG = "$Ausgewertet";
+
+/** Every received mail is open until it is answered or explicitly done. */
+export type MailStatus = "offen" | "beantwortet" | "erledigt";
 
 export interface MailSummary {
   uid: number;
@@ -10,8 +17,7 @@ export interface MailSummary {
   from: string;
   to: string;
   date: string;
-  seen: boolean;
-  answered: boolean;
+  status: MailStatus;
 }
 
 export function mailboxPassword(mailbox: Mailbox) {
@@ -45,6 +51,13 @@ async function withFolder<T>(
   }
 }
 
+/** Our own mails in the inbox (tests, Bcc) never need an answer. */
+function statusOf(flags?: Set<string>, ownMail?: boolean): MailStatus {
+  if (flags?.has("\\Answered")) return "beantwortet";
+  if (flags?.has(DONE_FLAG) || ownMail) return "erledigt";
+  return "offen";
+}
+
 /** Newest first; only the last PAGE_SIZE messages of the folder. */
 export function listMails(mailbox: Mailbox, path: string) {
   return withFolder(mailbox, path, async (client) => {
@@ -67,36 +80,71 @@ export function listMails(mailbox: Mailbox, path: string) {
         date: new Date(
           envelope?.date ?? message.internalDate ?? Date.now(),
         ).toISOString(),
-        seen: !!message.flags?.has("\\Seen"),
-        answered: !!message.flags?.has("\\Answered"),
+        status: statusOf(
+          message.flags,
+          envelope?.from?.some((a) => a.address === mailbox.address),
+        ),
       });
     }
     return mails.reverse();
   });
 }
 
-/** Fetches and parses one message; opening it marks it as read. */
+/** Fetches and parses one message without changing any flag. */
 export function readMail(
   mailbox: Mailbox,
   path: string,
   uid: number,
-): Promise<ParsedMail | undefined> {
+): Promise<{ mail: ParsedMail; status: MailStatus } | undefined> {
   return withFolder(mailbox, path, async (client) => {
     const message = await client.fetchOne(
       String(uid),
-      { source: true },
+      { source: true, flags: true },
       { uid: true },
     );
     if (!message || !message.source) return undefined;
-    await client.messageFlagsAdd(String(uid), ["\\Seen"], { uid: true });
-    return simpleParser(message.source);
+    const mail = await simpleParser(message.source);
+    const ownMail = mail.from?.value.some((a) => a.address === mailbox.address);
+    return { mail, status: statusOf(message.flags, ownMail) };
   });
 }
 
-export function markAnswered(mailbox: Mailbox, path: string, uid: number) {
+export function setFlag(
+  mailbox: Mailbox,
+  path: string,
+  uid: number,
+  flag: string,
+  on: boolean,
+) {
   return withFolder(mailbox, path, (client) =>
-    client.messageFlagsAdd(String(uid), ["\\Answered"], { uid: true }),
+    on
+      ? client.messageFlagsAdd(String(uid), [flag], { uid: true })
+      : client.messageFlagsRemove(String(uid), [flag], { uid: true }),
   );
+}
+
+/** Received mails not yet run through the list update, oldest first. */
+export function unlistedMails(mailbox: Mailbox) {
+  return withFolder(mailbox, "INBOX", async (client) => {
+    const uids = await client.search({ unKeyword: LISTED_FLAG }, { uid: true });
+    if (!uids || uids.length === 0) return [];
+    const messages: FetchMessageObject[] = [];
+    for await (const message of client.fetch(
+      uids.join(","),
+      { uid: true, source: true },
+      { uid: true },
+    )) {
+      messages.push(message);
+    }
+    return Promise.all(
+      messages
+        .sort((a, b) => a.uid - b.uid)
+        .map(async (message) => ({
+          uid: message.uid,
+          mail: await simpleParser(message.source!),
+        })),
+    );
+  });
 }
 
 export function appendToFolder(mailbox: Mailbox, path: string, raw: Buffer) {

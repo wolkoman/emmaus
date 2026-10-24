@@ -39,5 +39,6 @@ export const Links = {
   PostfachMail: (mailbox: string, folder: string, uid: number) =>
     `/postfach/${mailbox}/${folder}/${uid}`,
   PostfachNeu: (mailbox: string) => `/postfach/${mailbox}/neu`,
+  PostfachListe: (mailbox: string) => `/postfach/${mailbox}/liste`,
   Seite: (slug: string) => `/${slug}`,
 };

@@ -41,6 +41,10 @@
   the README's "Secrets" section. New `NEXT_PUBLIC_*` secrets must be set
   `--visibility unmasked`: Vercel rejects them as sensitive and Doppler then
   disables the whole sync.
+- Postfach (`/postfach`): mail status lives in the mailbox as IMAP flags
+  (`\Answered`, `$Erledigt`; `$Ausgewertet` = already used for the list), so
+  never mark mails `\Seen` or otherwise change flags on read. The lists are
+  updated every 10 minutes by `.github/workflows/mail-lists-cron.yml`.
 - Local "Veröffentlichen" renders in the eco cluster: Doppler `dev` holds the
   `K8S_*`/`RENDERER_IMAGE` vars (docs/pdf-render-jobs.md); it also needs a
   `NEXT_PUBLIC_SITE_URL` tunnel to the port the dev server actually got.

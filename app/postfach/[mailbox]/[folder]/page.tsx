@@ -13,7 +13,7 @@ import { cn } from "@/util/utils";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { PiArrowBendUpLeft } from "react-icons/pi";
+import { StatusIcon } from "@/app/postfach/StatusIcon";
 
 const COLUMNS = "grid grid-cols-[minmax(0,12rem)_minmax(0,1fr)_7rem] gap-3";
 
@@ -36,12 +36,19 @@ async function Folder(props: { params: Params }) {
   );
   const mails = await listMails(mailbox, MAIL_FOLDERS[folder].path);
   const sent = folder === "gesendet";
+  const open = sent ? 0 : mails.filter((m) => m.status === "offen").length;
 
   return (
     <div className="flex flex-col gap-6 px-4 py-8 lg:px-8">
       <PageHeading
         title={MAIL_FOLDERS[folder].title}
-        description={mailbox.address}
+        description={
+          sent
+            ? mailbox.address
+            : open === 0
+              ? "Alle E-Mails sind beantwortet oder erledigt."
+              : `${open} ${open === 1 ? "E-Mail wartet" : "E-Mails warten"} auf Antwort.`
+        }
       />
       {mails.length === 0 ? (
         <p className="text-black/60">Keine E-Mails.</p>
@@ -59,16 +66,14 @@ async function Folder(props: { params: Params }) {
               className="block"
             >
               <AppTableRow
-                className={cn(COLUMNS, !sent && !mail.seen && "font-semibold")}
+                className={cn(
+                  COLUMNS,
+                  !sent && mail.status === "offen" && "font-semibold",
+                )}
               >
                 <span className="truncate">{sent ? mail.to : mail.from}</span>
                 <span className="flex min-w-0 items-center gap-1.5">
-                  {mail.answered && (
-                    <PiArrowBendUpLeft
-                      className="shrink-0 text-black/50"
-                      title="Beantwortet"
-                    />
-                  )}
+                  {!sent && <StatusIcon status={mail.status} />}
                   <span className="truncate">{mail.subject}</span>
                 </span>
                 <span className="text-right text-sm text-black/60">

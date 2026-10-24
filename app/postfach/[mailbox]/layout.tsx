@@ -12,7 +12,12 @@ import { MAIL_FOLDERS, mailboxesFor } from "@/domain/mail/mailboxes";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ReactNode, Suspense } from "react";
-import { PiPaperPlaneTilt, PiPencilSimple, PiTray } from "react-icons/pi";
+import {
+  PiListChecks,
+  PiPaperPlaneTilt,
+  PiPencilSimple,
+  PiTray,
+} from "react-icons/pi";
 
 export const metadata: Metadata = {
   title: "Postfach | Emmaus",
@@ -79,6 +84,23 @@ async function PostfachShell(props: {
                 </AppSidebarLink>
               ),
             )}
+            {mailbox.list &&
+              (mailbox.slug === current ? (
+                <AppSidebarSegmentLink
+                  href={Links.PostfachListe(mailbox.slug)}
+                  segment="liste"
+                  icon={<PiListChecks />}
+                >
+                  {mailbox.list.title}
+                </AppSidebarSegmentLink>
+              ) : (
+                <AppSidebarLink
+                  href={Links.PostfachListe(mailbox.slug)}
+                  icon={<PiListChecks />}
+                >
+                  {mailbox.list.title}
+                </AppSidebarLink>
+              ))}
           </AppSidebarSection>
         ))}
       >

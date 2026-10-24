@@ -26,8 +26,8 @@ export async function GET(
   }
   if (!isMailFolder(folder)) return new Response("Not found", { status: 404 });
 
-  const mail = await readMail(mailbox, MAIL_FOLDERS[folder].path, Number(uid));
-  const attachment = mail?.attachments[Number(index)];
+  const read = await readMail(mailbox, MAIL_FOLDERS[folder].path, Number(uid));
+  const attachment = read?.mail.attachments[Number(index)];
   if (!attachment) return new Response("Not found", { status: 404 });
 
   const filename = attachment.filename ?? `anhang-${index}`;
