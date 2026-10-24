@@ -8,7 +8,7 @@ import {
   PageHeading,
   SectionHeading,
 } from "@/components/intern/AppUI";
-import { getMailList } from "@/domain/mail/mail-list-repo";
+import { getMailList, recentListChanges } from "@/domain/mail/mail-list-repo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -27,7 +27,10 @@ async function List(props: { params: Params }) {
   const { mailbox: slug } = await props.params;
   const { mailbox } = await requireMailbox(slug, Links.PostfachListe(slug));
   if (!mailbox.list) notFound();
-  const list = await getMailList(mailbox);
+  const [list, changes] = await Promise.all([
+    getMailList(mailbox),
+    recentListChanges(mailbox, 30),
+  ]);
 
   return (
     <div className="flex max-w-3xl flex-col gap-6 px-4 py-8 lg:px-8">
@@ -42,18 +45,19 @@ async function List(props: { params: Params }) {
         instructions={list.instructions}
         updated={list.updated}
       />
-      {list.history.length > 0 && (
+      {changes.length > 0 && (
         <section>
           <SectionHeading title="Automatische Änderungen" />
           <AppCard className="divide-y divide-neutral-100">
-            {list.history.map((entry) => (
-              <div key={`${entry.uid}-${entry.at}`} className="px-5 py-3">
+            {changes.map((entry) => (
+              <div key={entry.id} className="px-5 py-3">
                 <div className="text-sm">{entry.change}</div>
                 <Link
                   href={Links.PostfachMail(slug, "posteingang", entry.uid)}
                   className="text-sm text-black/60 hover:underline"
                 >
-                  {formatMailDate(entry.at)}: {entry.from}, „{entry.subject}“
+                  {formatMailDate(entry.created)}: {entry.from}, „
+                  {entry.subject}“
                 </Link>
               </div>
             ))}

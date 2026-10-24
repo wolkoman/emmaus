@@ -1,5 +1,9 @@
 import { LISTED_FLAG, setFlag, unlistedMails } from "@/domain/mail/imap";
-import { getMailList, saveMailList } from "@/domain/mail/mail-list-repo";
+import {
+  addListChange,
+  getMailList,
+  saveMailList,
+} from "@/domain/mail/mail-list-repo";
 import { Mailbox } from "@/domain/mail/mailboxes";
 import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
@@ -23,30 +27,21 @@ export async function updateListFromNewMails(mailbox: Mailbox) {
     const sentByUs = mail.from?.value.some(
       (a) => a.address?.toLowerCase() === mailbox.address,
     );
-    if (!sentByUs) {
-      const update = await askClaude(
-        mailbox,
-        list.instructions,
-        list.text,
-        mail,
-      );
-      if (update.list.trim() !== list.text.trim()) {
-        await saveMailList(
-          list,
-          {
-            text: update.list,
-            addHistory: {
-              at: new Date().toISOString(),
-              uid,
-              subject: mail.subject ?? "",
-              from: mail.from?.text ?? "",
-              change: update.change,
-            },
-          },
-          list.updated,
-        );
-      }
+    const update = sentByUs
+      ? undefined
+      : await askClaude(mailbox, list.instructions, list.text, mail);
+    const changed =
+      !!update && update.list.trim() !== list.text.trim() ? update : undefined;
+    if (changed) {
+      await saveMailList(list, { text: changed.list }, list.updated);
     }
+    await addListChange(mailbox, {
+      uid,
+      subject: mail.subject ?? "",
+      from: mail.from?.text ?? "",
+      change: changed?.change ?? "",
+      list_after: changed?.list ?? list.text,
+    });
     await setFlag(mailbox, "INBOX", uid, LISTED_FLAG, true);
   }
   return mails.length;

@@ -15,7 +15,7 @@ import { isMailFolder, MAIL_FOLDERS } from "@/domain/mail/mailboxes";
 import { AddressObject, ParsedMail } from "mailparser";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { getMailList } from "@/domain/mail/mail-list-repo";
+import { listChangesForMail } from "@/domain/mail/mail-list-repo";
 import Link from "next/link";
 import { PiListChecks, PiPaperclip } from "react-icons/pi";
 
@@ -39,11 +39,12 @@ async function Mail(props: { params: Params }) {
   );
   const read = await readMail(mailbox, MAIL_FOLDERS[folder].path, uid);
   if (!read) notFound();
-  const { mail, status, listed } = read;
-  const listChanges =
+  const { mail, status } = read;
+  const evaluations =
     mailbox.list && folder === "posteingang"
-      ? (await getMailList(mailbox)).history.filter((h) => h.uid === uid)
+      ? await listChangesForMail(mailbox, uid)
       : [];
+  const changes = evaluations.filter((e) => e.change);
 
   const sender = mail.headers.get("x-emmaus-sender");
   const facts: [string, string | undefined][] = [
@@ -105,11 +106,11 @@ async function Mail(props: { params: Params }) {
         <AppCard className="flex items-start gap-2 px-5 py-3 text-sm">
           <PiListChecks className="mt-0.5 shrink-0 text-black/50" />
           <div className="flex flex-col gap-1">
-            {listChanges.length > 0 ? (
-              listChanges.map((h) => <span key={h.at}>{h.change}</span>)
+            {changes.length > 0 ? (
+              changes.map((e) => <span key={e.id}>{e.change}</span>)
             ) : (
               <span className="text-black/60">
-                {listed
+                {evaluations.length > 0
                   ? "Keine Änderung an der Liste."
                   : "Noch nicht für die Liste ausgewertet."}
               </span>

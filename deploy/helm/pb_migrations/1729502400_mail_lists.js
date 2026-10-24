@@ -1,8 +1,8 @@
 /// <reference path="../../../node_modules/pocketbase/types.d.ts" />
 /**
  * `mail_lists`: one free-text list per mailbox (/postfach/<mailbox>/liste),
- * edited by hand and updated by Claude from received mails. `history` keeps
- * the last automatic changes: [{ at, uid, subject, from, change }].
+ * edited by hand and updated by Claude from received mails (log in
+ * `mail_list_changes`).
  */
 migrate(
   (app) => {
@@ -18,7 +18,6 @@ migrate(
         { name: "mailbox", type: "text", required: true, max: 100 },
         { name: "text", type: "text", max: 200000 },
         { name: "instructions", type: "text", max: 10000 },
-        { name: "history", type: "json", maxSize: 200000 },
         { name: "created", type: "autodate", onCreate: true },
         { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
       ],
