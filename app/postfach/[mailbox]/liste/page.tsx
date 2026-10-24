@@ -36,7 +36,7 @@ async function List(props: { params: Params }) {
     <div className="flex max-w-3xl flex-col gap-6 px-4 py-8 lg:px-8">
       <PageHeading
         title={mailbox.list.title}
-        description="Wird bei jeder neuen E-Mail automatisch ergänzt und lässt sich hier jederzeit von Hand ändern."
+        description="Neue E-Mails werden alle 10 Minuten automatisch eingearbeitet. Die Liste lässt sich hier jederzeit von Hand ändern."
       />
       <ListEditor
         key={list.updated}

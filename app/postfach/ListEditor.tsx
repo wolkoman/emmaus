@@ -5,10 +5,10 @@ import { FormMessage } from "@/components/intern/PasswordField";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { runListUpdate, saveListText } from "@/domain/mail/mail-actions";
+import { saveListText } from "@/domain/mail/mail-actions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { PiArrowsClockwise, PiFloppyDisk } from "react-icons/pi";
+import { PiFloppyDisk } from "react-icons/pi";
 
 /** Remount with `key={updated}` so a refresh shows the saved list. */
 export function ListEditor(props: {
@@ -20,19 +20,19 @@ export function ListEditor(props: {
   const router = useRouter();
   const [text, setText] = useState(props.text);
   const [instructions, setInstructions] = useState(props.instructions);
-  const [busy, setBusy] = useState<"save" | "update" | null>(null);
+  const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ ok: boolean; text: string }>();
   const dirty = text !== props.text || instructions !== props.instructions;
 
   async function save() {
-    setBusy("save");
+    setSaving(true);
     const ok = await saveListText(
       props.mailbox,
       text,
       instructions,
       props.updated,
     ).catch(() => null);
-    setBusy(null);
+    setSaving(false);
     if (ok) return router.refresh();
     setMessage({
       ok: false,
@@ -41,19 +41,6 @@ export function ListEditor(props: {
           ? "Die Liste wurde inzwischen geändert. Bitte Ihre Änderung kopieren und die Seite neu laden."
           : "Die Liste konnte nicht gespeichert werden.",
     });
-  }
-
-  async function update() {
-    setBusy("update");
-    const count = await runListUpdate(props.mailbox).catch(() => null);
-    setBusy(null);
-    if (count === null) {
-      setMessage({ ok: false, text: "Die Auswertung ist fehlgeschlagen." });
-    } else if (count === 0) {
-      setMessage({ ok: true, text: "Keine neuen E-Mails." });
-    } else {
-      router.refresh();
-    }
   }
 
   return (
@@ -81,21 +68,13 @@ export function ListEditor(props: {
         </div>
       </details>
       {message && <FormMessage ok={message.ok}>{message.text}</FormMessage>}
-      <div className="flex flex-wrap gap-2">
+      <div>
         <Button
           onClick={save}
-          disabled={!dirty || busy !== null}
-          loading={busy === "save" || undefined}
+          disabled={!dirty || saving}
+          loading={saving || undefined}
         >
           <PiFloppyDisk /> Speichern
-        </Button>
-        <Button
-          variant="outline"
-          onClick={update}
-          disabled={dirty || busy !== null}
-          loading={busy === "update" || undefined}
-        >
-          <PiArrowsClockwise /> Neue E-Mails jetzt auswerten
         </Button>
       </div>
     </AppCard>

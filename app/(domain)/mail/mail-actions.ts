@@ -2,7 +2,6 @@
 
 import { resolveUserFromServer } from "@/app/(shared)/UserHandler";
 import { DONE_FLAG, setFlag } from "@/domain/mail/imap";
-import { updateListFromNewMails } from "@/domain/mail/list-updater";
 import {
   getMailList,
   ListConflictError,
@@ -61,11 +60,4 @@ export async function setNotifyAddress(
   const others = list.notify.filter((a) => a !== email);
   await saveNotify(list, subscribed ? [...others, email] : others);
   revalidatePath(`/postfach/${slug}/benachrichtigung`);
-}
-
-export async function runListUpdate(slug: string): Promise<number> {
-  const mailbox = await authorizedMailbox(slug);
-  const count = await updateListFromNewMails(mailbox);
-  revalidatePath(`/postfach/${slug}/liste`);
-  return count;
 }
