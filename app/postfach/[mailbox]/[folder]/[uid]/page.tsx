@@ -15,7 +15,9 @@ import { isMailFolder, MAIL_FOLDERS } from "@/domain/mail/mailboxes";
 import { AddressObject, ParsedMail } from "mailparser";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { PiPaperclip } from "react-icons/pi";
+import { getMailList } from "@/domain/mail/mail-list-repo";
+import Link from "next/link";
+import { PiListChecks, PiPaperclip } from "react-icons/pi";
 
 type Params = Promise<{ mailbox: string; folder: string; uid: string }>;
 
@@ -37,7 +39,11 @@ async function Mail(props: { params: Params }) {
   );
   const read = await readMail(mailbox, MAIL_FOLDERS[folder].path, uid);
   if (!read) notFound();
-  const { mail, status } = read;
+  const { mail, status, listed } = read;
+  const listChanges =
+    mailbox.list && folder === "posteingang"
+      ? (await getMailList(mailbox)).history.filter((h) => h.uid === uid)
+      : [];
 
   const sender = mail.headers.get("x-emmaus-sender");
   const facts: [string, string | undefined][] = [
@@ -95,6 +101,28 @@ async function Mail(props: { params: Params }) {
           </div>
         )}
       </AppCard>
+      {mailbox.list && folder === "posteingang" && (
+        <AppCard className="flex items-start gap-2 px-5 py-3 text-sm">
+          <PiListChecks className="mt-0.5 shrink-0 text-black/50" />
+          <div className="flex flex-col gap-1">
+            {listChanges.length > 0 ? (
+              listChanges.map((h) => <span key={h.at}>{h.change}</span>)
+            ) : (
+              <span className="text-black/60">
+                {listed
+                  ? "Keine Änderung an der Liste."
+                  : "Noch nicht für die Liste ausgewertet."}
+              </span>
+            )}
+            <Link
+              href={Links.PostfachListe(slug)}
+              className="text-black/60 hover:underline"
+            >
+              Zur Liste „{mailbox.list.title}“
+            </Link>
+          </div>
+        </AppCard>
+      )}
       {folder === "posteingang" && (
         <section>
           <SectionHeading title="Antworten" />

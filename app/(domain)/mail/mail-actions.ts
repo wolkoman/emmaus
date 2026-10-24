@@ -7,6 +7,7 @@ import {
   getMailList,
   ListConflictError,
   saveMailList,
+  saveNotify,
 } from "@/domain/mail/mail-list-repo";
 import { canReadMailbox, MAILBOXES } from "@/domain/mail/mailboxes";
 import { revalidatePath } from "next/cache";
@@ -44,6 +45,22 @@ export async function saveListText(
   }
   revalidatePath(`/postfach/${slug}/liste`);
   return true;
+}
+
+export async function setNotifyAddress(
+  slug: string,
+  address: string,
+  subscribed: boolean,
+) {
+  const mailbox = await authorizedMailbox(slug);
+  const email = address.trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    throw new Error("Ungültige E-Mail-Adresse");
+  }
+  const list = await getMailList(mailbox);
+  const others = list.notify.filter((a) => a !== email);
+  await saveNotify(list, subscribed ? [...others, email] : others);
+  revalidatePath(`/postfach/${slug}/benachrichtigung`);
 }
 
 export async function runListUpdate(slug: string): Promise<number> {

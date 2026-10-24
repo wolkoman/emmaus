@@ -1,0 +1,16 @@
+name: Mail Digest
+
+on:
+  schedule:
+    - cron: "0 5 * * *" # Daily at 05:00 UTC (07:00 Vienna in summer, 06:00 in winter)
+  workflow_dispatch:
+
+jobs:
+  send-digest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send daily digest of open mails
+        run: |
+          curl -f -sS -L --max-redirs 0 -X GET \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ vars.SITE_URL }}/api/cron/mail-digest"

@@ -1,7 +1,8 @@
 import { Mailbox } from "@/domain/mail/mailboxes";
 import { pb } from "@/util/pocketbase";
 
-const HISTORY_LENGTH = 30;
+// Long enough that a mail's change is still found from its detail page.
+const HISTORY_LENGTH = 300;
 
 export interface ListChange {
   at: string;
@@ -16,6 +17,8 @@ export interface MailList {
   text: string;
   instructions: string;
   history: ListChange[];
+  /** Addresses that get the daily digest of open mails. */
+  notify: string[];
   updated: string;
 }
 
@@ -37,7 +40,16 @@ export async function getMailList(mailbox: Mailbox): Promise<MailList> {
         history: [],
       });
     });
-  return { ...record, history: record.history ?? [] };
+  return {
+    ...record,
+    history: record.history ?? [],
+    notify: record.notify ?? [],
+  };
+}
+
+export async function saveNotify(list: MailList, notify: string[]) {
+  const client = await pb();
+  await client.collection("mail_lists").update(list.id, { notify });
 }
 
 /**

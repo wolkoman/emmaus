@@ -95,7 +95,9 @@ export function readMail(
   mailbox: Mailbox,
   path: string,
   uid: number,
-): Promise<{ mail: ParsedMail; status: MailStatus } | undefined> {
+): Promise<
+  { mail: ParsedMail; status: MailStatus; listed: boolean } | undefined
+> {
   return withFolder(mailbox, path, async (client) => {
     const message = await client.fetchOne(
       String(uid),
@@ -105,7 +107,11 @@ export function readMail(
     if (!message || !message.source) return undefined;
     const mail = await simpleParser(message.source);
     const ownMail = mail.from?.value.some((a) => a.address === mailbox.address);
-    return { mail, status: statusOf(message.flags, ownMail) };
+    return {
+      mail,
+      status: statusOf(message.flags, ownMail),
+      listed: !!message.flags?.has(LISTED_FLAG),
+    };
   });
 }
 

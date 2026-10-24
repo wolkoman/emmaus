@@ -8,11 +8,12 @@ import {
 } from "@/components/intern/AppSidebar";
 import { AppSidebarSegmentLink } from "@/components/intern/AppSidebarSegmentLink";
 import { Button } from "@/components/ui/button";
-import { MAIL_FOLDERS, mailboxesFor } from "@/domain/mail/mailboxes";
+import { MAIL_FOLDERS, Mailbox, mailboxesFor } from "@/domain/mail/mailboxes";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ReactNode, Suspense } from "react";
 import {
+  PiBell,
   PiListChecks,
   PiPaperPlaneTilt,
   PiPencilSimple,
@@ -27,6 +28,33 @@ const FOLDER_ICONS = {
   posteingang: <PiTray />,
   gesendet: <PiPaperPlaneTilt />,
 };
+
+function sidebarEntries(mailbox: Mailbox) {
+  return [
+    ...Object.entries(MAIL_FOLDERS).map(([folder, { title }]) => ({
+      segment: folder,
+      href: Links.PostfachOrdner(mailbox.slug, folder),
+      title,
+      icon: FOLDER_ICONS[folder as keyof typeof FOLDER_ICONS],
+    })),
+    ...(mailbox.list
+      ? [
+          {
+            segment: "liste",
+            href: Links.PostfachListe(mailbox.slug),
+            title: mailbox.list.title,
+            icon: <PiListChecks />,
+          },
+        ]
+      : []),
+    {
+      segment: "benachrichtigung",
+      href: Links.PostfachBenachrichtigung(mailbox.slug),
+      title: "Benachrichtigung",
+      icon: <PiBell />,
+    },
+  ];
+}
 
 // Stays mounted while switching between folders and messages of a mailbox.
 export default function PostfachLayout(props: {
@@ -64,43 +92,17 @@ async function PostfachShell(props: {
       <AppSidebarLayout
         sidebar={mailboxes.map((mailbox) => (
           <AppSidebarSection key={mailbox.slug} title={mailbox.address}>
-            {Object.entries(MAIL_FOLDERS).map(([folder, { title }]) =>
+            {sidebarEntries(mailbox).map((entry) =>
               mailbox.slug === current ? (
-                <AppSidebarSegmentLink
-                  key={folder}
-                  href={Links.PostfachOrdner(mailbox.slug, folder)}
-                  segment={folder}
-                  icon={FOLDER_ICONS[folder as keyof typeof FOLDER_ICONS]}
-                >
-                  {title}
+                <AppSidebarSegmentLink key={entry.segment} {...entry}>
+                  {entry.title}
                 </AppSidebarSegmentLink>
               ) : (
-                <AppSidebarLink
-                  key={folder}
-                  href={Links.PostfachOrdner(mailbox.slug, folder)}
-                  icon={FOLDER_ICONS[folder as keyof typeof FOLDER_ICONS]}
-                >
-                  {title}
+                <AppSidebarLink key={entry.segment} {...entry}>
+                  {entry.title}
                 </AppSidebarLink>
               ),
             )}
-            {mailbox.list &&
-              (mailbox.slug === current ? (
-                <AppSidebarSegmentLink
-                  href={Links.PostfachListe(mailbox.slug)}
-                  segment="liste"
-                  icon={<PiListChecks />}
-                >
-                  {mailbox.list.title}
-                </AppSidebarSegmentLink>
-              ) : (
-                <AppSidebarLink
-                  href={Links.PostfachListe(mailbox.slug)}
-                  icon={<PiListChecks />}
-                >
-                  {mailbox.list.title}
-                </AppSidebarLink>
-              ))}
           </AppSidebarSection>
         ))}
       >
