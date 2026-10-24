@@ -95,7 +95,7 @@ export function CarloPage({ lang }: { lang: LiveLang }) {
               <div className="text-3xl capitalize lg:text-4xl">
                 {date.weekday}
               </div>
-              <div className="text-6xl font-bold tracking-tight whitespace-nowrap text-[#aadcd8] italic lg:text-8xl">
+              <div className="text-5xl font-bold tracking-tight whitespace-nowrap sm:text-6xl text-[#aadcd8] italic lg:text-8xl">
                 {date.day}
               </div>
             </div>
