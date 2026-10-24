@@ -147,7 +147,7 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       massNote:
         "In tedesco, croato, italiano e inglese. Anche in diretta streaming qui sotto.",
       meeting: "Incontro con sua madre",
-      film: "Prima del film su Carlo, con un intervento di sua madre Antonia",
+      film: "Anteprima del film su Carlo, sarà presente sua madre Antonia",
       parish: "Chiesa Emmaus, Tesarekplatz 2, 1100 Vienna",
       cinema: "Cinema Hollywood Megaplex Gasometer, Guglgasse 11, 1110 Vienna",
     },
@@ -232,7 +232,7 @@ export function formatDateParts(start: string, lang: LiveLang) {
     weekday: date.toLocaleDateString(locale, { weekday: "long", timeZone }),
     day: date.toLocaleDateString(locale, {
       day: "numeric",
-      month: "short",
+      month: "long",
       timeZone,
     }),
   };
