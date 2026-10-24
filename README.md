@@ -29,13 +29,24 @@ A comprehensive web platform for the Catholic parish "Emmaus am Wienerberg" in V
 
 ## Getting started
 
-Currently, development happens against production data. Environment variables are managed through Vercel. Contact Manuel (@wolkoman) for access permissions to the project environment.
+Currently, development happens against production data. Secrets live in Doppler (workplace "emmaus", project `emmaus`), not in Vercel or `.env` files. Contact Manuel (@wolkoman) for access.
 
 Follow these steps to set up your development environment:
 
 1. `bun install` - Install dependencies
-2. `vercel env pull .env.local` - Pull environment variables from Vercel
-3. `bun dev` - Start the development server
+2. `doppler login --scope "$PWD"` - Log in to the emmaus workplace for this folder only, then `doppler setup --no-interactive` (reads `doppler.yaml`)
+3. `bun dev` - Start the development server (runs under `doppler run`, config `dev`)
+
+### Secrets
+
+| Doppler config | Used by |
+| --- | --- |
+| `dev` | `bun dev` locally, synced to Vercel Development |
+| `stg` | synced to Vercel Preview |
+| `prd` | synced to Vercel Production |
+| `prd_cluster` | inherits `prd`, adds cluster-only keys (`GITHUB_TOKEN` for PB backups); written to the eco cluster by `deploy/sync-secrets.sh` |
+
+Change secrets in Doppler only. Vercel picks them up via the Doppler integration (redeploy to apply); for the cluster run `./deploy/sync-secrets.sh`. GitHub Actions secrets (`KUBECONFIG_B64`, `CRON_SECRET`) are still set in the repo settings.
 
 The application will be available at http://localhost:3000.
 

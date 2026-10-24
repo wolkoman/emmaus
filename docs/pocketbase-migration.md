@@ -111,10 +111,11 @@ Cockpit branch is dead code, safe to collapse).
 - Backups: nightly CronJob (`emmaus-pb-backup`) uploads a PB backup zip to a
   GitHub release (`pb-backup-*`), keeps the newest 14. Restore procedure is
   documented at the top of `deploy/helm/templates/cronjob-pb-backup.yaml`.
-- **Superuser password source of truth is the k8s secret `emmaus-secrets`**
-  (`PB_ADMIN_EMAIL`/`PB_ADMIN_PASSWORD`). The container entrypoint re-upserts
-  the superuser on every pod start, so a mismatched password elsewhere gets
-  clobbered. Vercel prod and local `.env` must hold the same values.
+- **Superuser password source of truth is Doppler `emmaus/prd`**
+  (`PB_ADMIN_EMAIL`/`PB_ADMIN_PASSWORD`), copied into the k8s secret
+  `emmaus-secrets` by `deploy/sync-secrets.sh`. The container entrypoint
+  re-upserts the superuser on every pod start, so a mismatched password
+  elsewhere gets clobbered.
 
 ## Hard-won gotchas
 

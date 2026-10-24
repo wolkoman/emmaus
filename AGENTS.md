@@ -34,8 +34,15 @@
   `bun.lock` entry; Vercel can't reach it (401) and the deploy fails. After
   adding packages, replace those URLs with `""` (default registry) before
   committing.
-- Local "Veröffentlichen" renders in the eco cluster: `.env.local` needs the
-  `K8S_*`/`RENDERER_IMAGE` vars (docs/pdf-render-jobs.md) and a
+- Secrets live in Doppler, workplace "emmaus" (private, not the Magic work
+  workplace), project `emmaus`. The CLI login for it is scoped to
+  `/Users/manuel/Projects/emmaus`; the global Doppler login is Magic's, so
+  never run doppler for emmaus outside that folder. Configs and sync are in
+  the README's "Secrets" section. New `NEXT_PUBLIC_*` secrets must be set
+  `--visibility unmasked`: Vercel rejects them as sensitive and Doppler then
+  disables the whole sync.
+- Local "Veröffentlichen" renders in the eco cluster: Doppler `dev` holds the
+  `K8S_*`/`RENDERER_IMAGE` vars (docs/pdf-render-jobs.md); it also needs a
   `NEXT_PUBLIC_SITE_URL` tunnel to the port the dev server actually got.
   `scripts/dev.mjs` assumes port 3000; when Next falls back to 3001 it still
   reuses a tunnel to 3000, and the render job then fetches the wrong server.

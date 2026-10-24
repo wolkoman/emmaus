@@ -7,7 +7,7 @@
     "start": "next start",
     "lint": "next lint",
     "build": "next build",
-    "dev": "node scripts/dev.mjs",
+    "dev": "doppler run -- node scripts/dev.mjs",
     "generate": "cockpit-client generate --output=./util/cockpit.generated.ts",
     "email": "email dev",
     "pb:local": "docker compose -f pb/docker-compose.yml up -d",
