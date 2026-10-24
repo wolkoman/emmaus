@@ -351,6 +351,7 @@ export const PersonsCompetencesOptions = {
   communion_minister_planning: "communion_minister_planning",
   sacristan_planning: "sacristan_planning",
   musician_planning: "musician_planning",
+  "mail:events": "mail:events",
 } as const;
 export type PersonsCompetencesOptions =
   (typeof PersonsCompetencesOptions)[keyof typeof PersonsCompetencesOptions];
