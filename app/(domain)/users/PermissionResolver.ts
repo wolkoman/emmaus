@@ -15,6 +15,7 @@ export function resolveCompetencesForGroup(group: string): C[] {
     [C.Editor]: ["admin", "master", "ArticleEditor"].includes(group),
     [C.WeeklyEditor]: ["admin", "master"].includes(group),
     [C.Instagram]: ["admin", "master"].includes(group),
+    [C.MailEvents]: ["admin", "master"].includes(group),
   };
   return Object.entries(key)
     .filter(([_, value]) => value)

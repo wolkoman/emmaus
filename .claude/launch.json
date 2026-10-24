@@ -35,7 +35,7 @@
       "runtimeExecutable": "bash",
       "runtimeArgs": [
         "-c",
-        "POCKETBASE_URL=http://localhost:8090 PB_PUBLIC_URL=http://localhost:8090 PB_ADMIN_EMAIL=admin@emmaus.local PB_ADMIN_PASSWORD=devpassword NEXT_PUBLIC_BASE_URL=http://localhost:3201 ./node_modules/.bin/next dev -p 3201"
+        "doppler run -- env POCKETBASE_URL=http://localhost:8090 PB_PUBLIC_URL=http://localhost:8090 PB_ADMIN_EMAIL=admin@emmaus.local PB_ADMIN_PASSWORD=devpassword NEXT_PUBLIC_BASE_URL=http://localhost:3201 ./node_modules/.bin/next dev -p 3201"
       ],
       "port": 3201
     },

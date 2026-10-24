@@ -1,0 +1,63 @@
+"use server";
+
+import { resolveUserFromServer } from "@/app/(shared)/UserHandler";
+import { DONE_FLAG, setFlag } from "@/domain/mail/imap";
+import {
+  getMailList,
+  ListConflictError,
+  saveMailList,
+  saveNotify,
+} from "@/domain/mail/mail-list-repo";
+import { canReadMailbox, MAILBOXES } from "@/domain/mail/mailboxes";
+import { revalidatePath } from "next/cache";
+
+async function authorizedMailbox(slug: string) {
+  const person = await resolveUserFromServer();
+  const mailbox = MAILBOXES.find((m) => m.slug === slug);
+  if (!person || !mailbox || !canReadMailbox(person, mailbox)) {
+    throw new Error("No authorization");
+  }
+  return mailbox;
+}
+
+/** "Ohne Antwort als erledigt markieren", or undo it. */
+export async function setMailDone(slug: string, uid: number, done: boolean) {
+  const mailbox = await authorizedMailbox(slug);
+  await setFlag(mailbox, "INBOX", uid, DONE_FLAG, done);
+  revalidatePath(`/postfach/${slug}`, "layout");
+}
+
+/** false when someone else saved the list in the meantime. */
+export async function saveListText(
+  slug: string,
+  text: string,
+  instructions: string,
+  expectedUpdated: string,
+): Promise<boolean> {
+  const mailbox = await authorizedMailbox(slug);
+  const list = await getMailList(mailbox);
+  try {
+    await saveMailList(list, { text, instructions }, expectedUpdated);
+  } catch (err) {
+    if (err instanceof ListConflictError) return false;
+    throw err;
+  }
+  revalidatePath(`/postfach/${slug}/liste`);
+  return true;
+}
+
+export async function setNotifyAddress(
+  slug: string,
+  address: string,
+  subscribed: boolean,
+) {
+  const mailbox = await authorizedMailbox(slug);
+  const email = address.trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    throw new Error("Ungültige E-Mail-Adresse");
+  }
+  const list = await getMailList(mailbox);
+  const others = list.notify.filter((a) => a !== email);
+  await saveNotify(list, subscribed ? [...others, email] : others);
+  revalidatePath(`/postfach/${slug}/benachrichtigung`);
+}

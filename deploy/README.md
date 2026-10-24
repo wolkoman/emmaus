@@ -26,13 +26,18 @@ documented in [docs/pdf-render-jobs.md](../docs/pdf-render-jobs.md):
 kubectl apply -f deploy/render-trigger-serviceaccount.yaml
 ```
 
-### 2. Create the shared secret
+### 2. Create the secrets
 
-PocketBase reads `PB_ADMIN_EMAIL` / `PB_ADMIN_PASSWORD` from the
-`emmaus-secrets` Secret:
+PocketBase and render jobs read `PB_ADMIN_EMAIL` / `PB_ADMIN_PASSWORD` from
+`emmaus-secrets`, the site CronJobs (mail lists, mail digest) read
+`CRON_SECRET` from it, the backup CronJob reads `GITHUB_TOKEN` from
+`emmaus-pb-backup`. Both come from Doppler (`emmaus` / `prd_cluster`). The sync
+script replaces them, so on a fresh cluster create them empty first:
 
 ```bash
-kubectl create secret generic emmaus-secrets --from-env-file=.env -n emmaus
+kubectl --context=eco create secret generic emmaus-secrets -n emmaus
+kubectl --context=eco create secret generic emmaus-pb-backup -n emmaus
+./deploy/sync-secrets.sh
 ```
 
 ## Deploying
@@ -55,10 +60,10 @@ helm template emmaus ./deploy/helm -n emmaus
 
 ## Updating Secrets
 
+Change the value in Doppler, then:
+
 ```bash
-kubectl delete secret emmaus-secrets -n emmaus
-kubectl create secret generic emmaus-secrets --from-env-file=.env -n emmaus
-kubectl rollout restart deployment/emmaus-pb -n emmaus
+./deploy/sync-secrets.sh
 ```
 
 ## Verifying Deployment
@@ -80,5 +85,5 @@ helm rollback emmaus 2 -n emmaus      # roll back to specific revision
 ## Security Notes
 
 - Never commit `.env` file to version control
-- Secrets are stored in Kubernetes and injected at runtime
+- Doppler is the source of truth; Kubernetes Secrets are a copy written by `sync-secrets.sh`
 - TLS certificates are managed by cert-manager

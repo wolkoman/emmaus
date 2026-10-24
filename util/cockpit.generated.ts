@@ -108,6 +108,7 @@ export enum CpPersonCompetences {
   "CommunionMinisterPlanning" = "communion_minister_planning",
   "SacristanPlanning" = "sacristan_planning",
   "MusicianPlanning" = "musician_planning",
+  "MailEvents" = "mail:events",
 }
 export interface CpInternalData extends CpCollection {
   __collectionName: "internal-data";

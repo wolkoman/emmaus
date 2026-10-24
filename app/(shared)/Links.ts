@@ -33,5 +33,14 @@ export const Links = {
     `/intern/login?redirect=${encodeURIComponent(path)}`,
   Logout: "/intern/logout",
   Resourcen: "/resourcen",
+  Postfach: "/postfach",
+  PostfachOrdner: (mailbox: string, folder: string) =>
+    `/postfach/${mailbox}/${folder}`,
+  PostfachMail: (mailbox: string, folder: string, uid: number) =>
+    `/postfach/${mailbox}/${folder}/${uid}`,
+  PostfachNeu: (mailbox: string) => `/postfach/${mailbox}/neu`,
+  PostfachListe: (mailbox: string) => `/postfach/${mailbox}/liste`,
+  PostfachBenachrichtigung: (mailbox: string) =>
+    `/postfach/${mailbox}/benachrichtigung`,
   Seite: (slug: string) => `/${slug}`,
 };

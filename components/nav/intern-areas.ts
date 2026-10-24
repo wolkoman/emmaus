@@ -1,4 +1,5 @@
 import { Links } from "@/app/(shared)/Links";
+import { mailboxesFor } from "@/domain/mail/mailboxes";
 import { CpPerson, CpPersonCompetences } from "@/util/cockpit.generated";
 
 export interface InternArea {
@@ -29,6 +30,14 @@ export function internAreas(person: CpPerson): InternArea[] {
       href: Links.Projektplattform,
       title: "Redaktion",
       slogan: "Verkündigung im Emmausboten",
+    },
+    mailboxesFor(person).length > 0 && {
+      icon: "PiEnvelopeSimple",
+      href: Links.Postfach,
+      title: "Postfach",
+      slogan: mailboxesFor(person)
+        .map((mailbox) => mailbox.address)
+        .join(", "),
     },
     {
       icon: "PiMegaphone",
