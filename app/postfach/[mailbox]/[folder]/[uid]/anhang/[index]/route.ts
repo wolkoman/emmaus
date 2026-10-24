@@ -35,6 +35,8 @@ export async function GET(
     headers: {
       "Content-Type": attachment.contentType,
       "Content-Disposition": `attachment; filename*=UTF-8''${encodeURIComponent(filename)}`,
+      // The sender picks the Content-Type; never let the browser render it.
+      "X-Content-Type-Options": "nosniff",
     },
   });
 }

@@ -4,9 +4,9 @@ import { NextResponse } from "next/server";
 
 // Triggered every 10 minutes by the emmaus-mail-lists CronJob (deploy/helm).
 export async function GET(request: Request) {
-  if (
-    request.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`
-  ) {
+  const secret = process.env.CRON_SECRET;
+  // Without a secret `Bearer undefined` would match, so refuse instead.
+  if (!secret || request.headers.get("authorization") !== `Bearer ${secret}`) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
   const processed: Record<string, number> = {};
