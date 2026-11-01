@@ -1,3 +1,4 @@
+import { LIVE_TEXT } from "@/app/carlo/i18n";
 import { Button } from "@/components/ui/button";
 import { CalendarEvent } from "@/domain/events/EventMapper";
 import Link from "next/link";
@@ -26,7 +27,7 @@ const PROGRAMME = [
   {
     time: "19:00",
     title: "Premiere des Films über Carlo, mit Ansprache seiner Mutter Antonia",
-    note: "Kino Hollywood Megaplex Gasometer, Guglgasse 11, 1110 Wien",
+    note: "Kino Hollywood Megaplex Gasometer, Guglgasse 43, 1110 Wien",
   },
 ];
 
@@ -62,6 +63,7 @@ export function AcutisEvent(props: { spaced: boolean }) {
             </div>
           ))}
         </div>
+        <p className="mt-2">{LIVE_TEXT.de.practical.registration}</p>
       </div>
       <div className="mt-3 flex justify-end">
         <Link href="/carlo">

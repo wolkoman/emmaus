@@ -3,6 +3,7 @@ import {
   FILM_START,
   LIVESTREAM,
   MEETING_START,
+  ROUTE_URL,
   TICKET_URL,
 } from "@/app/carlo/livestream";
 import { Button } from "@/components/ui/button";
@@ -76,6 +77,7 @@ export function CarloTeaser() {
             </div>
           ))}
         </div>
+        <p className="-mt-2 text-white/80">{text.practical.registration}</p>
         <div>
           <Link href="/carlo">
             <Button
@@ -105,6 +107,17 @@ export function CarloTeaser() {
                 {text.tickets.link} <PiArrowSquareOutBold />
               </Button>
             </a>
+            <p className="mt-4 text-white/80">
+              {text.practical.route}{" "}
+              <a
+                href={ROUTE_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="font-semibold whitespace-nowrap text-white underline hover:no-underline"
+              >
+                {text.practical.routeLink}
+              </a>
+            </p>
           </div>
         )}
       </div>

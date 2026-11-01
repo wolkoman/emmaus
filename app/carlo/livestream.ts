@@ -16,3 +16,7 @@ export const FILM_START = "2026-11-21T18:00:00Z";
 
 /** Ticket shop for the film premiere; while empty the page says tickets are coming soon. */
 export const TICKET_URL = "https://www.megaplex.at/film/gasometer/carlo-acutis";
+
+/** Public transport route from the parish to the cinema (Google Maps directions URL). */
+export const ROUTE_URL =
+  "https://www.google.com/maps/dir/?api=1&origin=Tesarekplatz%202%2C%201100%20Wien&destination=Hollywood%20Megaplex%20Gasometer%2C%20Guglgasse%2043%2C%201110%20Wien&travelmode=transit";

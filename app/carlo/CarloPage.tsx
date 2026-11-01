@@ -19,6 +19,7 @@ import {
   FILM_START,
   LIVESTREAM,
   MEETING_START,
+  ROUTE_URL,
   TICKET_URL,
 } from "./livestream";
 
@@ -149,6 +150,34 @@ export function CarloPage({ lang }: { lang: LiveLang }) {
                   </div>
                 )}
               </ProgrammeItem>
+            </div>
+          </div>
+
+          <h2 className="mt-20 text-3xl font-bold lg:mt-28 lg:text-4xl">
+            {text.practical.heading}
+          </h2>
+          <div className="mt-6 grid gap-8 text-lg md:grid-cols-2 md:gap-12 lg:text-xl">
+            <div>
+              <h3 className="font-semibold text-[#aadcd8]">
+                {text.practical.registrationTitle}
+              </h3>
+              <p className="mt-2">{text.practical.registration}</p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-[#aadcd8]">
+                {text.practical.routeTitle}
+              </h3>
+              <p className="mt-2">{text.practical.route}</p>
+              <a
+                href={ROUTE_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-4 inline-block"
+              >
+                <Button size="lg" className={ticketButton}>
+                  {text.practical.routeLink} <PiArrowSquareOutBold />
+                </Button>
+              </a>
             </div>
           </div>
 
