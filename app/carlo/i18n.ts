@@ -46,7 +46,17 @@ type LiveText = {
     parish: string;
     cinema: string;
   };
-  tickets: { link: string; soon: string };
+  /** `howTo` explains the Megaplex shop, where buyers need an account. */
+  tickets: { link: string; soon: string; howTo: string };
+  /** Answers to visitors' questions: registration and getting to the cinema. */
+  practical: {
+    heading: string;
+    registrationTitle: string;
+    registration: string;
+    routeTitle: string;
+    route: string;
+    routeLink: string;
+  };
   livestreamHeading: string;
   units: { days: Unit; hours: Unit; minutes: Unit; seconds: Unit };
   notYet: string;
@@ -75,11 +85,23 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       meeting: "Begegnung mit seiner Mutter",
       film: "Premiere des Films über Carlo, mit Ansprache seiner Mutter Antonia",
       parish: "Pfarre Emmaus am Wienerberg, Tesarekplatz 2, 1100 Wien",
-      cinema: "Kino Hollywood Megaplex Gasometer, Guglgasse 11, 1110 Wien",
+      cinema: "Kino Hollywood Megaplex Gasometer, Guglgasse 43, 1110 Wien",
     },
     tickets: {
-      link: "Kinokarten kaufen",
+      link: "Kinokarten beim Megaplex kaufen",
       soon: "Wird freigeschaltet, sobald Karten erhältlich sind",
+      howTo:
+        "Die Karten verkauft das Kino direkt: Im Ticketshop des Megaplex die Vorstellung am 21. November um 19:00 Uhr wählen, Plätze aussuchen, mit Ihrer E-Mail-Adresse ein Megaplex-Konto anlegen (oder sich anmelden) und bezahlen. Das E-Ticket finden Sie danach in Ihrem Konto unter „Meine Tickets“.",
+    },
+    practical: {
+      heading: "Gut zu wissen",
+      registrationTitle: "Anmeldung",
+      registration:
+        "Für die Hl. Messe und die Begegnung mit Antonia Salzano Acutis ist keine Anmeldung nötig, kommen Sie einfach vorbei. Nur für den Film braucht man eine Kinokarte.",
+      routeTitle: "Von der Pfarre zum Kino",
+      route:
+        "Das Kino Hollywood Megaplex liegt direkt bei der U3-Station Gasometer. Von der Pfarre kommen Sie am besten mit den Öffis hin; die aktuelle Verbindung zeigt der Routenplaner.",
+      routeLink: "Route mit Öffis anzeigen",
     },
     livestreamHeading: "Livestream der Hl. Messe",
     units: {
@@ -110,11 +132,23 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       meeting: "Meeting with his mother",
       film: "Premiere of the film about Carlo, with an address by his mother Antonia",
       parish: "Emmaus parish church, Tesarekplatz 2, 1100 Vienna",
-      cinema: "Hollywood Megaplex Gasometer cinema, Guglgasse 11, 1110 Vienna",
+      cinema: "Hollywood Megaplex Gasometer cinema, Guglgasse 43, 1110 Vienna",
     },
     tickets: {
-      link: "Buy cinema tickets",
+      link: "Buy cinema tickets from Megaplex",
       soon: "Available as soon as tickets go on sale",
+      howTo:
+        "Tickets are sold by the cinema itself, in its German-language shop: choose the screening on 21 November at 19:00, pick your seats, create a Megaplex account with your email address (or sign in) and pay. Your e-ticket will then be in your account under “Meine Tickets”.",
+    },
+    practical: {
+      heading: "Good to know",
+      registrationTitle: "Registration",
+      registration:
+        "No registration is needed for the Holy Mass or the meeting with Antonia Salzano Acutis, just come along. Only the film requires a cinema ticket.",
+      routeTitle: "From the parish to the cinema",
+      route:
+        "The Hollywood Megaplex cinema is right by the U3 underground station Gasometer. From the parish, public transport is the best way to get there; the route planner shows the current connection.",
+      routeLink: "Show public transport route",
     },
     livestreamHeading: "Livestream of the Holy Mass",
     units: {
@@ -149,11 +183,23 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       meeting: "Incontro con sua madre",
       film: "Anteprima del film su Carlo, sarà presente sua madre Antonia",
       parish: "Chiesa Emmaus, Tesarekplatz 2, 1100 Vienna",
-      cinema: "Cinema Hollywood Megaplex Gasometer, Guglgasse 11, 1110 Vienna",
+      cinema: "Cinema Hollywood Megaplex Gasometer, Guglgasse 43, 1110 Vienna",
     },
     tickets: {
-      link: "Acquista i biglietti del cinema",
+      link: "Acquista i biglietti al Megaplex",
       soon: "Disponibile non appena i biglietti saranno in vendita",
+      howTo:
+        "I biglietti li vende direttamente il cinema, nel suo shop in tedesco: scegliete la proiezione del 21 novembre alle 19:00, selezionate i posti, create un account Megaplex con il vostro indirizzo e-mail (oppure accedete) e pagate. L’e-ticket si trova poi nel vostro account alla voce «Meine Tickets».",
+    },
+    practical: {
+      heading: "Buono a sapersi",
+      registrationTitle: "Iscrizione",
+      registration:
+        "Per la Santa Messa e l’incontro con Antonia Salzano Acutis non serve iscriversi: venite semplicemente. Solo per il film serve un biglietto del cinema.",
+      routeTitle: "Dalla parrocchia al cinema",
+      route:
+        "Il cinema Hollywood Megaplex si trova direttamente presso la stazione della metropolitana U3 Gasometer. Dalla parrocchia conviene andarci con i mezzi pubblici; il collegamento aggiornato è indicato nel calcolatore di percorso.",
+      routeLink: "Mostra il percorso con i mezzi pubblici",
     },
     livestreamHeading: "Diretta streaming della Santa Messa",
     units: {
@@ -188,11 +234,23 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       meeting: "Susret s njegovom majkom",
       film: "Premijera filma o Carlu, uz obraćanje njegove majke Antonije",
       parish: "Crkva Emmaus, Tesarekplatz 2, 1100 Beč",
-      cinema: "Kino Hollywood Megaplex Gasometer, Guglgasse 11, 1110 Beč",
+      cinema: "Kino Hollywood Megaplex Gasometer, Guglgasse 43, 1110 Beč",
     },
     tickets: {
-      link: "Kupi ulaznice za kino",
+      link: "Kupi ulaznice u Megaplexu",
       soon: "Bit će dostupno čim ulaznice budu u prodaji",
+      howTo:
+        "Ulaznice prodaje izravno kino, u svojoj trgovini na njemačkom jeziku: odaberite projekciju 21. studenoga u 19:00, izaberite mjesta, otvorite Megaplex račun sa svojom e-mail adresom (ili se prijavite) i platite. E-ulaznicu zatim pronađite u svom računu pod „Meine Tickets”.",
+    },
+    practical: {
+      heading: "Dobro je znati",
+      registrationTitle: "Prijava",
+      registration:
+        "Za svetu misu i susret s Antonijom Salzano Acutis prijava nije potrebna, slobodno dođite. Samo za film potrebna je ulaznica za kino.",
+      routeTitle: "Od župe do kina",
+      route:
+        "Kino Hollywood Megaplex nalazi se odmah uz stanicu podzemne željeznice U3 Gasometer. Od župe najbolje je doći javnim prijevozom; trenutačnu vezu pokazuje planer rute.",
+      routeLink: "Prikaži rutu javnim prijevozom",
     },
     livestreamHeading: "Prijenos svete mise uživo",
     units: {

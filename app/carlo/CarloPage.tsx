@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ReactNode } from "react";
-import { PiArrowRightBold } from "react-icons/pi";
+import { PiArrowRightBold, PiArrowSquareOutBold } from "react-icons/pi";
 import {
   carloPath,
   formatDateParts,
@@ -19,6 +19,7 @@ import {
   FILM_START,
   LIVESTREAM,
   MEETING_START,
+  ROUTE_URL,
   TICKET_URL,
 } from "./livestream";
 
@@ -95,7 +96,7 @@ export function CarloPage({ lang }: { lang: LiveLang }) {
               <div className="text-3xl capitalize lg:text-4xl">
                 {date.weekday}
               </div>
-              <div className="text-5xl font-bold tracking-tight whitespace-nowrap sm:text-6xl text-[#aadcd8] italic lg:text-8xl">
+              <div className="text-5xl font-bold tracking-tight whitespace-nowrap text-[#aadcd8] italic sm:text-6xl lg:text-8xl">
                 {date.day}
               </div>
             </div>
@@ -118,11 +119,16 @@ export function CarloPage({ lang }: { lang: LiveLang }) {
                 place={programme.cinema}
               >
                 {TICKET_URL ? (
-                  <a href={TICKET_URL} target="_blank" rel="noreferrer">
-                    <Button size="lg" className={ticketButton}>
-                      {text.tickets.link} <PiArrowRightBold />
-                    </Button>
-                  </a>
+                  <>
+                    <a href={TICKET_URL} target="_blank" rel="noreferrer">
+                      <Button size="lg" className={ticketButton}>
+                        {text.tickets.link} <PiArrowSquareOutBold />
+                      </Button>
+                    </a>
+                    <p className="mt-3 max-w-xl text-base text-white/80">
+                      {text.tickets.howTo}
+                    </p>
+                  </>
                 ) : (
                   <div className="flex flex-wrap items-center gap-3">
                     <Button
@@ -144,6 +150,34 @@ export function CarloPage({ lang }: { lang: LiveLang }) {
                   </div>
                 )}
               </ProgrammeItem>
+            </div>
+          </div>
+
+          <h2 className="mt-20 text-3xl font-bold lg:mt-28 lg:text-4xl">
+            {text.practical.heading}
+          </h2>
+          <div className="mt-6 grid gap-8 text-lg md:grid-cols-2 md:gap-12 lg:text-xl">
+            <div>
+              <h3 className="font-semibold text-[#aadcd8]">
+                {text.practical.registrationTitle}
+              </h3>
+              <p className="mt-2">{text.practical.registration}</p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-[#aadcd8]">
+                {text.practical.routeTitle}
+              </h3>
+              <p className="mt-2">{text.practical.route}</p>
+              <a
+                href={ROUTE_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-4 inline-block"
+              >
+                <Button size="lg" className={ticketButton}>
+                  {text.practical.routeLink} <PiArrowSquareOutBold />
+                </Button>
+              </a>
             </div>
           </div>
 

@@ -8,7 +8,9 @@ import { Suspense } from "react";
 import Responsive from "../components/Responsive";
 import Site from "../components/Site";
 import { Banner1 } from "./banner1";
+import { CarloTeaser } from "./CarloTeaser";
 import { ContactSection } from "./ContactSection";
+import { UntilLivestreamEnds } from "./UntilLivestreamEnds";
 
 export default async function HomePage() {
   return (
@@ -16,8 +18,9 @@ export default async function HomePage() {
       <Responsive>
         <TopBar />
       </Responsive>
-      <div className="mx-auto w-full max-w-6xl px-4">
+      <div className="mx-auto w-full max-w-6xl px-4 lg:mb-16">
         <CoverImage />
+        <UntilLivestreamEnds during={<CarloTeaser />} after={null} />
       </div>
       <Responsive>
         <WelcomeAndFeatured />
