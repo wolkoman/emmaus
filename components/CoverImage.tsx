@@ -73,8 +73,8 @@ function HeroSlideshow({ images }: { images: string[] }) {
 
 export function CoverImage() {
   return (
-    <div className="relative lg:mb-16">
-      <div className="h-3xl relative lg:my-16">
+    <div className="relative">
+      <div className="h-3xl relative lg:mt-16">
         <HeroSlideshow images={IMAGES} />
       </div>
     </div>
