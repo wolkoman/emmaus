@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ReactNode } from "react";
-import { PiArrowRightBold } from "react-icons/pi";
+import { PiArrowRightBold, PiArrowSquareOutBold } from "react-icons/pi";
 import {
   carloPath,
   formatDateParts,
@@ -95,7 +95,7 @@ export function CarloPage({ lang }: { lang: LiveLang }) {
               <div className="text-3xl capitalize lg:text-4xl">
                 {date.weekday}
               </div>
-              <div className="text-5xl font-bold tracking-tight whitespace-nowrap sm:text-6xl text-[#aadcd8] italic lg:text-8xl">
+              <div className="text-5xl font-bold tracking-tight whitespace-nowrap text-[#aadcd8] italic sm:text-6xl lg:text-8xl">
                 {date.day}
               </div>
             </div>
@@ -118,11 +118,16 @@ export function CarloPage({ lang }: { lang: LiveLang }) {
                 place={programme.cinema}
               >
                 {TICKET_URL ? (
-                  <a href={TICKET_URL} target="_blank" rel="noreferrer">
-                    <Button size="lg" className={ticketButton}>
-                      {text.tickets.link} <PiArrowRightBold />
-                    </Button>
-                  </a>
+                  <>
+                    <a href={TICKET_URL} target="_blank" rel="noreferrer">
+                      <Button size="lg" className={ticketButton}>
+                        {text.tickets.link} <PiArrowSquareOutBold />
+                      </Button>
+                    </a>
+                    <p className="mt-3 max-w-xl text-base text-white/80">
+                      {text.tickets.howTo}
+                    </p>
+                  </>
                 ) : (
                   <div className="flex flex-wrap items-center gap-3">
                     <Button

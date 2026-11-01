@@ -46,7 +46,8 @@ type LiveText = {
     parish: string;
     cinema: string;
   };
-  tickets: { link: string; soon: string };
+  /** `howTo` explains the Megaplex shop, where buyers need an account. */
+  tickets: { link: string; soon: string; howTo: string };
   livestreamHeading: string;
   units: { days: Unit; hours: Unit; minutes: Unit; seconds: Unit };
   notYet: string;
@@ -78,8 +79,10 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       cinema: "Kino Hollywood Megaplex Gasometer, Guglgasse 11, 1110 Wien",
     },
     tickets: {
-      link: "Kinokarten kaufen",
+      link: "Kinokarten beim Megaplex kaufen",
       soon: "Wird freigeschaltet, sobald Karten erhältlich sind",
+      howTo:
+        "Die Karten verkauft das Kino direkt: Im Ticketshop des Megaplex die Vorstellung am 21. November um 19:00 Uhr wählen, Plätze aussuchen, mit Ihrer E-Mail-Adresse ein Megaplex-Konto anlegen (oder sich anmelden) und bezahlen. Das E-Ticket finden Sie danach in Ihrem Konto unter „Meine Tickets“.",
     },
     livestreamHeading: "Livestream der Hl. Messe",
     units: {
@@ -113,8 +116,10 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       cinema: "Hollywood Megaplex Gasometer cinema, Guglgasse 11, 1110 Vienna",
     },
     tickets: {
-      link: "Buy cinema tickets",
+      link: "Buy cinema tickets from Megaplex",
       soon: "Available as soon as tickets go on sale",
+      howTo:
+        "Tickets are sold by the cinema itself, in its German-language shop: choose the screening on 21 November at 19:00, pick your seats, create a Megaplex account with your email address (or sign in) and pay. Your e-ticket will then be in your account under “Meine Tickets”.",
     },
     livestreamHeading: "Livestream of the Holy Mass",
     units: {
@@ -152,8 +157,10 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       cinema: "Cinema Hollywood Megaplex Gasometer, Guglgasse 11, 1110 Vienna",
     },
     tickets: {
-      link: "Acquista i biglietti del cinema",
+      link: "Acquista i biglietti al Megaplex",
       soon: "Disponibile non appena i biglietti saranno in vendita",
+      howTo:
+        "I biglietti li vende direttamente il cinema, nel suo shop in tedesco: scegliete la proiezione del 21 novembre alle 19:00, selezionate i posti, create un account Megaplex con il vostro indirizzo e-mail (oppure accedete) e pagate. L’e-ticket si trova poi nel vostro account alla voce «Meine Tickets».",
     },
     livestreamHeading: "Diretta streaming della Santa Messa",
     units: {
@@ -191,8 +198,10 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       cinema: "Kino Hollywood Megaplex Gasometer, Guglgasse 11, 1110 Beč",
     },
     tickets: {
-      link: "Kupi ulaznice za kino",
+      link: "Kupi ulaznice u Megaplexu",
       soon: "Bit će dostupno čim ulaznice budu u prodaji",
+      howTo:
+        "Ulaznice prodaje izravno kino, u svojoj trgovini na njemačkom jeziku: odaberite projekciju 21. studenoga u 19:00, izaberite mjesta, otvorite Megaplex račun sa svojom e-mail adresom (ili se prijavite) i platite. E-ulaznicu zatim pronađite u svom računu pod „Meine Tickets”.",
     },
     livestreamHeading: "Prijenos svete mise uživo",
     units: {

@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { PiArrowRightBold } from "react-icons/pi";
+import { PiArrowRightBold, PiArrowSquareOutBold } from "react-icons/pi";
 
 /** Homepage banner right below the hero that points visitors to /carlo. */
 export function CarloTeaser() {
@@ -76,7 +76,7 @@ export function CarloTeaser() {
             </div>
           ))}
         </div>
-        <div className="flex flex-wrap gap-3">
+        <div>
           <Link href="/carlo">
             <Button
               size="lg"
@@ -85,17 +85,28 @@ export function CarloTeaser() {
               Alle Infos und Livestream <PiArrowRightBold />
             </Button>
           </Link>
-          {TICKET_URL && (
-            <a href={TICKET_URL} target="_blank" rel="noreferrer">
+        </div>
+        {TICKET_URL && (
+          <div className="rounded-lg bg-white/10 p-4 lg:p-5">
+            <div className="font-semibold lg:text-lg">
+              Kinokarten für die Filmpremiere um {formatTime(FILM_START, "de")}
+            </div>
+            <p className="mt-1 text-white/80">{text.tickets.howTo}</p>
+            <a
+              href={TICKET_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-3 inline-block"
+            >
               <Button
                 size="lg"
                 className="border-white/60 bg-transparent px-4 text-base font-semibold text-white hover:bg-white/10"
               >
-                Kinokarten kaufen <PiArrowRightBold />
+                {text.tickets.link} <PiArrowSquareOutBold />
               </Button>
             </a>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );
