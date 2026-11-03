@@ -31,6 +31,13 @@ export const MAILBOXES: Mailbox[] = [
         "in der bestehenden Zeile nachtragen.",
     },
   },
+  {
+    slug: "wahl",
+    title: "Wahl",
+    address: "wahl@emmaus.wien",
+    competence: CpPersonCompetences.MailWahl,
+    passwordEnv: "ELECTION_MAIL_PASSWORD",
+  },
 ];
 
 export function canReadMailbox(person: CpPerson, mailbox: Mailbox) {

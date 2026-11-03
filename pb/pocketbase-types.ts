@@ -352,6 +352,7 @@ export const PersonsCompetencesOptions = {
   sacristan_planning: "sacristan_planning",
   musician_planning: "musician_planning",
   "mail:events": "mail:events",
+  "mail:wahl": "mail:wahl",
 } as const;
 export type PersonsCompetencesOptions =
   (typeof PersonsCompetencesOptions)[keyof typeof PersonsCompetencesOptions];
