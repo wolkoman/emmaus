@@ -27,9 +27,11 @@
     uses "Du".
   - Sizes as on the homepage: hero `h-3xl`, section headings `text-3xl`,
     card/body text at the standard size.
-- If `"use cache"` components fail in dev with `chunk.reason.enqueueModel is
-  not a function`, the on-disk dev cache is corrupt: stop the server and
-  delete `.next`; restarting alone is not enough.
+- `chunk.reason.enqueueModel is not a function` in dev hides the real error
+  of a failing `"use cache"` function (often missing env). First check that
+  `node_modules/next` matches `bun.lock` (`bun install --frozen-lockfile`
+  after pulling; a stale 16.2.7 made it hang pages), then stop the server
+  and delete `.next`.
 - `bun add` on Manuel's machine writes the StepSecurity proxy URL into every
   `bun.lock` entry; Vercel can't reach it (401) and the deploy fails. After
   adding packages, replace those URLs with `""` (default registry) before
