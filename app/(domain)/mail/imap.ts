@@ -124,13 +124,16 @@ export function setFlag(
 }
 
 /** Received mails not yet run through the list update, oldest first. */
-export function unlistedMails(mailbox: Mailbox) {
+export function unlistedMails(mailbox: Mailbox, limit: number) {
   return withFolder(mailbox, "INBOX", async (client) => {
     const uids = await client.search({ unKeyword: LISTED_FLAG }, { uid: true });
     if (!uids || uids.length === 0) return [];
     const messages: FetchMessageObject[] = [];
     for await (const message of client.fetch(
-      uids.join(","),
+      uids
+        .sort((a, b) => a - b)
+        .slice(0, limit)
+        .join(","),
       { uid: true, source: true },
       { uid: true },
     )) {

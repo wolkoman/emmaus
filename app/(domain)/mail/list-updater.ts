@@ -2,6 +2,7 @@ import { LISTED_FLAG, setFlag, unlistedMails } from "@/domain/mail/imap";
 import {
   addListChange,
   getMailList,
+  ListConflictError,
   saveMailList,
 } from "@/domain/mail/mail-list-repo";
 import { Mailbox } from "@/domain/mail/mailboxes";
@@ -15,32 +16,53 @@ const ListUpdate = z.object({
   change: z.string(),
 });
 
+// Bounds the Claude calls a spam flood can cause; the rest waits for the next run.
+const MAILS_PER_RUN = 20;
+const MAX_TEXT_LENGTH = 20000;
+
 /**
  * Runs every received mail that hasn't been yet through Claude, which returns
  * the updated list. Mails are flagged afterwards, so each is used once.
  */
 export async function updateListFromNewMails(mailbox: Mailbox) {
   if (!mailbox.list) return 0;
-  const mails = await unlistedMails(mailbox);
-  for (const { uid, mail } of mails) {
+  const mails = await unlistedMails(mailbox, MAILS_PER_RUN);
+  for (const entry of mails) {
+    const { uid, mail } = entry;
     const list = await getMailList(mailbox);
     const sentByUs = mail.from?.value.some(
       (a) => a.address?.toLowerCase() === mailbox.address,
     );
-    const update = sentByUs
-      ? undefined
-      : await askClaude(mailbox, list.instructions, list.text, mail);
-    const changed =
-      !!update && update.list.trim() !== list.text.trim() ? update : undefined;
-    if (changed) {
-      await saveMailList(list, { text: changed.list }, list.updated);
+    let change = "";
+    let listAfter = list.text;
+    if (!sentByUs) {
+      try {
+        const update = await askClaude(
+          mailbox,
+          list.instructions,
+          list.text,
+          mail,
+        );
+        if (update.list.trim() !== list.text.trim()) {
+          await saveMailList(list, { text: update.list }, list.updated);
+          change = update.change;
+          listAfter = update.list;
+        }
+      } catch (err) {
+        // Someone saved the list meanwhile: retry this mail next run.
+        if (err instanceof ListConflictError) return mails.indexOf(entry);
+        // Flag the mail anyway, or it would block and re-bill every run.
+        console.error(`List update failed for ${mailbox.slug} ${uid}`, err);
+        change =
+          "Automatische Auswertung fehlgeschlagen, bitte von Hand prüfen.";
+      }
     }
     await addListChange(mailbox, {
       uid,
       subject: mail.subject ?? "",
       from: mail.from?.text ?? "",
-      change: changed?.change ?? "",
-      list_after: changed?.list ?? list.text,
+      change,
+      list_after: listAfter,
     });
     await setFlag(mailbox, "INBOX", uid, LISTED_FLAG, true);
   }
@@ -83,7 +105,7 @@ async function askClaude(
           `Von: ${mail.from?.text ?? ""}\n` +
           `Datum: ${mail.date?.toISOString() ?? ""}\n` +
           `Betreff: ${mail.subject ?? ""}\n\n` +
-          `${mail.text ?? ""}\n</email>`,
+          `${truncate(mail.text ?? "")}\n</email>`,
       },
     ],
   });
@@ -91,4 +113,10 @@ async function askClaude(
     throw new Error(`List update failed (${response.stop_reason})`);
   }
   return response.parsed_output;
+}
+
+function truncate(text: string) {
+  return text.length > MAX_TEXT_LENGTH
+    ? `${text.slice(0, MAX_TEXT_LENGTH)}\n[… gekürzt]`
+    : text;
 }
