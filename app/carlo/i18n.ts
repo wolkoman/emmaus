@@ -85,13 +85,13 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       meeting: "Begegnung mit seiner Mutter",
       film: "Premiere des Films über Carlo, mit Ansprache seiner Mutter Antonia",
       parish: "Pfarre Emmaus am Wienerberg, Tesarekplatz 2, 1100 Wien",
-      cinema: "Kino Hollywood Megaplex Gasometer, Guglgasse 43, 1110 Wien",
+      cinema: "Kino Hollywood Megaplex Gasometer, Guglgasse 11, 1110 Wien",
     },
     tickets: {
       link: "Kinokarten beim Megaplex kaufen",
       soon: "Wird freigeschaltet, sobald Karten erhältlich sind",
       howTo:
-        "Die Karten verkauft das Kino direkt: Im Ticketshop des Megaplex die Vorstellung am 21. November um 19:00 Uhr wählen, Plätze aussuchen, mit Ihrer E-Mail-Adresse ein Megaplex-Konto anlegen (oder sich anmelden) und bezahlen. Das E-Ticket finden Sie danach in Ihrem Konto unter „Meine Tickets“.",
+        "Die Karten verkauft das Kino direkt: Im Ticketshop des Megaplex die Vorstellung am 21. November um 19:00 oder 19:20 Uhr wählen, Plätze aussuchen, mit Ihrer E-Mail-Adresse ein Megaplex-Konto anlegen (oder sich anmelden) und bezahlen. Das E-Ticket finden Sie danach in Ihrem Konto unter „Meine Tickets“.",
     },
     practical: {
       heading: "Gut zu wissen",
@@ -132,13 +132,13 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       meeting: "Meeting with his mother",
       film: "Premiere of the film about Carlo, with an address by his mother Antonia",
       parish: "Emmaus parish church, Tesarekplatz 2, 1100 Vienna",
-      cinema: "Hollywood Megaplex Gasometer cinema, Guglgasse 43, 1110 Vienna",
+      cinema: "Hollywood Megaplex Gasometer cinema, Guglgasse 11, 1110 Vienna",
     },
     tickets: {
       link: "Buy cinema tickets from Megaplex",
       soon: "Available as soon as tickets go on sale",
       howTo:
-        "Tickets are sold by the cinema itself, in its German-language shop: choose the screening on 21 November at 19:00, pick your seats, create a Megaplex account with your email address (or sign in) and pay. Your e-ticket will then be in your account under “Meine Tickets”.",
+        "Tickets are sold by the cinema itself, in its German-language shop: choose the screening on 21 November at 19:00 or 19:20, pick your seats, create a Megaplex account with your email address (or sign in) and pay. Your e-ticket will then be in your account under “Meine Tickets”.",
     },
     practical: {
       heading: "Good to know",
@@ -183,13 +183,13 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       meeting: "Incontro con sua madre",
       film: "Anteprima del film su Carlo, sarà presente sua madre Antonia",
       parish: "Chiesa Emmaus, Tesarekplatz 2, 1100 Vienna",
-      cinema: "Cinema Hollywood Megaplex Gasometer, Guglgasse 43, 1110 Vienna",
+      cinema: "Cinema Hollywood Megaplex Gasometer, Guglgasse 11, 1110 Vienna",
     },
     tickets: {
       link: "Acquista i biglietti al Megaplex",
       soon: "Disponibile non appena i biglietti saranno in vendita",
       howTo:
-        "I biglietti li vende direttamente il cinema, nel suo shop in tedesco: scegliete la proiezione del 21 novembre alle 19:00, selezionate i posti, create un account Megaplex con il vostro indirizzo e-mail (oppure accedete) e pagate. L’e-ticket si trova poi nel vostro account alla voce «Meine Tickets».",
+        "I biglietti li vende direttamente il cinema, nel suo shop in tedesco: scegliete la proiezione del 21 novembre alle 19:00 o alle 19:20, selezionate i posti, create un account Megaplex con il vostro indirizzo e-mail (oppure accedete) e pagate. L’e-ticket si trova poi nel vostro account alla voce «Meine Tickets».",
     },
     practical: {
       heading: "Buono a sapersi",
@@ -234,13 +234,13 @@ export const LIVE_TEXT: Record<LiveLang, LiveText> = {
       meeting: "Susret s njegovom majkom",
       film: "Premijera filma o Carlu, uz obraćanje njegove majke Antonije",
       parish: "Crkva Emmaus, Tesarekplatz 2, 1100 Beč",
-      cinema: "Kino Hollywood Megaplex Gasometer, Guglgasse 43, 1110 Beč",
+      cinema: "Kino Hollywood Megaplex Gasometer, Guglgasse 11, 1110 Beč",
     },
     tickets: {
       link: "Kupi ulaznice u Megaplexu",
       soon: "Bit će dostupno čim ulaznice budu u prodaji",
       howTo:
-        "Ulaznice prodaje izravno kino, u svojoj trgovini na njemačkom jeziku: odaberite projekciju 21. studenoga u 19:00, izaberite mjesta, otvorite Megaplex račun sa svojom e-mail adresom (ili se prijavite) i platite. E-ulaznicu zatim pronađite u svom računu pod „Meine Tickets”.",
+        "Ulaznice prodaje izravno kino, u svojoj trgovini na njemačkom jeziku: odaberite projekciju 21. studenoga u 19:00 ili 19:20, izaberite mjesta, otvorite Megaplex račun sa svojom e-mail adresom (ili se prijavite) i platite. E-ulaznicu zatim pronađite u svom računu pod „Meine Tickets”.",
     },
     practical: {
       heading: "Dobro je znati",

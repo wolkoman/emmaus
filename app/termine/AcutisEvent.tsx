@@ -25,9 +25,9 @@ const PROGRAMME = [
     title: "Begegnung mit der Mutter des Heiligen Carlo Acutis",
   },
   {
-    time: "19:00",
+    time: "19:00 / 19:20",
     title: "Premiere des Films über Carlo, mit Ansprache seiner Mutter Antonia",
-    note: "Kino Hollywood Megaplex Gasometer, Guglgasse 43, 1110 Wien",
+    note: "Kino Hollywood Megaplex Gasometer, Guglgasse 11, 1110 Wien",
   },
 ];
 

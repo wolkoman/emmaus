@@ -16,7 +16,7 @@ import {
 } from "./i18n";
 import { LiveStatus } from "./LiveStatus";
 import {
-  FILM_START,
+  FILM_STARTS,
   LIVESTREAM,
   MEETING_START,
   ROUTE_URL,
@@ -114,7 +114,9 @@ export function CarloPage({ lang }: { lang: LiveLang }) {
                 place={programme.parish}
               />
               <ProgrammeItem
-                time={formatTime(FILM_START, lang)}
+                time={FILM_STARTS.map((start) => formatTime(start, lang)).join(
+                  "\n",
+                )}
                 title={programme.film}
                 place={programme.cinema}
               >
@@ -211,7 +213,7 @@ function ProgrammeItem(props: {
 }) {
   return (
     <div className="contents">
-      <div className="font-semibold text-[#aadcd8] tabular-nums">
+      <div className="font-semibold whitespace-pre-line text-[#aadcd8] tabular-nums">
         {props.time}
       </div>
       <div>
