@@ -85,6 +85,20 @@ connect without an id and only get the state.
 
 ## OBS setup
 
+**Quick start on a new machine**: `obs/` holds the profile (`EMMAUSLIVE`:
+1920×1080 canvas, 720p30 output) and the scene collection (`AcutisLive.json`:
+`ATEM IN`, `Pre-Live`, `Live`, `Overlay (browser)`). In OBS:
+
+1. **Profile → Import**, choose the `obs/EMMAUSLIVE` folder, then select it.
+2. **Scene Collection → Import**, choose `obs/AcutisLive.json`, then select it.
+3. In `ATEM IN`, replace the `Color` placeholder with the ATEM's capture
+   device, and set the recording folder under Settings → Output.
+4. Do steps 1 (WebSocket password) and 4 (Move transition) below; the export
+   still uses a 1 s Fade.
+
+The export holds no stream key or passwords; set the stream under Settings →
+Stream on each machine.
+
 1. **WebSocket server**: Tools → WebSocket Server Settings → enable it, keep
    authentication on, and put the password in `.env.local` as
    `OBS_WEBSOCKET_PASSWORD`. The control page shows `obs.connection`.
