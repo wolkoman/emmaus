@@ -14,7 +14,7 @@ bun run broadcast
 
 - Start page for the operators, linking to the camera pages: http://localhost:4321
 - Control page (with the chat as "Regie"): http://localhost:4321/control
-- Overlays: `http://localhost:4321/overlay/<name>`, e.g. http://localhost:4321/overlay/live
+- Overlay for OBS: http://localhost:4321/overlay/main (the pre-live screen and the live overlay in one frame; each layer alone at `/overlay/prelive` and `/overlay/live`)
 - Camera pages: `http://<mac>:4321/camera/1` … `/camera/4` (see "Cameras and chat")
 
 The state lives in memory: a restart resets every field to its initial value.
@@ -39,7 +39,7 @@ server/protocol.ts  the WebSocket messages, documented in one place
 server/http.ts      pages, assets and the JSON API
 server/obs.ts       connection to OBS (obs-websocket 5): switch scenes, report changes
 server/chat.ts      crew chat: recent history and who is typing
-content/            texts for the overlays (prelive.ts, trailer.ts)
+content/            texts for the overlays (prelive.ts, trailer.ts, readings.ts, communion.ts)
 public/             what browsers load: control page, camera page, overlays, shared modules
                     (overlay-client.js connection, chat.js chat panel, morph-text.js)
 ```
@@ -90,14 +90,15 @@ connect without an id and only get the state.
    `OBS_WEBSOCKET_PASSWORD`. The control page shows `obs.connection`.
 2. **Scenes**: `obs.scene` maps to OBS scenes in `OBS_SCENES` in `main.ts`
    (`prelive` → `Pre-Live`, `live` → `Live`).
-3. **Browser sources**: width 1920, height 1080, "Shutdown source when not
-   visible" off (otherwise the page reloads on every scene switch).
-   - `Live Indicator (browser)` sits in the `LIVE INDICATOR OVERLAY` scene, which
-     `Pre-Live` and `Live` both nest.
-   - `Pre-Live Info (browser)` is in `Pre-Live` and `Live` (the second time via
-     **Add → Add Existing**, so both share one page), at 0, 0, scale 1, above
-     `ATEM IN` and below `LIVE INDICATOR OVERLAY`. Tick **"Control audio via
-     OBS"** so the trailer's sound reaches the stream.
+3. **Browser source**: one, `Overlay (browser)` with
+   `http://localhost:4321/overlay/main`, width 1920, height 1080, at 0, 0,
+   scale 1, above `ATEM IN`. Put it in `Pre-Live` and `Live` (the second time
+   via **Add → Add Existing**, so both share one page). Turn "Shutdown source
+   when not visible" off (otherwise the page reloads on every scene switch) and
+   tick **"Control audio via OBS"** so the trailer's sound reaches the stream.
+   The page stacks the pre-live screen (below) and the live overlay (on top) in
+   two frames; it replaces the former `Pre-Live Info` and `Live Indicator`
+   browser sources.
 4. **Transition**: the **Move** plugin, **800 ms**, easing **Cubic, In/Out**. It
    scales `ATEM IN` from the pre-live frame (688, 96, scale 0.6) to full screen;
    the page animates in step, so `--move-ms` and `--move-ease` at the top of
@@ -192,12 +193,87 @@ connect at all, allow incoming connections for `bun` in macOS's firewall.
 
 Going live stops a trailer that is still playing.
 
-### `live`: red dot and "LIVE", top right
+### `live`: the overlays over the live picture
+
+Everything shown over the live picture is in this one page, so it needs no
+further browser sources; new overlays for the live picture go here too. It is
+nested in `Pre-Live` as well, so show a banner only once the scene is `live`.
+
+**`mode`**: red dot and "LIVE", top right
 
 | `mode` | Effect                                                                        |
 | ------ | ----------------------------------------------------------------------------- |
 | `off`  | Letters slide up and fade out one by one, then the dot fades (initial state)  |
 | `on`   | Dot appears, then the letters drop in one by one                              |
+
+**`banner`**: lower third with name and role, bottom left. The texts are in
+`BANNERS` in `public/overlays/live.html`.
+
+| `banner` | Shows                                                 |
+| -------- | ----------------------------------------------------- |
+| `off`    | Nothing (initial state)                               |
+| `priest` | Dr. Zvonko Brezovski, Pfarrer, Pfarre Emmaus am Wienerberg |
+| `mother` | Antonia Salzano Acutis, Mutter des hl. Carlo Acutis   |
+
+The role line changes language every 3 seconds (German, Croatian, Italian,
+English; `ROLE_MS`) and the panel keeps the width of the longest one.
+
+The panel wipes open from the left, then name and role rise; hiding reverses
+it. Switching between two banners hides the first before the second comes in.
+While a banner is shown the LIVE indicator is shown too, even with `mode`
+`off`; it goes again with the banner. A banner hides itself after 12 seconds, once every language has shown
+(`BANNER_MS` in `main.ts`); show it again when the person appears again.
+
+**`reading`**, **`cue`**, **`step`**: subtitles for the readings, a band
+across the bottom with the current cue in German, Croatian, Italian and
+English, one row each. The texts are in `content/readings.ts`, split into
+sense lines that are aligned across the languages. `readings.set` picks the
+texts behind `first` and `gospel` (`READING_SETS`): `actual` is the Carlo
+Acutis Mass (Isaiah 61, Matthew 12), `test` the test Mass on Sunday,
+15 November 2026, St. Leopold (Proverbs 3, Luke 19). On the control page it is
+the deliberately tiny "Readings: Mass / Test" switch at the top right, so it is
+not hit by accident during the live Mass; in test mode the whole page turns blue. Switching
+turns off a reading that is on screen.
+
+| Field     | Values                       | Effect                                                    |
+| --------- | ---------------------------- | --------------------------------------------------------- |
+| `reading` | `off`, `first`, `gospel`     | Shows that reading of the current set from its Bible reference; choosing it again restarts it (the gospel is read twice) |
+| `cue`     | `0` …                        | Read-only: `0` is the Bible reference, `1` the announcement, then the lines |
+| `step`    | `prev`, `next`               | Moves one cue; `next` after the last cue hides the band, `prev` stops at the reference |
+
+Each row is the whole reading on one line that scrolls left continuously; the
+point being read sits at 40% of the width (`ANCHOR` in `live.html`), with what
+was just read to its left and what comes next to its right. Every line scrolls
+in its own time, estimated from its length (`CHARS_PER_SECOND`), and each
+language at its own speed so the rows stay on the same line. When the operator
+steps, the scroll re-times instead of jumping: it catches up smoothly if the
+reader is ahead and comes to rest at the end of the line if the reader is
+slower. Choosing a reading again fades the text out and starts over (the gospel
+is read twice). Each reading starts with only its Bible reference ("Matthäus
+12,46-50", with "Evangelium" small above it), larger, rotating through the four languages every 2.5 seconds
+(`REFERENCE_MS`) while the rows are hidden. The first `next` fades over to the
+announcement ("Aus dem heiligen Evangelium nach Matthäus"), which stands still at the left edge; the scroll
+starts with the following `next`, and over the first line the reading point moves
+out to `ANCHOR`.
+
+**Following the reader**: while a reading is on, the control page shows it at
+the top: the line being read and, in a blue box, the next line in all four
+languages. Press "Next line" (or →, Page Down, so a presenter clicker works)
+the moment the reader starts the line in the blue box; ← or Page Up goes back.
+`step=next` on a Stream Deck key does the same.
+
+**`communion`**: during communion the stream shows only a b-roll image (nobody
+receiving is shown), and this lays a card over it in the parish teal, under the
+LIVE dot and the other overlays. The texts are in `content/communion.ts`.
+
+| `communion` | Shows                                                                     |
+| ----------- | ------------------------------------------------------------------------- |
+| `off`       | Nothing (initial state)                                                   |
+| `prayer`    | The act of spiritual communion in all four languages at once, in a 2×2 grid |
+| `carlo`     | "Die Eucharistie ist meine Autobahn in den Himmel", large on the left; the language changes every 25 seconds (`CARLO_MS`) with a fade |
+
+Start with `prayer` when communion begins and switch to `carlo` for the rest of
+it; the cards crossfade.
 
 ### `prelive`: the pre-live screen
 
@@ -211,28 +287,57 @@ stays visible in every pre-live mode, including the trailer. When `obs.scene`
 becomes `live`, the hole around the camera opens to full screen and everything
 else clears away; back to `prelive` reverses it.
 
-| Field       | Default                         | Effect                                                                                       |
-| ----------- | ------------------------------- | -------------------------------------------------------------------------------------------- |
-| `startTime` | Mass start from `livestream.ts` | Today's broadcast start for the countdown; "starting shortly" once it has passed             |
-| `trailer`   | `off`                           | `play` shows the trailer in the camera frame with German and Croatian translations; back to `off` when it ends |
+| Field        | Default                           | Effect                                                                                       |
+| ------------ | --------------------------------- | -------------------------------------------------------------------------------------------- |
+| `screen`     | `before`                          | Which left column and pill: `before` the Mass, a `pause` (before the meeting with Carlo's mother) or the `end` |
+| `startTime`  | Mass start from `livestream.ts`   | Today's broadcast start for the countdown; "starting shortly" once it has passed             |
+| `resumeTime` | Meeting start from `livestream.ts` | Where the pause counts down to ("The broadcast continues in N minutes")                     |
+| `trailer`   | `off`                           | `play` shows the trailer in the camera frame with Croatian, Italian and English subtitles; back to `off` when it ends |
+| `music`     | `off`                           | `play` fades in `public/media/music.mp3`, looped; it fades out while the trailer plays and back in after it; going live stops it |
 
 Title and date come from `app/carlo/i18n.ts` and `app/carlo/livestream.ts`, the
 same source as the website's `/carlo` page; the other texts are in
-`content/prelive.ts`. Text uses four sizes, set as variables
+`content/prelive.ts`. Text uses three sizes, set as variables
 at the top of the stylesheet; the font is the site's Source Sans 3.
 
+**Smallest text**: 32px at 1920×1080 on every overlay (26px was the smallest
+still legible in the stream). Translations rotate through the languages in place
+rather than appearing as smaller lines; the film block under the frame does the
+same as the left column.
+
+**Pause and end**: switch OBS back to `prelive` and set `screen`. The camera
+frame, film block and parish stay; the left column crossfades. The pause shows
+"Gleich geht es weiter", the meeting at 17:00 and a countdown to `resumeTime`;
+the end shows the thanks and that the recording will be on emmaus.wien/carlo,
+with "Thank you for watching" in the pill. It leaves out the evening's film
+screening: viewers who could go are in Vienna and most likely there already.
+
+Each rotating line keeps the height of its tallest language (all languages are
+laid out invisibly in the same cell), so nothing below it moves when the
+language changes.
+
+**Music**: `public/media/music.mp3` is not in git either; any MP3 works. Copy
+it there on the streaming Mac.
+
 **Trailer**: `public/media/trailer.mp4` is not in git; put the file there on the
-streaming Mac. Its audio is Italian with English subtitles and title cards
-burned in, so `content/trailer.ts` holds German and Croatian translations,
-timed to the video.
+streaming Mac. It is Kinostar's 50-second German trailer, fetched with
+`yt-dlp -f "bv*[height<=1080][vcodec^=avc1]+ba[ext=m4a]" --merge-output-format mp4
+-o broadcast/public/media/trailer.mp4 https://www.youtube.com/watch?v=zpvVgU0mSxw`
+(H.264, which OBS's browser plays). It is narrated in German, so
+`content/trailer.ts` holds Croatian, Italian and English subtitles, timed from
+YouTube's automatic German captions.
 
 ## Extending
 
 **A field or section**: add it to the schema in `main.ts` (`choice([...])` or
-`time("17:00")`). Validation, the control page and the HTTP URLs follow.
+`time("17:00")`). Validation, the control page and the HTTP URLs follow. A
+command such as `next` is a `choice([...], { action: true })` handled in
+`OWNED_FIELDS`; the control page shows its buttons without marking one active.
 
 **An overlay**: create `public/overlays/<name>.html` with a transparent
-background; `connect({ onState })` from `/overlay-client.js` gives it the state.
+background; `connect({ on: { state } })` from `/overlay-client.js` gives it the
+state. To put it on air, add it as another frame in `overlays/main.html` (later
+frames lie on top) rather than as a new OBS browser source.
 
 **An outside system** (like OBS, later the ATEM): a module in `server/` that
 connects, reconnects by itself and reports through callbacks. In `main.ts` its

@@ -62,5 +62,7 @@
   disappearing and swapping (overlay modes, pill, trailer, rotating text).
   Camera switching is done in OBS/ATEM and is out of scope.
   Everything shown before the livestream keeps the broadcast countdown visible.
+  No text on air smaller than 32px at 1920×1080 (26px was the smallest still
+  legible in the stream; 32px is the agreed minimum).
   Pages only render server state; OBS, the ATEM and other systems are server
   modules (`broadcast/server/`), see the README's "How it fits together".

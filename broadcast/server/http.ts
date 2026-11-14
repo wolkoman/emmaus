@@ -3,6 +3,8 @@ import type { Server } from "bun";
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { preliveContent } from "../content/prelive";
+import { COMMUNION } from "../content/communion";
+import { READING_LANGS, READING_SETS, READINGS } from "../content/readings";
 import type { Store } from "./store";
 
 const PUBLIC_DIR = join(import.meta.dir, "../public");
@@ -92,13 +94,15 @@ export function createHttpHandler({ store, set, chatClients }: Deps) {
     }
     if ((match = path.match(/^\/overlay\/([a-z0-9-]+)$/))) return file(join(PUBLIC_DIR, "overlays", `${match[1]}.html`));
     if ((match = path.match(/^\/([a-z-]+\.js)$/))) return file(join(PUBLIC_DIR, match[1]));
-    if ((match = path.match(/^\/media\/([a-z0-9-]+\.mp4)$/))) return file(join(PUBLIC_DIR, "media", match[1]));
+    if ((match = path.match(/^\/media\/([a-z0-9-]+\.(?:mp4|mp3))$/))) return file(join(PUBLIC_DIR, "media", match[1]));
     if ((match = path.match(/^\/fonts\/(source-sans-3-[a-z0-9-]+\.woff2)$/))) return file(join(FONT_DIR, match[1]));
     if (path === "/logo.svg") return file(LOGO);
 
     // API
     if (path === "/api/state") return json({ schema: store.schema, state: store.state, overlays: overlayPages });
     if (path === "/api/content/prelive") return json(preliveContent());
+    if (path === "/api/content/readings") return json({ langs: READING_LANGS, readings: READINGS, sets: READING_SETS });
+    if (path === "/api/content/communion") return json({ langs: READING_LANGS, ...COMMUNION });
     // GET with query parameters is what a Stream Deck "Website" button can send.
     if ((match = path.match(/^\/api\/([a-z0-9-]+)\/set$/)) && (req.method === "GET" || req.method === "POST")) {
       const isJson = req.method === "POST" && req.headers.get("content-type")?.includes("application/json");

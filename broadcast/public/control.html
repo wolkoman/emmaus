@@ -195,6 +195,92 @@
         margin-top: 4px;
         word-break: break-all;
       }
+      /* Following a reading: the line being read and the next one, big enough to read along. */
+      .reading-lines {
+        display: grid;
+        gap: 12px;
+        margin-top: 12px;
+      }
+      .reading-cue {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 4px 12px;
+        align-items: baseline;
+        padding: 12px 14px;
+        border-radius: 8px;
+        background: #16181c;
+      }
+      .reading-cue h3 {
+        grid-column: 1 / -1;
+        margin: 0 0 4px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #9aa0a8;
+      }
+      .reading-cue .lang {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #9aa0a8;
+      }
+      .reading-now {
+        font-size: 17px;
+        color: #9aa0a8;
+      }
+      .reading-next {
+        font-size: 24px;
+        border: 1px solid #3d6fa3;
+      }
+      .reading .buttons button {
+        flex: 1;
+        padding: 16px;
+        font-size: 18px;
+      }
+      .reading .buttons .primary {
+        flex: 3;
+        background: #1f3b5a;
+        border-color: #3d6fa3;
+      }
+      .reading-hint {
+        margin: 8px 0 0;
+        font-size: 13px;
+        color: #9aa0a8;
+      }
+      /* Test mode: the whole page turns blue, so nobody takes the test texts for the real Mass. */
+      :root {
+        transition: background 300ms ease;
+      }
+      :root.test-mode {
+        background: #0d2a57;
+      }
+      .test-mode section {
+        background: #123a73;
+        border-color: #2b5ca8;
+      }
+      .test-mode input,
+      .test-mode .reading-cue {
+        background: #0d2a57;
+      }
+      /* Deliberately tiny, so the live readings are not swapped by a stray tap. */
+      .set-toggle {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-left: auto;
+        font-size: 11px;
+        font-weight: 400;
+        color: #9aa0a8;
+      }
+      .set-toggle button {
+        padding: 2px 6px;
+        font-size: 11px;
+        border-radius: 4px;
+      }
+      .set-toggle button[data-set="test"].active {
+        background: #2f7de1;
+        border-color: #2f7de1;
+      }
     </style>
   </head>
   <body>
@@ -332,7 +418,9 @@
         row.append(...buttons, ...field.values.map((value) => apiUrl(section, name, value)));
         return {
           el: row,
-          update: (current) => buttons.forEach((b, i) => b.classList.toggle("active", field.values[i] === current)),
+          update: (current) => {
+            if (!field.action) buttons.forEach((b, i) => b.classList.toggle("active", field.values[i] === current));
+          },
         };
       }
 
@@ -386,6 +474,7 @@
       // --- Page ---
 
       for (const [section, fields] of Object.entries(schema)) {
+        if (section === "readings") continue; // the big switch at the top
         const el = document.createElement("section");
         el.innerHTML = `<h2>${section}</h2>`;
         if (overlays.includes(section)) {
@@ -406,6 +495,89 @@
         }
         main.append(el);
       }
+
+      // --- Reading: follow the reader and step the subtitles ---
+
+      const { langs, readings, sets } = await fetch("/api/content/readings").then((res) => res.json());
+      const reading = document.createElement("section");
+      reading.className = "reading";
+      reading.hidden = true;
+      reading.innerHTML = `
+        <h2>Reading: <span class="reading-where"></span></h2>
+        <div class="reading-lines"></div>
+        <div class="buttons">
+          <button class="reading-prev">◀ Back</button>
+          <button class="primary reading-next-button">Next line ▶</button>
+        </div>
+        <p class="reading-hint">Press "Next line" (or → / Page Down, e.g. on a presenter clicker) as the reader starts the line in the blue box. ← / Page Up goes back.</p>`;
+      reading.querySelector(".reading-prev").onclick = () => client.set("live", { step: "prev" });
+      reading.querySelector(".reading-next-button").onclick = () => client.set("live", { step: "next" });
+      main.prepend(reading);
+
+      function cueBlock(title, className, texts) {
+        const block = document.createElement("div");
+        block.className = `reading-cue ${className}`;
+        block.append(Object.assign(document.createElement("h3"), { textContent: title }));
+        for (const lang of langs) {
+          block.append(
+            Object.assign(document.createElement("span"), { className: "lang", textContent: lang }),
+            Object.assign(document.createElement("span"), { textContent: texts?.[lang] ?? "–" }),
+          );
+        }
+        return block;
+      }
+
+      updaters.push((state) => {
+        const { reading: which, cue } = state.live;
+        reading.hidden = which === "off";
+        if (reading.hidden) return;
+        const name = sets[state.readings.set][which];
+        // Step 0 is the Bible reference alone; the lines follow from the announcement on.
+        const { label, reference, cues } = readings[name];
+        const steps = [Object.fromEntries(langs.map((lang) => [lang, `${label[lang]} · ${reference[lang]}`])), ...cues];
+        const index = Number(cue);
+        const where = index === 0 ? "Bible reference" : `line ${index} of ${steps.length - 1}`;
+        reading.querySelector(".reading-where").textContent = `${name}, ${where}`;
+        reading.querySelector(".reading-lines").replaceChildren(
+          cueBlock(index === 0 ? "On screen: the Bible reference" : "Being read", "reading-now", steps[index]),
+          cueBlock(index + 1 < steps.length ? "Next: press when this starts" : "Next: ends the subtitles", "reading-next", steps[index + 1]),
+        );
+      });
+      if (state) updaters.at(-1)(state); // the state may have arrived while the readings loaded
+
+      // --- Real or test readings: a big switch at the top ---
+
+      const toggle = document.createElement("div");
+      toggle.className = "set-toggle";
+      const titles = { actual: "Mass", test: "Test" };
+      const setButtons = Object.entries(sets).map(([set, { first, gospel }]) => {
+        const button = Object.assign(document.createElement("button"), {
+          type: "button",
+          textContent: titles[set] ?? set,
+          title: `${readings[first].reference.de} · ${readings[gospel].reference.de}; switching turns off a reading on screen`,
+        });
+        button.dataset.set = set;
+        button.onclick = () => client.set("readings", { set });
+        return button;
+      });
+      toggle.append("Readings:", ...setButtons);
+      document.querySelector("h1").append(toggle);
+
+      updaters.push((state) => {
+        const { set } = state.readings;
+        document.documentElement.classList.toggle("test-mode", set === "test");
+        for (const button of setButtons) button.classList.toggle("active", button.dataset.set === set);
+      });
+      if (state) updaters.at(-1)(state);
+
+      document.addEventListener("keydown", (event) => {
+        if (!state || state.live.reading === "off") return;
+        if (event.target instanceof Element && event.target.closest("input, textarea, dialog, [contenteditable]")) return;
+        const step = { ArrowRight: "next", PageDown: "next", ArrowLeft: "prev", PageUp: "prev" }[event.key];
+        if (!step) return;
+        event.preventDefault();
+        client.set("live", { step });
+      });
     </script>
   </body>
 </html>

@@ -2,14 +2,29 @@
 <html lang="de">
   <head>
     <meta charset="utf-8" />
-    <title>Live indicator</title>
+    <title>Live</title>
     <style>
+      @font-face {
+        font-family: "Source Sans 3";
+        font-weight: 400;
+        src: url("/fonts/source-sans-3-latin-ext-400-normal.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Source Sans 3";
+        font-weight: 700;
+        src: url("/fonts/source-sans-3-latin-ext-700-normal.woff2") format("woff2");
+      }
+
       html,
       body {
         margin: 0;
+        width: 1920px;
+        height: 1080px;
         background: transparent;
         overflow: hidden;
       }
+
+      /* --- Live indicator, top right --- */
 
       .live {
         --step: 70ms;
@@ -20,7 +35,7 @@
         align-items: center;
         gap: 16px;
         color: #fff;
-        font: 700 40px/1 -apple-system, "Helvetica Neue", Arial, sans-serif;
+        font: 700 40px/1 "Source Sans 3", -apple-system, "Helvetica Neue", Arial, sans-serif;
         text-shadow:
           0 1px 2px rgb(0 0 0 / 0.45),
           0 0 12px rgb(0 0 0 / 0.25);
@@ -57,22 +72,272 @@
         transition-delay: calc(var(--i) * var(--step));
       }
 
-      .is-on .dot {
+      .live.is-on .dot {
         opacity: 1;
         transform: none;
         transition-timing-function: ease, cubic-bezier(0.2, 0.7, 0.2, 1);
         transition-delay: 0ms;
       }
 
-      .is-on .letter {
+      .live.is-on .letter {
         opacity: 1;
         transform: none;
         transition-timing-function: ease, cubic-bezier(0.2, 0.7, 0.2, 1);
         transition-delay: calc(120ms + var(--i) * var(--step));
       }
+
+      /* --- Lower third, bottom left --- */
+
+      .lower-third {
+        --in: cubic-bezier(0.2, 0.7, 0.2, 1);
+        --out: cubic-bezier(0.4, 0, 1, 1);
+        position: absolute;
+        left: 96px;
+        bottom: 96px;
+        display: flex;
+        color: #fff;
+        font-family: "Source Sans 3", -apple-system, "Helvetica Neue", Arial, sans-serif;
+      }
+
+      .panel {
+        position: relative;
+        isolation: isolate;
+        padding: 20px 40px 22px;
+      }
+      /* The wipe scales this layer instead of clipping the panel: a clip-path animation under a filter flickered. */
+      .panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: linear-gradient(135deg, #1d474b 0%, #12302f 100%);
+        box-shadow: 0 12px 32px rgb(0 0 0 / 0.35);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 450ms var(--out) 100ms;
+      }
+
+      .name,
+      .role {
+        opacity: 0;
+        transform: translateY(12px);
+        transition:
+          opacity 250ms ease,
+          transform 250ms var(--out);
+      }
+      .name {
+        font-size: 48px;
+        line-height: 1.1;
+        font-weight: 700;
+      }
+      .role {
+        margin-top: 4px;
+        font-size: 32px;
+        line-height: 1.2;
+        color: rgb(255 255 255 / 0.8);
+        /* Every translation sits in the same cell, only one visible, so the panel is as wide as the longest. */
+        display: grid;
+        white-space: nowrap;
+      }
+      .role > * {
+        grid-area: 1 / 1;
+      }
+      .role-sizer {
+        visibility: hidden;
+      }
+
+      /* In: panel wipes open, then name and role rise; out runs the same steps in reverse (OUT_MS below). */
+      .lower-third.is-on .panel::before {
+        transform: none;
+        transition: transform 550ms var(--in) 0ms;
+      }
+      .lower-third.is-on .name,
+      .lower-third.is-on .role {
+        opacity: 1;
+        transform: none;
+        transition-timing-function: ease, var(--in);
+        transition-duration: 400ms;
+      }
+      .lower-third.is-on .name {
+        transition-delay: 350ms;
+      }
+      .lower-third.is-on .role {
+        transition-delay: 450ms;
+      }
+
+      /* --- Reading subtitles, bottom: one row per language --- */
+
+      .subtitles {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: grid;
+        /* minmax(0, …): a row holds the whole reading, which must not widen the column. */
+        grid-template-columns: auto minmax(0, 1fr);
+        column-gap: 28px;
+        row-gap: 4px;
+        align-items: baseline;
+        padding: 200px 96px 64px;
+        background: linear-gradient(to bottom, rgb(0 0 0 / 0) 0%, rgb(0 0 0 / 0.55) 45%, rgb(0 0 0 / 0.85) 100%);
+        color: #fff;
+        font-family: "Source Sans 3", -apple-system, "Helvetica Neue", Arial, sans-serif;
+        text-shadow: 0 1px 3px rgb(0 0 0 / 0.5);
+        opacity: 0;
+        transition: opacity 500ms ease;
+      }
+      .subtitles.is-on {
+        opacity: 1;
+      }
+      .lang {
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgb(255 255 255 / 0.6);
+        transition: opacity 300ms ease;
+      }
+      /* At 48px the longest line (German, Isaiah) takes about 1320 of the 1660px. */
+      .line {
+        font-size: 48px;
+        line-height: 1.2;
+        white-space: nowrap;
+        /* Read text fades out at the left; upcoming text dims towards the right edge. */
+        mask-image: linear-gradient(to right, transparent 0%, #000 var(--fade, 12%), #000 68%, rgb(0 0 0 / 0.4) 88%, transparent 100%);
+        transition: opacity 300ms ease;
+      }
+      /* The whole reading as one line per language; the script moves it continuously. */
+      .track {
+        display: flex;
+        gap: 0.25em;
+        will-change: transform;
+      }
+      .subtitles.is-jumping .line,
+      .subtitles.is-jumping .reference {
+        opacity: 0;
+      }
+      /* Before the announcement: only the Bible reference, larger, over where the rows stand. */
+      .reference {
+        position: absolute;
+        left: 96px;
+        right: 96px;
+        bottom: 64px;
+        height: calc(4 * 1.2 * 48px + 3 * 4px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 8px;
+        font-size: 88px;
+        line-height: 1.1;
+        opacity: 0;
+        transition: opacity 400ms ease;
+      }
+      .subtitles.is-intro .reference {
+        opacity: 1;
+      }
+      .reference-label {
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgb(255 255 255 / 0.7);
+      }
+      .subtitles.is-intro .lang,
+      .subtitles.is-intro .line {
+        opacity: 0;
+      }
+
+      /* --- Communion: full-frame cards over the b-roll, in the parish teal --- */
+
+      .communion {
+        position: absolute;
+        inset: 0;
+        box-sizing: border-box;
+        color: #fff;
+        font-family: "Source Sans 3", -apple-system, "Helvetica Neue", Arial, sans-serif;
+        /* Out: the text leaves first, then the teal; in: the teal first, then the text. */
+        opacity: 0;
+        transition: opacity 900ms ease 350ms;
+      }
+      .communion.is-on {
+        opacity: 1;
+        transition-delay: 0ms;
+      }
+      /* Each block rises a little into place, one after the other. */
+      .communion-prayer > section,
+      .carlo-quote,
+      .communion-author {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity 450ms ease,
+          transform 450ms cubic-bezier(0.4, 0, 1, 1);
+      }
+      .communion.is-on > section,
+      .communion.is-on .carlo-quote,
+      .communion.is-on .communion-author {
+        opacity: 1;
+        transform: none;
+        transition-duration: 1000ms;
+        transition-timing-function: ease, cubic-bezier(0.2, 0.7, 0.2, 1);
+        transition-delay: calc(450ms + var(--i, 0) * 150ms);
+      }
+      .communion-title,
+      .communion-author {
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgb(255 255 255 / 0.7);
+      }
+
+      /* The prayer in all four languages at once, so nobody waits for theirs while praying. */
+      .communion-prayer {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-content: center;
+        gap: 72px 96px;
+        padding: 96px;
+        background: linear-gradient(to right, rgb(18 48 47 / 0.94) 0%, rgb(29 71 75 / 0.88) 60%, rgb(29 71 75 / 0.7) 100%);
+      }
+      /* 34px is the largest that keeps about 100px clear above and below the grid. */
+      .communion-prayer p {
+        margin: 12px 0 0;
+        font-size: 34px;
+        line-height: 1.4;
+      }
+
+      /* One word of Carlo, large on the left, changing language slowly; the image stays visible on the right. */
+      .communion-carlo {
+        display: flex;
+        align-items: center;
+        padding: 0 128px;
+        background: linear-gradient(to right, rgb(18 48 47 / 0.95) 0%, rgb(29 71 75 / 0.8) 45%, rgb(29 71 75 / 0) 85%);
+      }
+      .carlo-text {
+        max-width: 1000px;
+        transition: opacity 600ms ease;
+      }
+      .carlo-text.is-fading {
+        opacity: 0;
+      }
+      .carlo-quote {
+        margin: 0 0 28px;
+        font-size: 76px;
+        line-height: 1.15;
+        text-wrap: balance;
+      }
     </style>
   </head>
   <body>
+    <div class="communion communion-prayer"></div>
+    <div class="communion communion-carlo">
+      <div class="carlo-text">
+        <p class="carlo-quote"></p>
+        <div class="communion-author" style="--i: 2"></div>
+      </div>
+    </div>
     <div class="live">
       <span class="dot"></span>
       <span class="word">
@@ -82,11 +347,311 @@
         <span class="letter" style="--i: 3">E</span>
       </span>
     </div>
+    <div class="subtitles"></div>
+    <div class="lower-third">
+      <div class="panel">
+        <div class="name"></div>
+        <div class="role"></div>
+      </div>
+    </div>
     <script type="module">
       import { connect } from "/overlay-client.js";
+      import { morphText } from "/morph-text.js";
 
-      const root = document.querySelector(".live");
-      connect({ on: { state: ({ state }) => root.classList.toggle("is-on", state.live.mode === "on") } });
+      /** The values of `live.banner`; the role cycles through the Mass languages. */
+      const BANNERS = {
+        priest: {
+          name: "Dr. Zvonko Brezovski",
+          roles: [
+            "Pfarrer, Pfarre Emmaus am Wienerberg",
+            "Župnik, Pfarre Emmaus am Wienerberg",
+            "Parroco, Pfarre Emmaus am Wienerberg",
+            "Parish priest, Pfarre Emmaus am Wienerberg",
+          ],
+        },
+        mother: {
+          name: "Antonia Salzano Acutis",
+          roles: [
+            "Mutter des hl. Carlo Acutis",
+            "Majka svetog Carla Acutisa",
+            "Madre di San Carlo Acutis",
+            "Mother of Saint Carlo Acutis",
+          ],
+        },
+      };
+      /** Each role language stays this long; the server hides the banner once all have shown (BANNER_MS). */
+      const ROLE_MS = 3000;
+      /** How long the lower third takes to hide (see the transitions above). */
+      const OUT_MS = 600;
+
+      const live = document.querySelector(".live");
+      const lowerThird = document.querySelector(".lower-third");
+      const name = lowerThird.querySelector(".name");
+      const role = lowerThird.querySelector(".role");
+
+      let shown = "off";
+      let wanted = "off";
+      let hiding = null;
+      let rotation = null;
+
+      /** Switching between two banners hides the first completely before the second comes in. */
+      function showBanner(banner) {
+        wanted = banner;
+        if (hiding || shown === wanted) return;
+        if (shown !== "off") {
+          lowerThird.classList.remove("is-on");
+          clearInterval(rotation);
+          shown = "off";
+          hiding = setTimeout(() => {
+            hiding = null;
+            showBanner(wanted);
+          }, OUT_MS);
+          return;
+        }
+        const { roles } = BANNERS[wanted];
+        name.textContent = BANNERS[wanted].name;
+        // Sizers are rendered by morphText too, so they lay out exactly like the visible text.
+        const sizers = roles.map((text) => {
+          const sizer = Object.assign(document.createElement("span"), { className: "role-sizer" });
+          morphText(sizer, text);
+          return sizer;
+        });
+        const roleText = document.createElement("span");
+        role.replaceChildren(...sizers, roleText);
+        morphText(roleText, roles[0]);
+        let index = 0;
+        rotation = setInterval(() => {
+          morphText(roleText, roles[++index]);
+          if (index === roles.length - 1) clearInterval(rotation); // the last stays until the server hides it
+        }, ROLE_MS);
+        lowerThird.classList.add("is-on");
+        shown = wanted;
+      }
+
+      const { langs, readings, sets } = await fetch("/api/content/readings").then((res) => res.json());
+      const subtitles = document.querySelector(".subtitles");
+      const lines = langs.map((lang) => {
+        const line = Object.assign(document.createElement("div"), { className: "line" });
+        subtitles.append(Object.assign(document.createElement("div"), { className: "lang", textContent: lang }), line);
+        return line;
+      });
+
+      // Track positions are measured from the text, so the webfont must be there first.
+      await document.fonts.load('400 48px "Source Sans 3"');
+
+      /** Where the spoken point sits, as a share of the row's width. */
+      const ANCHOR = 0.4;
+      /** Estimated reading pace; a line's scroll time comes from its average length over the languages. */
+      const CHARS_PER_SECOND = 13;
+      /** How quickly the scroll catches up when the operator steps ahead of or behind the estimate. */
+      const CATCH_UP_S = 0.5;
+
+      let layout = null; // the reading on screen: its rows (with each cue's start) and line durations
+      let cue = 1; // the line the reader is on, from the operator
+      let cueAt = 0; // when that line started
+      let position = 0; // what is shown: line index plus progress through it
+
+      function buildLayout(reading) {
+        for (const [i, line] of lines.entries()) {
+          const track = Object.assign(document.createElement("div"), { className: "track" });
+          track.append(...readings[reading].cues.map((c) => Object.assign(document.createElement("span"), { textContent: c[langs[i]] })));
+          track.firstChild.style.marginRight = "1.25em"; // the announcement has no full stop; set it apart from the text
+          line.replaceChildren(track);
+        }
+        const rows = lines.map((line) => {
+          const track = line.firstChild;
+          const spans = [...track.children];
+          const gap = parseFloat(getComputedStyle(track).columnGap);
+          const starts = spans.map((span) => span.offsetLeft - spans[0].offsetLeft);
+          starts.push(starts.at(-1) + spans.at(-1).offsetWidth + gap);
+          return { track, starts, anchor: line.clientWidth * ANCHOR };
+        });
+        const durations = readings[reading].cues.map((c) => {
+          const chars = langs.reduce((sum, lang) => sum + c[lang].length, 0) / langs.length;
+          return Math.max(chars / CHARS_PER_SECOND, 1.5);
+        });
+        layout = { reading, rows, durations };
+      }
+
+      /** Where the reader should be now: through the current line at its estimated pace, waiting at its end. */
+      function expected(now) {
+        if (cue <= 1) return 1; // the reference and the announcement wait, left-aligned, until the first line starts
+        return cue - 1 + Math.min((now - cueAt) / 1000 / layout.durations[cue - 1], 1);
+      }
+
+      function render() {
+        // Over the first line the reading point moves from the announcement's end to ANCHOR, tied to the
+        // scroll rather than time so it never outpaces it (which would nudge short rows to the right).
+        const t = Math.min(Math.max(position - 1, 0), 1);
+        const settled = t * t * (3 - 2 * t);
+        for (const { track, starts, anchor } of layout.rows) {
+          const i = Math.min(Math.floor(position), starts.length - 2);
+          const x = starts[i] + (position - i) * (starts[i + 1] - starts[i]);
+          // Still: the reading point is the end of the announcement, so the text starts at the row's edge.
+          const point = starts[1] + (anchor - starts[1]) * settled;
+          track.style.transform = `translateX(${point - x}px)`;
+        }
+        subtitles.style.setProperty("--fade", `${12 * settled}%`);
+      }
+
+      let last = performance.now();
+      requestAnimationFrame(function frame(now) {
+        const dt = (now - last) / 1000;
+        last = now;
+        if (layout && !jumping) {
+          position += (expected(now) - position) * (1 - Math.exp(-dt / CATCH_UP_S));
+          render();
+        }
+        requestAnimationFrame(frame);
+      });
+
+      function startAt(reading, c) {
+        buildLayout(reading);
+        cue = c;
+        cueAt = performance.now();
+        position = c <= 1 ? 1 : c - 1;
+        render();
+      }
+
+      /** How long the reference stays in each language. */
+      const REFERENCE_MS = 2500;
+      const referenceLabel = Object.assign(document.createElement("span"), { className: "reference-label" });
+      const reference = document.createElement("span");
+      subtitles.append(Object.assign(document.createElement("div"), { className: "reference" }));
+      subtitles.lastChild.append(referenceLabel, reference);
+      let referenceRotation = null;
+      let referenceReading = null;
+
+      /** Cue 0 shows only the reference, rotating through the languages; the rows come in with the announcement. */
+      function setIntro(reading, on) {
+        if (on && referenceReading !== reading) {
+          clearInterval(referenceRotation);
+          const { label, reference: texts } = readings[reading];
+          const show = (lang) => {
+            morphText(referenceLabel, label[lang]);
+            morphText(reference, texts[lang]);
+          };
+          let i = 0;
+          delete referenceLabel.dataset.text; // first call renders without a swap
+          delete reference.dataset.text;
+          show(langs[0]);
+          referenceRotation = setInterval(() => show(langs[++i % langs.length]), REFERENCE_MS);
+          referenceReading = reading;
+        } else if (!on) {
+          stopReference();
+        }
+        subtitles.classList.toggle("is-intro", on);
+      }
+      function stopReference() {
+        clearInterval(referenceRotation);
+        referenceReading = null;
+      }
+
+      /** A step re-times the scroll; a new reading or a jump (restarting the gospel) fades out and starts over. */
+      let jumping = null;
+      let target = { reading: "off", cue: 1 };
+      function showReading(reading, cueValue) {
+        target = { reading, cue: Number(cueValue) };
+        if (reading === "off") {
+          subtitles.classList.remove("is-on"); // keeps scrolling as it fades out
+          stopReference();
+          return;
+        }
+        const c = Number(cueValue);
+        if (!subtitles.classList.contains("is-on")) {
+          clearTimeout(jumping);
+          jumping = null;
+          subtitles.classList.remove("is-jumping");
+          startAt(reading, c);
+          setIntro(reading, c === 0);
+          subtitles.classList.add("is-on");
+        } else if (jumping) {
+          // the fade in progress starts at `target`
+        } else if (reading === layout.reading && Math.abs(c - cue) <= 1) {
+          if (c !== cue) {
+            cue = c;
+            cueAt = performance.now();
+          }
+          setIntro(reading, c === 0);
+        } else {
+          subtitles.classList.add("is-jumping");
+          jumping = setTimeout(() => {
+            jumping = null;
+            if (target.reading !== "off") {
+              startAt(target.reading, target.cue);
+              setIntro(target.reading, target.cue === 0);
+            }
+            subtitles.classList.remove("is-jumping");
+          }, 300);
+        }
+      }
+
+      // --- Communion ---
+
+      /** How long Carlo's word stays in each language. */
+      const CARLO_MS = 25000;
+      const communion = await fetch("/api/content/communion").then((res) => res.json());
+      const prayerCard = document.querySelector(".communion-prayer");
+      const carloCard = document.querySelector(".communion-carlo");
+      const carloText = carloCard.querySelector(".carlo-text");
+
+      for (const [i, lang] of communion.langs.entries()) {
+        const block = document.createElement("section");
+        block.lang = lang;
+        block.style.setProperty("--i", i);
+        block.append(
+          Object.assign(document.createElement("div"), { className: "communion-title", textContent: communion.prayer.title[lang] }),
+          Object.assign(document.createElement("p"), { textContent: communion.prayer.text[lang] }),
+        );
+        prayerCard.append(block);
+      }
+
+      let carloIndex = 0;
+      let carloRotation = null;
+      let carloSwap = null;
+
+      function setCarlo(index) {
+        const lang = communion.langs[index % communion.langs.length];
+        carloText.lang = lang;
+        carloText.querySelector(".carlo-quote").textContent = communion.carlo.quote[lang];
+        carloText.querySelector(".communion-author").textContent = communion.carlo.author[lang];
+      }
+
+      function showCommunion(mode) {
+        prayerCard.classList.toggle("is-on", mode === "prayer");
+        const carloOn = mode === "carlo";
+        if (carloOn && !carloCard.classList.contains("is-on")) {
+          clearInterval(carloRotation);
+          clearTimeout(carloSwap);
+          carloText.classList.remove("is-fading");
+          carloIndex = 0;
+          setCarlo(carloIndex);
+          // Each change fades the text out, swaps the language and fades it back in.
+          carloRotation = setInterval(() => {
+            carloText.classList.add("is-fading");
+            carloSwap = setTimeout(() => {
+              setCarlo(++carloIndex);
+              carloText.classList.remove("is-fading");
+            }, 600);
+          }, CARLO_MS);
+        } else if (!carloOn) {
+          clearInterval(carloRotation); // the text stays as it is while the card fades out
+        }
+        carloCard.classList.toggle("is-on", carloOn);
+      }
+
+      connect({
+        on: {
+          state: ({ state }) => {
+            showCommunion(state.live.communion);
+            // A person banner always comes with the LIVE indicator.
+            live.classList.toggle("is-on", state.live.mode === "on" || state.live.banner !== "off");
+            showBanner(state.live.banner);
+            const reading = state.live.reading === "off" ? "off" : sets[state.readings.set][state.live.reading];
+            showReading(reading, state.live.cue);
+          },
+        },
+      });
     </script>
   </body>
 </html>

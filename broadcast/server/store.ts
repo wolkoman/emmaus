@@ -4,8 +4,8 @@
  */
 
 export type Field =
-  /** One of `values`; the first is the initial value. */
-  | { kind: "choice"; values: string[]; initial: string; readOnly?: boolean }
+  /** One of `values`; the first is the initial value. An `action` is a command (e.g. "next"), not a state to highlight. */
+  | { kind: "choice"; values: string[]; initial: string; readOnly?: boolean; action?: boolean }
   /** A time of day, "HH:MM". */
   | { kind: "time"; initial: string }
   /** Free text, e.g. a name. */
@@ -16,7 +16,7 @@ export type Patch = Record<string, string>;
 export type State = Record<string, Patch>;
 
 /** `readOnly` fields are set by the server (e.g. from OBS), never by clients. */
-export const choice = (values: string[], options: { readOnly?: boolean } = {}): Field => ({
+export const choice = (values: string[], options: { readOnly?: boolean; action?: boolean } = {}): Field => ({
   kind: "choice",
   values,
   initial: values[0],

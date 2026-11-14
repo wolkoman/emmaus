@@ -1,10 +1,13 @@
+// YouTube links (watch, youtu.be, /live/) are embedded; other links only get the button.
+const STREAM_URL = "";
+
 /** The Carlo Acutis event on /carlo: the Mass livestream; texts are in i18n.ts. */
 export const LIVESTREAM = {
   // UTC, so the countdown doesn't depend on the viewer's time zone (16:00 in Vienna).
   start: "2026-11-21T15:00:00Z",
-  // YouTube links (watch, youtu.be, /live/) are embedded; other links only get the button.
-  streamUrl: "",
-  recordingUrl: "",
+  streamUrl: STREAM_URL,
+  // A YouTube live video stays at its address as the recording afterwards.
+  recordingUrl: STREAM_URL,
 };
 
 /** After this, /carlo thanks viewers and the language banner disappears. */

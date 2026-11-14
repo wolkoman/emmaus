@@ -3,7 +3,8 @@
  * sync with every page over WebSockets and with OBS, plus the crew chat.
  * See ../README.md.
  */
-import { defaultBroadcastTime } from "../content/prelive";
+import { defaultBroadcastTime, defaultResumeTime } from "../content/prelive";
+import { READING_SETS, READINGS } from "../content/readings";
 import type { ServerWebSocket } from "bun";
 import { createChat } from "./chat";
 import { networkInterfaces } from "node:os";
@@ -19,6 +20,8 @@ const HOST = process.env.HOST ?? "127.0.0.1";
 const OBS_SCENES: Record<string, string> = { prelive: "Pre-Live", live: "Live" };
 /** Each camera has a page at /camera/<n> and joins the chat as cam<n>. */
 const CAMERAS = ["cam1", "cam2", "cam3", "cam4"];
+/** Cue numbers: "0" is the Bible reference alone, then "1" (the announcement) to the end of the longest reading. */
+const CUES = Array.from({ length: Math.max(...Object.values(READINGS).map(({ cues }) => cues.length)) + 1 }, (_, i) => `${i}`);
 /** The control page joins the chat as `director`. */
 const CHAT_CLIENTS = ["director", ...CAMERAS];
 
@@ -27,8 +30,27 @@ const store = createStore({
     scene: choice(Object.keys(OBS_SCENES)),
     connection: choice(["offline", "online"], { readOnly: true }),
   },
-  live: { mode: choice(["off", "on"]) },
-  prelive: { startTime: time(defaultBroadcastTime()), trailer: choice(["off", "play"]) },
+  /** `banner` is the lower third; its texts are in the live overlay page. `reading` shows subtitles, one `cue` at a time. */
+  live: {
+    mode: choice(["off", "on"]),
+    banner: choice(["off", "priest", "mother"]),
+    reading: choice(["off", "first", "gospel"]),
+    cue: choice(CUES, { readOnly: true }),
+    step: choice(["prev", "next"], { action: true }),
+    /** During communion over b-roll: the spiritual communion prayer, then a word of Carlo Acutis. */
+    communion: choice(["off", "prayer", "carlo"]),
+  },
+  /** `screen`: before the Mass (countdown to `startTime`), a pause (countdown to `resumeTime`) or the end. */
+  /** Which texts the readings use: the Carlo Acutis Mass, or the test Mass on 15 November. */
+  readings: { set: choice(Object.keys(READING_SETS)) },
+  prelive: {
+    screen: choice(["before", "pause", "end"]),
+    startTime: time(defaultBroadcastTime()),
+    resumeTime: time(defaultResumeTime()),
+    trailer: choice(["off", "play"]),
+    /** Background music (public/media/music.mp3), looped; it gives way while the trailer plays. */
+    music: choice(["off", "play"]),
+  },
   /** Operator names, shown in the chat and usable as @name. */
   cameras: Object.fromEntries(CAMERAS.map((cam) => [cam, text()])),
   /** Set by hand for now; the ATEM integration will own these. */
@@ -50,8 +72,22 @@ const obs = connectObs({
 
 function sceneChanged(scene: string) {
   store.apply("obs", { scene });
-  if (scene === "live") store.apply("prelive", { trailer: "off" });
+  if (scene === "live") store.apply("prelive", { trailer: "off", music: "off" });
 }
+
+// --- Banner ---
+
+/** A lower third only introduces a person, so it hides itself after this long: each of its four role languages once (ROLE_MS in live.html). */
+const BANNER_MS = 12000;
+let bannerTimer: ReturnType<typeof setTimeout> | undefined;
+let banner = store.state.live.banner;
+
+store.subscribe((state) => {
+  if (state.live.banner === banner) return;
+  banner = state.live.banner;
+  clearTimeout(bannerTimer);
+  if (banner !== "off") bannerTimer = setTimeout(() => store.apply("live", { banner: "off" }), BANNER_MS);
+});
 
 // --- Changes from clients ---
 
@@ -60,6 +96,23 @@ const OWNED_FIELDS: Record<string, (value: string) => Promise<void>> = {
   "obs.scene": async (scene) => {
     await obs.setScene(OBS_SCENES[scene]); // resolves when the transition has started
     sceneChanged(scene);
+  },
+  // Choosing a reading (again, e.g. for the gospel's second language) starts it at its Bible reference.
+  "live.reading": async (reading) => store.apply("live", { reading, cue: "0" }),
+  // Switching between the real and the test texts never swaps a reading on screen.
+  "readings.set": async (set) => {
+    store.apply("live", { reading: "off" });
+    store.apply("readings", { set });
+  },
+  // Next after the last cue hides the subtitles; prev stops at the reference.
+  "live.step": async (step) => {
+    const { reading, cue } = store.state.live;
+    if (reading === "off") throw new Error("no reading is shown");
+    const next = Number(cue) + (step === "next" ? 1 : -1);
+    const { set } = store.state.readings;
+    const { cues } = READINGS[READING_SETS[set as keyof typeof READING_SETS][reading as "first" | "gospel"]];
+    if (next > cues.length) store.apply("live", { reading: "off" });
+    else store.apply("live", { cue: `${Math.max(next, 0)}` });
   },
 };
 

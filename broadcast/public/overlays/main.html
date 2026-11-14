@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <title>Overlay</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        background: transparent;
+        overflow: hidden;
+      }
+      iframe {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+        border: 0;
+        background: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- The one browser source for OBS, in Pre-Live and Live: the pre-live screen below, the live overlay on top. -->
+    <iframe src="/overlay/prelive" allow="autoplay" title="Pre-live"></iframe>
+    <iframe src="/overlay/live" allow="autoplay" title="Live"></iframe>
+  </body>
+</html>
