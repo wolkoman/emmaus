@@ -28,6 +28,8 @@ until you click "Refresh" on it in OBS, so start the server first.
 | `HOST`                   | `127.0.0.1`           | Bind address; `0.0.0.0` to control from a phone or iPad on the LAN      |
 | `OBS_WEBSOCKET_URL`      | `ws://127.0.0.1:4455` | OBS's WebSocket server                                                  |
 | `OBS_WEBSOCKET_PASSWORD` | empty                 | Its password; put it in `.env.local` next to `package.json` (gitignored) |
+| `ATEM_IP`                | empty                 | The ATEM's address; empty means no tally from a switcher                |
+| `ATEM_PORT`              | `9910`                | Its control port (UDP)                                                  |
 | `ACCESS_KEY`             | empty                 | Lets other devices (camera phones) in; without it only the Mac itself may connect |
 
 ## How it fits together
@@ -38,27 +40,30 @@ server/store.ts     the state: sections of fields, validation, change notificati
 server/protocol.ts  the WebSocket messages, documented in one place
 server/http.ts      pages, assets and the JSON API
 server/obs.ts       connection to OBS (obs-websocket 5): switch scenes, report changes
+server/atem.ts      connection to the ATEM: its program/preview becomes the camera tally
 server/chat.ts      crew chat: recent history and who is typing
 content/            texts for the overlays (prelive.ts, trailer.ts, readings.ts, communion.ts)
 public/             what browsers load: control page, camera page, overlays, shared modules
                     (overlay-client.js connection, chat.js chat panel, morph-text.js)
 ```
 
-**State** is a set of sections (`obs`, `live`, `prelive`), each with string
-fields. The schema in `main.ts` says what each field may hold (`choice` or
-`time`) and is sent to the control page, which renders itself from it.
+**State** is a set of sections (`obs`, `atem`, `live`, `prelive`, `cameras`,
+`tally`), each with string fields. The schema in `main.ts` says what each field
+may hold (`choice` or `time`) and is sent to the control page, which renders
+itself from it.
 
 **Changes** arrive from the control page, overlays or HTTP and all go through
 `set()` in `main.ts`: it validates them, then either applies them directly or,
 for fields an outside system owns, asks that system first. `obs.scene` is such
 a field: the server asks OBS to switch and updates the state once OBS has
 started the transition. Changes made in OBS itself arrive the same way back.
-Fields marked `readOnly` (e.g. `obs.connection`) can only be set by the server.
+Fields marked `readOnly` (e.g. `obs.connection`, `tally`) can only be set by the
+server.
 Only our own pages may open the WebSocket (the server checks their origin); the
 HTTP set URLs stay open for the Stream Deck.
 
 **Every change** is broadcast to all pages as the complete state. Pages only
-ever render from the state; none of them talks to OBS.
+ever render from the state; none of them talks to OBS or the ATEM.
 
 **Chat** is not state but a stream of messages: the server keeps the last 200
 in memory and sends them to chat clients on connect. A page joins the chat by
@@ -117,6 +122,31 @@ Stream on each machine.
    scales `ATEM IN` from the pre-live frame (688, 96, scale 0.6) to full screen;
    the page animates in step, so `--move-ms` and `--move-ease` at the top of
    `prelive.html` must match.
+
+## ATEM setup
+
+The server talks to the ATEM over its network control port (UDP 9910); nothing
+has to be installed on the switcher, and OBS is not involved.
+
+**USB alone is not enough**: the cable carries the webcam picture and
+Blackmagic's own USB control protocol (what ATEM Software Control uses), but
+the network protocol this server speaks runs over Ethernet. Every ATEM Mini
+model has an `ATEM CONTROL` Ethernet port; plug it into the same router or
+switch as the streaming Mac. USB and Ethernet can be connected together.
+
+1. **Address**: in **ATEM Setup** (over USB; part of Blackmagic's free
+   **ATEM Switchers** download, which also contains ATEM Software Control), set
+   the ATEM to DHCP or to a free fixed address on the Mac's network, and put it
+   in `.env.local` as `ATEM_IP`. The factory address is `192.168.10.240`, which
+   the Mac usually cannot reach from its own network; the first-generation Mini
+   cannot use DHCP and keeps a fixed address. On the control page,
+   `atem.connection` shows `online` once the link works; `offline` also means
+   the ATEM is switched off or has another address.
+2. **Inputs**: camera `cam<n>` is ATEM input `n` (1 to 4). Feed the cameras
+   into inputs 1 to 4 and keep other sources (media player, colour generator)
+   on free inputs, so they don't light a camera that is not on air.
+3. **Tally** follows mix effect 1: the camera on program shows red, the one on
+   preview green.
 
 ## Changing state
 
@@ -184,8 +214,11 @@ remembered on each phone:
 - Browsers only play audio after a tap, so switching sounds or read-aloud on
   also unlocks it; after reloading the page one tap anywhere is needed again.
 
-**Tally** (`tally` section, `off` / `preview` / `program` per camera) is set by
-hand on the control page for now; an ATEM integration will set it later.
+**Tally** (`tally` section, `off` / `preview` / `program` per camera) comes from
+the ATEM: the camera feed on its program bus shows red LIVE, the one on preview
+green PREVIEW, everything else stays grey. Camera switching itself is done on
+the ATEM, not from here; the server only watches. Without `ATEM_IP` (or while
+the ATEM is off) every camera stays grey.
 
 **Phones on the network**: start the server with `HOST=0.0.0.0` and an
 `ACCESS_KEY` (both can go in `.env.local`). The startup log prints the link
@@ -359,9 +392,9 @@ background; `connect({ on: { state } })` from `/overlay-client.js` gives it the
 state. To put it on air, add it as another frame in `overlays/main.html` (later
 frames lie on top) rather than as a new OBS browser source.
 
-**An outside system** (like OBS, later the ATEM): a module in `server/` that
-connects, reconnects by itself and reports through callbacks. In `main.ts` its
-reports become `store.apply(...)`. Fields only it can change (status, tally) are
+**An outside system** (OBS, the ATEM): a module in `server/` that connects,
+reconnects by itself and reports through callbacks. In `main.ts` its reports
+become `store.apply(...)`. Fields only it can change (status, tally) are
 `readOnly`; fields clients may change but it carries out (like `obs.scene`) go
 into `OWNED_FIELDS`, which `set()` routes to it.
 

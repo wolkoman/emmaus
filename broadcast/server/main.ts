@@ -8,6 +8,7 @@ import { READING_SETS, READINGS } from "../content/readings";
 import type { ServerWebSocket } from "bun";
 import { createChat } from "./chat";
 import { networkInterfaces } from "node:os";
+import { connectAtem } from "./atem";
 import { ACCESS_KEY, createHttpHandler, overlayPages, type SocketData } from "./http";
 import { connectObs } from "./obs";
 import { decode, encode, type ClientMessage } from "./protocol";
@@ -15,11 +16,15 @@ import { choice, createStore, text, time, type Patch } from "./store";
 
 const PORT = Number(process.env.PORT ?? 4321);
 const HOST = process.env.HOST ?? "127.0.0.1";
+const ATEM_IP = process.env.ATEM_IP ?? "";
+const ATEM_PORT = Number(process.env.ATEM_PORT ?? 9910);
 
 /** The OBS scene behind each value of `obs.scene`. */
 const OBS_SCENES: Record<string, string> = { prelive: "Pre-Live", live: "Live" };
 /** Each camera has a page at /camera/<n> and joins the chat as cam<n>. */
 const CAMERAS = ["cam1", "cam2", "cam3", "cam4"];
+/** Camera cam<n> is on ATEM input n. */
+const ATEM_INPUTS = Object.fromEntries(CAMERAS.map((cam) => [cam, Number(cam.slice(3))]));
 /** Cue numbers: "0" is the Bible reference alone, then "1" (the announcement) to the end of the longest reading. */
 const CUES = Array.from({ length: Math.max(...Object.values(READINGS).map(({ cues }) => cues.length)) + 1 }, (_, i) => `${i}`);
 /** The control page joins the chat as `director`. */
@@ -28,6 +33,10 @@ const CHAT_CLIENTS = ["director", ...CAMERAS];
 const store = createStore({
   obs: {
     scene: choice(Object.keys(OBS_SCENES)),
+    connection: choice(["offline", "online"], { readOnly: true }),
+  },
+  /** The switcher only reports; camera switching itself is done on the ATEM. */
+  atem: {
     connection: choice(["offline", "online"], { readOnly: true }),
   },
   /** `banner` is the lower third; its texts are in the live overlay page. `reading` shows subtitles, one `cue` at a time. */
@@ -53,8 +62,8 @@ const store = createStore({
   },
   /** Operator names, shown in the chat and usable as @name. */
   cameras: Object.fromEntries(CAMERAS.map((cam) => [cam, text()])),
-  /** Set by hand for now; the ATEM integration will own these. */
-  tally: Object.fromEntries(CAMERAS.map((cam) => [cam, choice(["off", "preview", "program"])])),
+  /** Owned by the ATEM: which input is on air. */
+  tally: Object.fromEntries(CAMERAS.map((cam) => [cam, choice(["off", "preview", "program"], { readOnly: true })])),
 });
 
 // --- OBS ---
@@ -73,6 +82,18 @@ const obs = connectObs({
 function sceneChanged(scene: string) {
   store.apply("obs", { scene });
   if (scene === "live") store.apply("prelive", { trailer: "off", music: "off" });
+}
+
+// --- ATEM ---
+
+if (ATEM_IP) {
+  connectAtem({
+    address: ATEM_IP,
+    port: ATEM_PORT,
+    inputs: ATEM_INPUTS,
+    onConnected: (connected) => store.apply("atem", { connection: connected ? "online" : "offline" }),
+    onTally: (tally) => store.apply("tally", tally),
+  });
 }
 
 // --- Banner ---
@@ -228,6 +249,8 @@ console.log(`Livestream server on port ${PORT}\n`);
 console.log("On this Mac:");
 console.log(`  control page: ${local}/control`);
 for (const name of overlayPages) console.log(`  overlay ${name}: ${local}/overlay/${name}`);
+if (ATEM_IP) console.log(`  ATEM: ${ATEM_IP}:${ATEM_PORT} (tally of ${CAMERAS.length} cameras)`);
+else console.log("  no ATEM: set ATEM_IP in .env.local, otherwise the camera pages stay on standby");
 
 console.log("\nFor phones (open once, then pick the camera and bookmark it):");
 // Physical interfaces (en0, en1, …) first; the rest are usually VPNs or virtual networks (Docker, OrbStack).
