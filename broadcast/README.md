@@ -316,11 +316,17 @@ Each rotating line keeps the height of its tallest language (all languages are
 laid out invisibly in the same cell), so nothing below it moves when the
 language changes.
 
-**Music**: `public/media/music.mp3` is not in git either; any MP3 works. Copy
-it there on the streaming Mac.
+**Media files**: `public/media/` is not in git. Both files are attached to the
+GitHub release `broadcast-media`; on the streaming Mac, from the repo root:
 
-**Trailer**: `public/media/trailer.mp4` is not in git; put the file there on the
-streaming Mac. It is Kinostar's 50-second German trailer, fetched with
+```bash
+gh release download broadcast-media --repo wolkoman/emmaus --dir broadcast/public/media --clobber
+```
+
+**Music**: `public/media/music.mp3`; any MP3 works.
+
+**Trailer**: `public/media/trailer.mp4` is Kinostar's 50-second German
+trailer, originally fetched with
 `yt-dlp -f "bv*[height<=1080][vcodec^=avc1]+ba[ext=m4a]" --merge-output-format mp4
 -o broadcast/public/media/trailer.mp4 https://www.youtube.com/watch?v=zpvVgU0mSxw`
 (H.264, which OBS's browser plays). It is narrated in German, so
