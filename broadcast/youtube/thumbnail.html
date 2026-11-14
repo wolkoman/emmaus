@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <title>YouTube thumbnail</title>
+    <!-- Rendered to PNG with headless Chrome at 1280×720; ?test renders the test-stream variant. -->
+    <style>
+      @font-face {
+        font-family: "Source Sans 3";
+        font-weight: 400;
+        src: url("../../node_modules/@fontsource/source-sans-3/files/source-sans-3-latin-ext-400-normal.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Source Sans 3";
+        font-weight: 700;
+        src: url("../../node_modules/@fontsource/source-sans-3/files/source-sans-3-latin-ext-700-normal.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Source Sans 3";
+        font-weight: 900;
+        src: url("../../node_modules/@fontsource/source-sans-3/files/source-sans-3-latin-ext-900-normal.woff2") format("woff2");
+      }
+      :root {
+        --emmaus: #2a6266;
+        --mint: #a9dcd6;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+      }
+      body {
+        position: relative;
+        background: var(--emmaus);
+        color: #fff;
+        font-family: "Source Sans 3", sans-serif;
+      }
+      .photo {
+        position: absolute;
+        top: 0;
+        left: 330px;
+        height: 720px;
+      }
+      .fade {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, var(--emmaus) 0%, var(--emmaus) 38%, rgb(42 98 102 / 0.75) 52%, rgb(42 98 102 / 0) 72%);
+      }
+      .text {
+        position: absolute;
+        left: 72px;
+        top: 64px;
+        width: 640px;
+      }
+      .when {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 10px;
+        background: var(--mint);
+        color: var(--emmaus);
+        font-size: 36px;
+        font-weight: 900;
+        letter-spacing: 0.02em;
+      }
+      h1 {
+        margin: 36px 0 0;
+        font-size: 84px;
+        line-height: 0.98;
+        font-weight: 900;
+      }
+      .with {
+        margin-top: 28px;
+        font-size: 40px;
+        line-height: 1.15;
+        font-weight: 700;
+        color: var(--mint);
+        white-space: pre-line;
+      }
+      .parish {
+        position: absolute;
+        left: 72px;
+        bottom: 56px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        font-size: 34px;
+        font-weight: 700;
+      }
+      .parish img {
+        width: 64px;
+        height: 64px;
+      }
+      /* Test variant: no photo, a big TEST mark. */
+      .test .photo,
+      .test .fade {
+        display: none;
+      }
+      .test .text {
+        width: 1100px;
+      }
+      .test .when {
+        background: #ffcf3f;
+        color: #1d1d1d;
+      }
+      .test-mark {
+        display: none;
+        position: absolute;
+        right: 72px;
+        top: 64px;
+        font-size: 150px;
+        font-weight: 900;
+        line-height: 1;
+        color: #ffcf3f;
+      }
+      .test .test-mark {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <img class="photo" src="../../carlo-acutis.jpeg" alt="" />
+    <div class="fade"></div>
+    <div class="test-mark">TEST</div>
+    <div class="text">
+      <div class="when" data-real="LIVE · SA 21.11. · 16:00" data-test="SO 15.11. · 10:00"></div>
+      <h1 data-real="Heilige Messe zu Ehren des hl. Carlo Acutis" data-test="Heilige Messe zum Hochfest des hl. Leopold"></h1>
+      <div class="with" data-real="mit seiner Mutter&#10;Antonia Salzano Acutis" data-test="Probe für die Übertragung am 21. November"></div>
+    </div>
+    <div class="parish"><img src="../../public/logo.svg" alt="" />Pfarre Emmaus am Wienerberg</div>
+    <script>
+      const test = new URLSearchParams(location.search).has("test");
+      document.body.classList.toggle("test", test);
+      for (const el of document.querySelectorAll("[data-real]")) el.textContent = el.dataset[test ? "test" : "real"];
+    </script>
+  </body>
+</html>

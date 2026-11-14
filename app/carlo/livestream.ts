@@ -1,5 +1,5 @@
 // YouTube links (watch, youtu.be, /live/) are embedded; other links only get the button.
-const STREAM_URL = "";
+const STREAM_URL = "https://www.youtube.com/watch?v=CoK1opEfoUc";
 
 /** The Carlo Acutis event on /carlo: the Mass livestream; texts are in i18n.ts. */
 export const LIVESTREAM = {
