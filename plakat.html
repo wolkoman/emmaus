@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="de">
+<script>if (new URLSearchParams(location.search).has('druck')) document.documentElement.classList.add('druck'); if (new URLSearchParams(location.search).has('bild')) document.documentElement.classList.add('bild');</script>
+<head>
+<meta charset="utf-8">
+<title>Plakat Carlo Acutis</title>
+<style>
+  @page { size: A4; margin: 0; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  :root {
+    --emmaus: #2A6266;
+    --mint: #a9dcd6;
+    --bg-rgb: 42 98 102;        /* page colour, also used by the photo fades */
+    --fg: #fff;
+    --accent: var(--mint);
+    --line: rgb(255 255 255 / .3);
+    /* crop window in source pixels of carlo-acutis.jpeg (1320 x 768) */
+    --crop-x: 150; --crop-y: 0; --crop-w: 900; --crop-h: 640;
+    --scale: calc(210mm / var(--crop-w));
+  }
+  /* print-friendly variant: plakat.html?druck */
+  :root.druck {
+    --bg-rgb: 255 255 255;
+    --fg: var(--emmaus);
+    --accent: var(--emmaus);
+    --line: rgb(42 98 102 / .3);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #cfd4d4; }
+  body { font-family: "Source Sans 3", sans-serif; color: var(--fg); }
+
+  .page {
+    position: relative; width: 210mm; height: 297mm; margin: 10mm auto;
+    background: rgb(var(--bg-rgb)); overflow: hidden;
+  }
+  /* plakat.html?bild: page only, for rendering the web image */
+  :root.bild, :root.bild body { background: none; } :root.bild .page { margin: 0; }
+  @media print { html, body { background: none; } .page { margin: 0; } }
+
+  .photo {
+    position: absolute; top: 0; left: 0; width: 210mm;
+    height: calc(var(--crop-h) * var(--scale));
+    background-image: url("carlo-acutis.jpeg");
+    background-size: calc(1320 * var(--scale)) auto;
+    background-position: calc(var(--crop-x) * var(--scale) * -1) calc(var(--crop-y) * var(--scale) * -1);
+  }
+  .photo::after {
+    content: ""; position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgb(var(--bg-rgb) / .55) 0%, rgb(var(--bg-rgb) / 0) 16%),
+      linear-gradient(180deg, rgb(var(--bg-rgb) / 0) 42%, rgb(var(--bg-rgb) / .92) 68%, rgb(var(--bg-rgb)) 82%);
+  }
+
+  :root.druck .photo::after {
+    background:
+      linear-gradient(180deg, rgb(var(--bg-rgb) / .7) 0%, rgb(var(--bg-rgb) / 0) 16%),
+      linear-gradient(180deg, rgb(var(--bg-rgb) / 0) 52%, rgb(var(--bg-rgb) / .92) 72%, rgb(var(--bg-rgb)) 84%);
+  }
+
+  .top {
+    position: absolute; top: 10mm; left: 14mm; right: 14mm;
+    display: flex; align-items: center; gap: 3mm; font-size: 14pt; font-weight: 600;
+  }
+  .top svg { width: 11mm; height: 11mm; }
+  .top small { display: block; font-size: 11pt; font-weight: 500; }
+
+  .content { position: absolute; left: 14mm; right: 14mm; top: 91mm; bottom: 12mm; display: flex; flex-direction: column; }
+
+  .kicker { font-size: 20pt; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+  h1 {
+    margin-top: 1mm;
+    font-size: 72pt; line-height: .9; font-weight: 800; font-style: italic; letter-spacing: -.03em;
+  }
+  .with { margin-top: 2mm; font-size: 30pt; font-weight: 600; font-style: italic; letter-spacing: -.01em; }
+  .guest { margin-top: 6mm; font-size: 25pt; line-height: 1.2; font-weight: 500; }
+  .guest strong { font-weight: 800; color: var(--accent); }
+
+  .when { margin-top: auto; padding-top: 7mm; display: grid; grid-template-columns: 74mm 1fr; gap: 7mm; align-items: start; }
+  .date .day { font-size: 26pt; font-weight: 500; line-height: 1; }
+  .date .num { font-size: 56pt; font-weight: 800; font-style: italic; line-height: .95; color: var(--accent); letter-spacing: -.02em; }
+  .programm { list-style: none; border-left: .5mm solid var(--line); padding-left: 7mm; }
+  .programm li { display: grid; grid-template-columns: 20mm 1fr; font-size: 17pt; line-height: 1.2; padding: 1mm 0; }
+  .programm time { font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .programm .hl { font-weight: 700; }
+  .nowrap { white-space: nowrap; }
+  .programm small { display: block; font-size: 12pt; font-style: italic; opacity: .8; }
+
+  .programm .live { color: var(--accent); font-size: 11pt; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; margin-left: 1.5mm; }
+  .info { margin-top: 7mm; display: flex; align-items: center; gap: 6mm; }
+  .info .qr { flex: none; width: 30mm; height: 30mm; padding: 3mm; background: #fff; border-radius: 2.5mm; color: var(--emmaus); }
+  .info .qr svg { display: block; width: 100%; height: 100%; }
+  .info p { font-size: 17pt; line-height: 1.25; font-weight: 500; }
+  .info strong { display: block; font-size: 24pt; font-weight: 800; color: var(--accent); }
+  :root.druck .info .qr { border: .4mm solid var(--line); }
+
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="photo"></div>
+
+  <div class="top">
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="32" r="32" fill="#fff"/>
+      <path fill="#2A6266" fill-rule="evenodd" d="M32 64C49.6731 64 64 49.6731 64 32C64 14.3269 49.6731 0 32 0C14.3269 0 0 14.3269 0 32C0 39.2274 2.39599 45.8951 6.43699 51.2523C6.43161 50.4463 6.42654 49.6225 6.42198 48.7922C6.38622 42.2814 6.37772 35.0562 6.52134 33.249C6.62303 31.9694 7.36054 31.0737 8.08506 30.5833C16.6014 24.8194 25.5796 23.071 31.1816 22.6308C31.226 19.7008 31.2342 16.3372 31.2357 15.1916C31.2384 13.1633 32.8915 11.6 34.8361 11.6H45.468C47.4691 11.6 49.0861 13.2319 49.0678 15.2329L48.9731 25.5887C49.6793 25.7582 50.4763 25.9687 51.3038 26.223C53.2409 26.8182 55.7668 27.7754 57.5861 29.2747C58.95 30.3986 59.1445 32.4154 58.0206 33.7793C56.8966 35.1431 54.8798 35.3376 53.516 34.2137C52.7165 33.5549 51.213 32.8904 49.424 32.3407C47.7326 31.821 46.1605 31.5136 45.5235 31.3997C43.7909 31.09 42.5363 29.5764 42.5524 27.8173L42.6423 18H37.6262C37.614 20.2814 37.5864 23.3092 37.5244 25.4101C37.4667 27.3636 35.8754 28.8799 33.9683 28.9036C29.8652 28.9546 21.1704 29.9239 12.8475 35.1195C12.7867 37.7868 12.7919 43.3052 12.8219 48.757C12.84 52.0602 12.8663 55.2624 12.888 57.6393C12.8881 57.649 12.8882 57.6587 12.8882 57.6684C18.2213 61.6456 24.8357 64 32 64Z"/>
+    </svg>
+    <span>Pfarre Emmaus am Wienerberg<small>Tesarekplatz 2, 1100 Wien</small></span>
+  </div>
+
+  <div class="content">
+    <h1>Jesus erkennen<br>mit dem Heiligen<br>Carlo Acutis</h1>
+    <p class="guest">Seine Mutter <strong>Antonia Salzano Acutis</strong><br>kommt zu uns in die Pfarre Emmaus!</p>
+
+    <div class="when">
+      <div class="date">
+        <div class="day">Samstag</div>
+        <div class="num">21. Nov.</div>
+      </div>
+      <ul class="programm">
+        <li><time>16:00</time><span>Hl. Messe <span class="live">● live</span><small>Deutsch, Kroatisch, Italienisch, Englisch</small></span></li>
+        <li><time>17:00</time><span>Begegnung mit der Mutter</span></li>
+        <li><time>19:00<br>19:20</time><span>Premiere des Films <span class="nowrap">über Carlo,</span> mit Ansprache <span class="nowrap">seiner Mutter Antonia</span><small>im Kino Hollywood Megaplex Gasometer</small></span></li>
+      </ul>
+    </div>
+
+    <div class="info">
+      <div class="qr"><svg class="qr-code" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" shape-rendering="crispEdges"><path fill="currentColor" d="M0 0h1v1h-1zM1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM6 0h1v1h-1zM9 0h1v1h-1zM10 0h1v1h-1zM12 0h1v1h-1zM16 0h1v1h-1zM18 0h1v1h-1zM19 0h1v1h-1zM20 0h1v1h-1zM21 0h1v1h-1zM22 0h1v1h-1zM23 0h1v1h-1zM24 0h1v1h-1zM0 1h1v1h-1zM6 1h1v1h-1zM11 1h1v1h-1zM14 1h1v1h-1zM15 1h1v1h-1zM16 1h1v1h-1zM18 1h1v1h-1zM24 1h1v1h-1zM0 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM6 2h1v1h-1zM8 2h1v1h-1zM10 2h1v1h-1zM11 2h1v1h-1zM14 2h1v1h-1zM15 2h1v1h-1zM18 2h1v1h-1zM20 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM24 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM8 3h1v1h-1zM9 3h1v1h-1zM11 3h1v1h-1zM12 3h1v1h-1zM13 3h1v1h-1zM14 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM21 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM0 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM9 4h1v1h-1zM13 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM20 4h1v1h-1zM21 4h1v1h-1zM22 4h1v1h-1zM24 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM13 5h1v1h-1zM14 5h1v1h-1zM15 5h1v1h-1zM16 5h1v1h-1zM18 5h1v1h-1zM24 5h1v1h-1zM0 6h1v1h-1zM1 6h1v1h-1zM2 6h1v1h-1zM3 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM21 6h1v1h-1zM22 6h1v1h-1zM23 6h1v1h-1zM24 6h1v1h-1zM8 7h1v1h-1zM9 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM16 7h1v1h-1zM0 8h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM4 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM9 8h1v1h-1zM11 8h1v1h-1zM12 8h1v1h-1zM13 8h1v1h-1zM15 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM19 8h1v1h-1zM20 8h1v1h-1zM21 8h1v1h-1zM22 8h1v1h-1zM0 9h1v1h-1zM1 9h1v1h-1zM2 9h1v1h-1zM3 9h1v1h-1zM7 9h1v1h-1zM9 9h1v1h-1zM10 9h1v1h-1zM12 9h1v1h-1zM13 9h1v1h-1zM16 9h1v1h-1zM19 9h1v1h-1zM23 9h1v1h-1zM2 10h1v1h-1zM4 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM13 10h1v1h-1zM14 10h1v1h-1zM15 10h1v1h-1zM17 10h1v1h-1zM19 10h1v1h-1zM21 10h1v1h-1zM23 10h1v1h-1zM24 10h1v1h-1zM2 11h1v1h-1zM3 11h1v1h-1zM4 11h1v1h-1zM8 11h1v1h-1zM10 11h1v1h-1zM12 11h1v1h-1zM14 11h1v1h-1zM16 11h1v1h-1zM17 11h1v1h-1zM18 11h1v1h-1zM19 11h1v1h-1zM24 11h1v1h-1zM0 12h1v1h-1zM1 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM11 12h1v1h-1zM12 12h1v1h-1zM13 12h1v1h-1zM14 12h1v1h-1zM17 12h1v1h-1zM18 12h1v1h-1zM20 12h1v1h-1zM22 12h1v1h-1zM23 12h1v1h-1zM24 12h1v1h-1zM0 13h1v1h-1zM1 13h1v1h-1zM2 13h1v1h-1zM3 13h1v1h-1zM4 13h1v1h-1zM7 13h1v1h-1zM19 13h1v1h-1zM21 13h1v1h-1zM23 13h1v1h-1zM0 14h1v1h-1zM2 14h1v1h-1zM4 14h1v1h-1zM6 14h1v1h-1zM11 14h1v1h-1zM12 14h1v1h-1zM13 14h1v1h-1zM15 14h1v1h-1zM16 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM20 14h1v1h-1zM21 14h1v1h-1zM23 14h1v1h-1zM24 14h1v1h-1zM0 15h1v1h-1zM2 15h1v1h-1zM3 15h1v1h-1zM5 15h1v1h-1zM7 15h1v1h-1zM10 15h1v1h-1zM11 15h1v1h-1zM14 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM24 15h1v1h-1zM0 16h1v1h-1zM2 16h1v1h-1zM3 16h1v1h-1zM6 16h1v1h-1zM7 16h1v1h-1zM8 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM12 16h1v1h-1zM13 16h1v1h-1zM14 16h1v1h-1zM15 16h1v1h-1zM16 16h1v1h-1zM17 16h1v1h-1zM18 16h1v1h-1zM19 16h1v1h-1zM20 16h1v1h-1zM22 16h1v1h-1zM8 17h1v1h-1zM10 17h1v1h-1zM12 17h1v1h-1zM16 17h1v1h-1zM20 17h1v1h-1zM21 17h1v1h-1zM0 18h1v1h-1zM1 18h1v1h-1zM2 18h1v1h-1zM3 18h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM9 18h1v1h-1zM10 18h1v1h-1zM16 18h1v1h-1zM18 18h1v1h-1zM20 18h1v1h-1zM22 18h1v1h-1zM23 18h1v1h-1zM24 18h1v1h-1zM0 19h1v1h-1zM6 19h1v1h-1zM8 19h1v1h-1zM10 19h1v1h-1zM11 19h1v1h-1zM14 19h1v1h-1zM16 19h1v1h-1zM20 19h1v1h-1zM21 19h1v1h-1zM23 19h1v1h-1zM24 19h1v1h-1zM0 20h1v1h-1zM2 20h1v1h-1zM3 20h1v1h-1zM4 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM9 20h1v1h-1zM10 20h1v1h-1zM11 20h1v1h-1zM12 20h1v1h-1zM13 20h1v1h-1zM14 20h1v1h-1zM15 20h1v1h-1zM16 20h1v1h-1zM17 20h1v1h-1zM18 20h1v1h-1zM19 20h1v1h-1zM20 20h1v1h-1zM22 20h1v1h-1zM0 21h1v1h-1zM2 21h1v1h-1zM3 21h1v1h-1zM4 21h1v1h-1zM6 21h1v1h-1zM8 21h1v1h-1zM9 21h1v1h-1zM10 21h1v1h-1zM11 21h1v1h-1zM14 21h1v1h-1zM17 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM21 21h1v1h-1zM22 21h1v1h-1zM23 21h1v1h-1zM24 21h1v1h-1zM0 22h1v1h-1zM2 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM6 22h1v1h-1zM8 22h1v1h-1zM9 22h1v1h-1zM10 22h1v1h-1zM12 22h1v1h-1zM13 22h1v1h-1zM21 22h1v1h-1zM22 22h1v1h-1zM24 22h1v1h-1zM0 23h1v1h-1zM6 23h1v1h-1zM16 23h1v1h-1zM18 23h1v1h-1zM19 23h1v1h-1zM20 23h1v1h-1zM21 23h1v1h-1zM24 23h1v1h-1zM0 24h1v1h-1zM1 24h1v1h-1zM2 24h1v1h-1zM3 24h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM6 24h1v1h-1zM8 24h1v1h-1zM9 24h1v1h-1zM11 24h1v1h-1zM12 24h1v1h-1zM13 24h1v1h-1zM14 24h1v1h-1zM17 24h1v1h-1zM18 24h1v1h-1zM19 24h1v1h-1zM20 24h1v1h-1zM21 24h1v1h-1zM22 24h1v1h-1zM23 24h1v1h-1zM24 24h1v1h-1z"/></svg></div>
+      <p>Livestream der Hl. Messe, Kinokarten und alle Infos<strong>emmaus.wien/carlo</strong></p>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>
