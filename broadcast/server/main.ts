@@ -9,7 +9,7 @@ import type { ServerWebSocket } from "bun";
 import { createChat } from "./chat";
 import { networkInterfaces } from "node:os";
 import { connectAtem, findAtem } from "./atem";
-import { ACCESS_KEY, createHttpHandler, overlayPages, type SocketData } from "./http";
+import { createHttpHandler, overlayPages, type SocketData } from "./http";
 import { connectObs } from "./obs";
 import { decode, encode, type ClientMessage } from "./protocol";
 import { choice, createStore, text, time, type Patch } from "./store";
@@ -267,13 +267,11 @@ const lanAddresses = Object.entries(networkInterfaces())
   .filter((address) => address.family === "IPv4" && !address.internal)
   .sort((a, b) => Number(!a.name.startsWith("en")) - Number(!b.name.startsWith("en")));
 if (HOST === "127.0.0.1" || HOST === "localhost") {
-  console.log("  not reachable: set HOST=0.0.0.0 and ACCESS_KEY in .env.local");
-} else if (!ACCESS_KEY) {
-  console.log("  refused until ACCESS_KEY is set in .env.local");
+  console.log("  not reachable: set HOST=0.0.0.0 in .env.local");
 } else if (lanAddresses.length === 0) {
   console.log("  no network found: is the Mac on Wi-Fi or Ethernet?");
 } else {
   for (const { name, address } of lanAddresses) {
-    console.log(`  http://${address}:${PORT}/?key=${encodeURIComponent(ACCESS_KEY)}   (${name})`);
+    console.log(`  http://${address}:${PORT}/   (${name})`);
   }
 }

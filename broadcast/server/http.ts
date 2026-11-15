@@ -10,8 +10,6 @@ import type { Store } from "./store";
 const PUBLIC_DIR = join(import.meta.dir, "../public");
 const FONT_DIR = join(import.meta.dir, "../../node_modules/@fontsource/source-sans-3/files");
 const LOGO = join(import.meta.dir, "../../public/logo.svg");
-export const ACCESS_KEY = process.env.ACCESS_KEY ?? "";
-const LOOPBACK = new Set(["127.0.0.1", "::1", "::ffff:127.0.0.1"]);
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -33,31 +31,6 @@ async function file(path: string) {
   return (await f.exists()) ? new Response(f) : new Response("Not found", { status: 404 });
 }
 
-function cookie(req: Request, name: string) {
-  const pair = req.headers.get("cookie")?.split("; ").find((part) => part.startsWith(`${name}=`));
-  return pair ? decodeURIComponent(pair.slice(name.length + 1)) : null;
-}
-
-/**
- * The Mac itself (OBS, Stream Deck) needs nothing. Other devices need ACCESS_KEY:
- * once as ?key=… on a page (a cookie keeps it), or on every API call.
- * Returns a response to send instead, or null to continue.
- */
-function checkAccess(req: Request, server: Server, url: URL): Response | null {
-  if (LOOPBACK.has(server.requestIP(req)?.address ?? "")) return null;
-  if (!ACCESS_KEY) return new Response("Other devices need ACCESS_KEY to be set on the server", { status: 403 });
-  if (url.searchParams.get("key") === ACCESS_KEY) {
-    url.searchParams.delete("key");
-    if (url.pathname.startsWith("/api/") || url.pathname === "/ws") return null;
-    const headers = {
-      Location: url.pathname + url.search,
-      "Set-Cookie": `key=${encodeURIComponent(ACCESS_KEY)}; Path=/; HttpOnly; SameSite=Strict; Max-Age=31536000`,
-    };
-    return new Response(null, { status: 302, headers });
-  }
-  return cookie(req, "key") === ACCESS_KEY ? null : new Response("Forbidden", { status: 403 });
-}
-
 /** What a WebSocket connection knows about its client. */
 export type SocketData = { client: string | null };
 
@@ -73,9 +46,6 @@ export function createHttpHandler({ store, set, chatClients }: Deps) {
     const url = new URL(req.url);
     const path = url.pathname;
     let match: RegExpMatchArray | null;
-
-    const denied = checkAccess(req, server, url);
-    if (denied) return denied;
 
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
     if (path === "/ws") {

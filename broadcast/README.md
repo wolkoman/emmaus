@@ -30,7 +30,6 @@ until you click "Refresh" on it in OBS, so start the server first.
 | `OBS_WEBSOCKET_PASSWORD` | empty                 | Its password; put it in `.env.local` next to `package.json` (gitignored) |
 | `ATEM_IP`                | empty                 | The ATEM's address; empty means it is searched for on the local network |
 | `ATEM_PORT`              | `9910`                | Its control port (UDP)                                                  |
-| `ACCESS_KEY`             | empty                 | Lets other devices (camera phones) in; without it only the Mac itself may connect |
 
 ## How it fits together
 
@@ -222,14 +221,13 @@ green PREVIEW, everything else stays grey. Camera switching itself is done on
 the ATEM, not from here; the server only watches. Without `ATEM_IP` (or while
 the ATEM is off) every camera stays grey.
 
-**Phones on the network**: start the server with `HOST=0.0.0.0` and an
-`ACCESS_KEY` (both can go in `.env.local`). The startup log prints the link
-for phones with the Mac's network address and the key (the `en0`/`en1` line;
-`bridge…` and `utun…` are virtual networks or VPNs). Each phone opens
-`http://<mac-ip>:4321/?key=<ACCESS_KEY>` once; a cookie remembers the key, and
-the start page links to the camera pages (bookmark yours, e.g. on the home
-screen). Requests from the Mac itself never need the key. If phones can't
-connect at all, allow incoming connections for `bun` in macOS's firewall.
+**Phones on the network**: start the server with `HOST=0.0.0.0` (in
+`.env.local`). The startup log prints the address for phones (the `en0`/`en1`
+line; `bridge…` and `utun…` are virtual networks or VPNs). Each phone opens
+`http://<mac-ip>:4321/` once; the start page links to the camera pages (bookmark
+yours, e.g. on the home screen). Anyone on the network can open these pages and
+control the stream, there is no key. If phones can't connect at all, allow
+incoming connections for `bun` in macOS's firewall.
 
 ## State and overlays
 
@@ -408,10 +406,10 @@ Camera switching is OBS's job, not the overlays'.
 
 ## Security
 
-- Other devices need `ACCESS_KEY`; without it set, only the Mac itself can
-  connect. Everyone with the key can do everything the control page can,
-  including switching OBS scenes; there are no roles.
-- On the Mac there is no check: any web page open in a browser there can send a
-  GET to the set URLs (the WebSocket checks the origin, the Stream Deck URLs
-  can't). Keep `HOST` on `127.0.0.1` when no phones are needed, and use a
-  trusted network.
+- There is no key and no login: every device on the network can open the
+  control page, the overlays and the set URLs, so anyone on it can do what the
+  control page can, including switching OBS scenes. The network is assumed to
+  be private and trusted.
+- On the Mac there is no origin check for the set URLs: any web page open in a
+  browser there can send a GET to them (the WebSocket checks the origin; the
+  Stream Deck URLs can't). Keep `HOST` on `127.0.0.1` when no phones are needed.
