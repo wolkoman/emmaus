@@ -28,7 +28,7 @@ until you click "Refresh" on it in OBS, so start the server first.
 | `HOST`                   | `127.0.0.1`           | Bind address; `0.0.0.0` to control from a phone or iPad on the LAN      |
 | `OBS_WEBSOCKET_URL`      | `ws://127.0.0.1:4455` | OBS's WebSocket server                                                  |
 | `OBS_WEBSOCKET_PASSWORD` | empty                 | Its password; put it in `.env.local` next to `package.json` (gitignored) |
-| `ATEM_IP`                | empty                 | The ATEM's address; empty means no tally from a switcher                |
+| `ATEM_IP`                | empty                 | The ATEM's address; empty means it is searched for on the local network |
 | `ATEM_PORT`              | `9910`                | Its control port (UDP)                                                  |
 | `ACCESS_KEY`             | empty                 | Lets other devices (camera phones) in; without it only the Mac itself may connect |
 
@@ -134,14 +134,16 @@ the network protocol this server speaks runs over Ethernet. Every ATEM Mini
 model has an `ATEM CONTROL` Ethernet port; plug it into the same router or
 switch as the streaming Mac. USB and Ethernet can be connected together.
 
-1. **Address**: in **ATEM Setup** (over USB; part of Blackmagic's free
-   **ATEM Switchers** download, which also contains ATEM Software Control), set
-   the ATEM to DHCP or to a free fixed address on the Mac's network, and put it
-   in `.env.local` as `ATEM_IP`. The factory address is `192.168.10.240`, which
-   the Mac usually cannot reach from its own network; the first-generation Mini
-   cannot use DHCP and keeps a fixed address. On the control page,
-   `atem.connection` shows `online` once the link works; `offline` also means
-   the ATEM is switched off or has another address.
+1. **Network**: the ATEM needs an address in the Mac's subnet, either fixed or,
+   on models that support it, from DHCP. Set it in **ATEM Setup** (over USB;
+   part of Blackmagic's free **ATEM Switchers** download, which also contains
+   ATEM Software Control). The factory address is `192.168.10.240`, which the
+   Mac usually cannot reach; the first-generation Mini cannot use DHCP and
+   keeps a fixed address. On startup the server looks for the ATEM in the Mac's
+   networks, so `.env.local` needs no `ATEM_IP`; setting it to the ATEM's fixed
+   address skips that search. On the control page, `atem.connection` shows
+   `online` once the link works; `offline` also means the ATEM is switched off
+   or on another subnet.
 2. **Inputs**: camera `cam<n>` is ATEM input `n` (1 to 4). Feed the cameras
    into inputs 1 to 4 and keep other sources (media player, colour generator)
    on free inputs, so they don't light a camera that is not on air.

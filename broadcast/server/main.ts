@@ -8,7 +8,7 @@ import { READING_SETS, READINGS } from "../content/readings";
 import type { ServerWebSocket } from "bun";
 import { createChat } from "./chat";
 import { networkInterfaces } from "node:os";
-import { connectAtem } from "./atem";
+import { connectAtem, findAtem } from "./atem";
 import { ACCESS_KEY, createHttpHandler, overlayPages, type SocketData } from "./http";
 import { connectObs } from "./obs";
 import { decode, encode, type ClientMessage } from "./protocol";
@@ -86,15 +86,23 @@ function sceneChanged(scene: string) {
 
 // --- ATEM ---
 
-if (ATEM_IP) {
+/** The ATEM: the address from `ATEM_IP`, or the first one that answers on the Mac's network. */
+const atemAddress: Promise<string | null> = ATEM_IP ? Promise.resolve(ATEM_IP) : findAtem();
+
+atemAddress.then((address) => {
+  if (!address) {
+    console.warn("No ATEM found; the camera pages stay on standby (set ATEM_IP in .env.local)");
+    return;
+  }
+  if (!ATEM_IP) console.log(`ATEM found at ${address} (set ATEM_IP to skip the search)`);
   connectAtem({
-    address: ATEM_IP,
+    address,
     port: ATEM_PORT,
     inputs: ATEM_INPUTS,
     onConnected: (connected) => store.apply("atem", { connection: connected ? "online" : "offline" }),
     onTally: (tally) => store.apply("tally", tally),
   });
-}
+});
 
 // --- Banner ---
 
@@ -250,7 +258,7 @@ console.log("On this Mac:");
 console.log(`  control page: ${local}/control`);
 for (const name of overlayPages) console.log(`  overlay ${name}: ${local}/overlay/${name}`);
 if (ATEM_IP) console.log(`  ATEM: ${ATEM_IP}:${ATEM_PORT} (tally of ${CAMERAS.length} cameras)`);
-else console.log("  no ATEM: set ATEM_IP in .env.local, otherwise the camera pages stay on standby");
+else console.log("  ATEM: searching the local network (set ATEM_IP to skip that)");
 
 console.log("\nFor phones (open once, then pick the camera and bookmark it):");
 // Physical interfaces (en0, en1, …) first; the rest are usually VPNs or virtual networks (Docker, OrbStack).
