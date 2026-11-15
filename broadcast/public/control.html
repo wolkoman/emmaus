@@ -10,46 +10,278 @@
         font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
         background: #16181c;
         color: #e8e8ea;
+        --panel: #1f2227;
+        --line: #2c3036;
+        --button: #2a2e34;
+        --muted: #9aa0a8;
+        --on: #e3172d;
+        --select: #1f3b5a;
+        --select-line: #3d6fa3;
+        transition: background 300ms ease;
       }
       body {
-        max-width: 1200px;
+        max-width: 1400px;
         margin: 0 auto;
-        padding: 24px 16px;
+        padding: 16px;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+      h1 {
+        font-size: 20px;
+        margin: 0;
+      }
+      .statuses {
+        display: flex;
+        gap: 14px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .statuses span::before {
+        content: "";
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        margin-right: 6px;
+        border-radius: 50%;
+        background: #d33;
+      }
+      .statuses span.ok::before {
+        background: #3c6;
       }
       .layout {
         display: grid;
         gap: 16px;
         align-items: start;
       }
-      @media (min-width: 1000px) {
+      @media (min-width: 1100px) {
         .layout {
-          grid-template-columns: minmax(0, 1fr) 400px;
+          grid-template-columns: minmax(0, 1fr) 380px;
         }
         aside {
           position: sticky;
           top: 16px;
         }
       }
-      aside {
-        height: min(80vh, 720px);
-        display: flex;
-        flex-direction: column;
+      main {
+        display: grid;
+        gap: 16px;
       }
-      aside section {
-        height: 100%;
+      .columns {
+        display: grid;
+        gap: 16px;
+        align-items: start;
+      }
+      @media (min-width: 800px) {
+        .columns {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      section {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 16px;
+      }
+      section[hidden] {
+        display: none;
+      }
+      h2 {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        margin: 0 0 12px;
+      }
+      .row + .row {
+        margin-top: 14px;
+      }
+      .label {
+        display: block;
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+      .segments {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      button {
+        font: inherit;
+        font-size: 15px;
+        padding: 10px 16px;
+        border-radius: 8px;
+        border: 1px solid #3a3f46;
+        background: var(--button);
+        color: inherit;
+        cursor: pointer;
+      }
+      button:hover {
+        border-color: #5a616b;
+      }
+      .segments button {
+        flex: 1;
+      }
+      .segments button.active {
+        background: var(--select);
+        border-color: var(--select-line);
+      }
+      /* Something that is on air right now. */
+      .segments button.active.on-air {
+        background: var(--on);
+        border-color: var(--on);
+        color: #fff;
+      }
+      .big button {
+        padding: 18px;
+        font-size: 18px;
+        font-weight: 600;
+      }
+      input {
+        font: inherit;
+        font-size: 15px;
+        padding: 9px 12px;
+        border-radius: 8px;
+        border: 1px solid #3a3f46;
+        background: #16181c;
+        color: inherit;
+        min-width: 0;
+      }
+      .times {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .times input {
+        width: 100%;
         box-sizing: border-box;
-        margin: 0;
+      }
+      .hint {
+        margin: 6px 0 0;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .error {
+        margin: 0 0 16px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        background: #4a1d22;
+        color: #ffd7da;
+        display: none;
+      }
+      .error.shown {
+        display: block;
+      }
+
+      /* Cameras: operator name and tally. */
+      .cameras {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+      }
+      .camera {
+        display: grid;
+        gap: 6px;
+        padding: 10px;
+        border-radius: 8px;
+        background: #16181c;
+        border: 2px solid transparent;
+      }
+      .camera.program {
+        border-color: var(--on);
+      }
+      .camera.preview {
+        border-color: #2f9e57;
+      }
+      .camera strong {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+      }
+      .camera small {
+        font-weight: 400;
+        color: var(--muted);
+      }
+
+      /* Following a reading: the line being read and the next one, big enough to read along. */
+      .reading {
+        border-color: var(--select-line);
+      }
+      .reading-lines {
+        display: grid;
+        gap: 12px;
+      }
+      .reading-cue {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 4px 12px;
+        align-items: baseline;
+        padding: 12px 14px;
+        border-radius: 8px;
+        background: #16181c;
+      }
+      .reading-cue h3 {
+        grid-column: 1 / -1;
+        margin: 0 0 4px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+      }
+      .reading-cue .lang {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .reading-now {
+        font-size: 17px;
+        color: var(--muted);
+      }
+      .reading-next {
+        font-size: 24px;
+        border: 1px solid var(--select-line);
+      }
+      .reading-buttons {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .reading-buttons button {
+        flex: 1;
+        padding: 16px;
+        font-size: 18px;
+      }
+      .reading-buttons .primary {
+        flex: 3;
+        background: var(--select);
+        border-color: var(--select-line);
+      }
+
+      /* Chat */
+      aside section {
+        height: min(85vh, 760px);
+        box-sizing: border-box;
         display: flex;
         flex-direction: column;
       }
-      /* Asking cameras a question with answer buttons, in a modal opened next to Send. */
+      #chat {
+        flex: 1;
+        min-height: 0;
+      }
       dialog.ask {
         width: min(480px, calc(100vw - 32px));
         box-sizing: border-box;
         padding: 20px;
         border: 1px solid #3a3f46;
         border-radius: 12px;
-        background: #1f2227;
+        background: var(--panel);
         color: inherit;
       }
       dialog.ask::backdrop {
@@ -70,7 +302,7 @@
         padding: 0;
         border: 0;
         font-size: 14px;
-        color: #9aa0a8;
+        color: var(--muted);
       }
       .ask legend {
         padding: 0 0 6px;
@@ -86,9 +318,10 @@
         justify-content: flex-end;
         gap: 8px;
       }
-      .ask-actions .primary {
-        background: #1f3b5a;
-        border-color: #3d6fa3;
+      .ask-actions .primary,
+      .ask-to button[aria-pressed="true"] {
+        background: var(--select);
+        border-color: var(--select-line);
       }
       .ask-to {
         display: flex;
@@ -99,195 +332,117 @@
         padding: 6px 10px;
         font-size: 13px;
       }
-      .ask-to button[aria-pressed="true"] {
-        background: #1f3b5a;
-        border-color: #3d6fa3;
-      }
-      aside h2 {
-        margin-bottom: 12px;
-      }
-      #chat {
-        flex: 1;
-        min-height: 0;
-      }
-      h1 {
-        font-size: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      .status {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #d33;
-      }
-      .status.connected {
-        background: #3c6;
-      }
-      section {
-        background: #1f2227;
-        border: 1px solid #2c3036;
-        border-radius: 10px;
-        padding: 16px;
-        margin-bottom: 16px;
-      }
-      h2 {
-        font-size: 16px;
-        margin: 0 0 4px;
-      }
-      a {
-        color: #8ab4ff;
-      }
-      .field {
-        margin-top: 14px;
-      }
-      .buttons {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 6px;
-      }
-      .buttons code {
-        flex-basis: 100%;
-      }
-      button {
-        font: inherit;
-        font-size: 15px;
-        padding: 10px 18px;
-        border-radius: 8px;
-        border: 1px solid #3a3f46;
-        background: #2a2e34;
-        color: inherit;
-        cursor: pointer;
-      }
-      input {
-        flex: 1;
-        font: inherit;
-        font-size: 15px;
-        padding: 10px 12px;
-        border-radius: 8px;
-        border: 1px solid #3a3f46;
-        background: #16181c;
-        color: inherit;
-      }
-      button.active {
-        background: #e3172d;
-        border-color: #e3172d;
-        color: #fff;
-      }
-      .error {
-        margin: 0 0 16px;
-        padding: 10px 14px;
-        border-radius: 8px;
-        background: #4a1d22;
-        color: #ffd7da;
-        opacity: 0;
-        transition: opacity 300ms ease;
-      }
-      .error.shown {
-        opacity: 1;
-      }
-      code {
-        display: block;
-        font-size: 12px;
-        color: #9aa0a8;
-        margin-top: 4px;
-        word-break: break-all;
-      }
-      /* Following a reading: the line being read and the next one, big enough to read along. */
-      .reading-lines {
-        display: grid;
-        gap: 12px;
-        margin-top: 12px;
-      }
-      .reading-cue {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 4px 12px;
-        align-items: baseline;
-        padding: 12px 14px;
-        border-radius: 8px;
-        background: #16181c;
-      }
-      .reading-cue h3 {
-        grid-column: 1 / -1;
-        margin: 0 0 4px;
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: #9aa0a8;
-      }
-      .reading-cue .lang {
-        font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-        color: #9aa0a8;
-      }
-      .reading-now {
-        font-size: 17px;
-        color: #9aa0a8;
-      }
-      .reading-next {
-        font-size: 24px;
-        border: 1px solid #3d6fa3;
-      }
-      .reading .buttons button {
-        flex: 1;
-        padding: 16px;
-        font-size: 18px;
-      }
-      .reading .buttons .primary {
-        flex: 3;
-        background: #1f3b5a;
-        border-color: #3d6fa3;
-      }
-      .reading-hint {
-        margin: 8px 0 0;
-        font-size: 13px;
-        color: #9aa0a8;
-      }
+
       /* Test mode: the whole page turns blue, so nobody takes the test texts for the real Mass. */
-      :root {
-        transition: background 300ms ease;
-      }
       :root.test-mode {
         background: #0d2a57;
-      }
-      .test-mode section {
-        background: #123a73;
-        border-color: #2b5ca8;
+        --panel: #123a73;
+        --line: #2b5ca8;
       }
       .test-mode input,
-      .test-mode .reading-cue {
+      .test-mode .reading-cue,
+      .test-mode .camera {
         background: #0d2a57;
       }
-      /* Deliberately tiny, so the live readings are not swapped by a stray tap. */
+      /* Deliberately tiny, so the live readings are not swapped by a stray click. */
       .set-toggle {
         display: flex;
         align-items: center;
         gap: 4px;
         margin-left: auto;
         font-size: 11px;
-        font-weight: 400;
-        color: #9aa0a8;
+        color: var(--muted);
       }
       .set-toggle button {
         padding: 2px 6px;
         font-size: 11px;
         border-radius: 4px;
       }
-      .set-toggle button[data-set="test"].active {
+      .set-toggle button.active {
         background: #2f7de1;
         border-color: #2f7de1;
       }
     </style>
   </head>
   <body>
-    <h1><span class="status"></span> Livestream control</h1>
+    <header>
+      <h1>Livestream</h1>
+      <div class="statuses">
+        <span data-status="server">Server</span>
+        <span data-status="obs">OBS</span>
+        <span data-status="atem">ATEM</span>
+      </div>
+      <div class="set-toggle"></div>
+    </header>
     <p class="error" role="alert"></p>
+
     <div class="layout">
-      <main></main>
+      <main>
+        <section class="reading" hidden>
+          <h2>Reading: <span class="reading-where"></span></h2>
+          <div class="reading-lines"></div>
+          <div class="reading-buttons">
+            <button class="reading-prev">◀ Back</button>
+            <button class="primary reading-next-button">Next line ▶</button>
+          </div>
+          <p class="hint">Press "Next line" (or → / Page Down, e.g. on a presenter clicker) as the reader starts the line in the blue box. ← / Page Up goes back.</p>
+        </section>
+
+        <section>
+          <h2>Scene</h2>
+          <div class="segments big" data-field="obs.scene"></div>
+        </section>
+
+        <div class="columns">
+          <section>
+            <h2>Live</h2>
+            <div class="row">
+              <span class="label">LIVE indicator</span>
+              <div class="segments" data-field="live.mode"></div>
+            </div>
+            <div class="row">
+              <span class="label">Name banner</span>
+              <div class="segments" data-field="live.banner"></div>
+              <p class="hint">Hides itself after 12 seconds.</p>
+            </div>
+            <div class="row">
+              <span class="label">Reading subtitles</span>
+              <div class="segments" data-field="live.reading"></div>
+            </div>
+            <div class="row">
+              <span class="label">Communion</span>
+              <div class="segments" data-field="live.communion"></div>
+            </div>
+          </section>
+
+          <section>
+            <h2>Pre-live</h2>
+            <div class="row">
+              <span class="label">Screen</span>
+              <div class="segments" data-field="prelive.screen"></div>
+            </div>
+            <div class="row times">
+              <label><span class="label">Mass starts</span><input type="time" data-field="prelive.startTime" /></label>
+              <label><span class="label">Resumes after pause</span><input type="time" data-field="prelive.resumeTime" /></label>
+            </div>
+            <div class="row">
+              <span class="label">Trailer</span>
+              <div class="segments" data-field="prelive.trailer"></div>
+            </div>
+            <div class="row">
+              <span class="label">Music</span>
+              <div class="segments" data-field="prelive.music"></div>
+              <p class="hint">Trailer and music stop when the scene switches to Live.</p>
+            </div>
+          </section>
+        </div>
+
+        <section>
+          <h2>Cameras</h2>
+          <div class="cameras"></div>
+        </section>
+      </main>
+
       <aside>
         <section>
           <h2>Chat</h2>
@@ -323,14 +478,30 @@
       import { connect } from "/overlay-client.js";
       import { mountChat } from "/chat.js";
 
-      const main = document.querySelector("main");
-      const { schema, overlays } = await fetch("/api/state").then((res) => res.json());
-      const updaters = []; // (state) => void, one per field
+      /** Button labels per field; the values are the server's. "onAir" values light up red. */
+      const FIELDS = {
+        "obs.scene": { options: { prelive: "Pre-Live", live: "Live" }, onAir: ["live"] },
+        "live.mode": { options: { off: "Off", on: "On" }, onAir: ["on"] },
+        "live.banner": { options: { off: "Off", priest: "Pfarrer", mother: "Mutter" }, onAir: ["priest", "mother"] },
+        "live.reading": { options: { off: "Off", first: "First reading", gospel: "Gospel" }, onAir: ["first", "gospel"] },
+        "live.communion": { options: { off: "Off", prayer: "Prayer", carlo: "Carlo quote" }, onAir: ["prayer", "carlo"] },
+        "prelive.screen": { options: { before: "Before Mass", pause: "Pause", end: "End" } },
+        "prelive.trailer": { options: { off: "Stop", play: "Play" }, onAir: ["play"] },
+        "prelive.music": { options: { off: "Stop", play: "Play" }, onAir: ["play"] },
+      };
+
+      const { schema } = await fetch("/api/state").then((res) => res.json());
+      const updaters = []; // (state) => void
       let state = null;
+      const valueOf = (current, key) => key.split(".").reduce((value, part) => value?.[part], current);
+      const setField = (key, value) => {
+        const [section, name] = key.split(".");
+        client.set(section, { [name]: value });
+      };
 
       const client = connect({
         client: "director",
-        onStatus: (connected) => document.querySelector(".status").classList.toggle("connected", connected),
+        onStatus: (connected) => document.querySelector('[data-status="server"]').classList.toggle("ok", connected),
         on: {
           state: (message) => {
             state = message.state;
@@ -345,17 +516,92 @@
         },
       });
 
-      const askButton = Object.assign(document.createElement("button"), { type: "button", textContent: "Ask" });
+      let errorTimer;
+      function showError(error) {
+        const el = document.querySelector(".error");
+        el.textContent = error;
+        el.classList.add("shown");
+        clearTimeout(errorTimer);
+        errorTimer = setTimeout(() => el.classList.remove("shown"), 6000);
+      }
 
+      // --- Status ---
+
+      updaters.push((current) => {
+        document.querySelector('[data-status="obs"]').classList.toggle("ok", current.obs.connection === "online");
+        document.querySelector('[data-status="atem"]').classList.toggle("ok", current.atem.connection === "online");
+      });
+
+      // --- Button rows ---
+
+      for (const row of document.querySelectorAll(".segments[data-field]")) {
+        const key = row.dataset.field;
+        const { options, onAir = [] } = FIELDS[key];
+        const buttons = Object.entries(options).map(([value, label]) => {
+          const button = Object.assign(document.createElement("button"), { type: "button", textContent: label });
+          button.onclick = () => setField(key, value);
+          button.classList.toggle("on-air", onAir.includes(value));
+          button.dataset.value = value;
+          return button;
+        });
+        row.append(...buttons);
+        updaters.push((current) => {
+          const value = valueOf(current, key);
+          for (const button of buttons) button.classList.toggle("active", button.dataset.value === value);
+        });
+      }
+
+      // --- Times: set on Enter or when leaving the field ---
+
+      for (const input of document.querySelectorAll("input[type=time][data-field]")) {
+        const key = input.dataset.field;
+        const commit = () => {
+          if (input.value && input.value !== valueOf(state, key)) setField(key, input.value);
+        };
+        input.addEventListener("blur", commit);
+        input.addEventListener("keydown", (event) => event.key === "Enter" && input.blur());
+        updaters.push((current) => {
+          if (document.activeElement !== input) input.value = valueOf(current, key);
+        });
+      }
+
+      // --- Cameras: operator name and tally ---
+
+      const cameraIds = Object.keys(schema.cameras);
+      const TALLY = { program: "on air", preview: "preview", off: "" };
+      for (const cam of cameraIds) {
+        const card = Object.assign(document.createElement("div"), { className: "camera" });
+        const title = document.createElement("strong");
+        const tally = document.createElement("small");
+        title.append(`Camera ${cam.slice(3)}`, tally);
+        const input = Object.assign(document.createElement("input"), { maxLength: schema.cameras[cam].maxLength, placeholder: "Operator" });
+        const commit = () => {
+          const name = input.value.trim();
+          if (name !== state?.cameras[cam]) client.set("cameras", { [cam]: name });
+        };
+        input.addEventListener("blur", commit);
+        input.addEventListener("keydown", (event) => event.key === "Enter" && input.blur());
+        card.append(title, input);
+        document.querySelector(".cameras").append(card);
+        updaters.push((current) => {
+          const value = current.tally[cam];
+          card.classList.toggle("program", value === "program");
+          card.classList.toggle("preview", value === "preview");
+          tally.textContent = TALLY[value] ?? "";
+          if (document.activeElement !== input) input.value = current.cameras[cam];
+        });
+      }
+
+      // --- Chat and "Ask": a question to some cameras, answered with one tap on their phones ---
+
+      const askButton = Object.assign(document.createElement("button"), { type: "button", textContent: "Ask" });
       const chat = mountChat(document.querySelector("#chat"), {
         me: "director",
         actions: [askButton],
-        clients: () => ["director", ...Object.keys(schema.cameras)],
+        clients: () => ["director", ...cameraIds],
         connection: client,
         aliasOf: (id) => state?.cameras[id] ?? "",
       });
-
-      // --- Ask: a question to some cameras, answered with one tap on their phones ---
 
       const askDialog = document.querySelector("dialog.ask");
       const ask = askDialog.querySelector("form");
@@ -365,7 +611,7 @@
       };
       askDialog.querySelector(".ask-cancel").onclick = () => askDialog.close();
 
-      const recipients = Object.keys(schema.cameras).map((cam) => {
+      const recipients = cameraIds.map((cam) => {
         const button = Object.assign(document.createElement("button"), { type: "button" });
         button.dataset.cam = cam;
         button.setAttribute("aria-pressed", "false");
@@ -391,128 +637,12 @@
         askDialog.close();
       };
 
-      let errorTimer;
-      function showError(error) {
-        const el = document.querySelector(".error");
-        el.textContent = error;
-        el.classList.add("shown");
-        clearTimeout(errorTimer);
-        errorTimer = setTimeout(() => el.classList.remove("shown"), 6000);
-      }
-
-      // --- One renderer per field kind; each returns its element and a state updater. ---
-
-      function choiceField(section, name, field) {
-        if (field.readOnly) {
-          const value = document.createElement("strong");
-          return { el: value, update: (current) => (value.textContent = current) };
-        }
-        const buttons = field.values.map((value) => {
-          const button = document.createElement("button");
-          button.textContent = value;
-          button.onclick = () => client.set(section, { [name]: value });
-          return button;
-        });
-        const row = document.createElement("div");
-        row.className = "buttons";
-        row.append(...buttons, ...field.values.map((value) => apiUrl(section, name, value)));
-        return {
-          el: row,
-          update: (current) => {
-            if (!field.action) buttons.forEach((b, i) => b.classList.toggle("active", field.values[i] === current));
-          },
-        };
-      }
-
-      function timeField(section, name, field) {
-        const form = document.createElement("form");
-        form.className = "buttons";
-        const input = Object.assign(document.createElement("input"), { type: "time" });
-        const button = Object.assign(document.createElement("button"), { textContent: "Set" });
-        form.onsubmit = (event) => {
-          event.preventDefault();
-          client.set(section, { [name]: input.value });
-          input.blur();
-        };
-        form.append(input, button, apiUrl(section, name, field.initial));
-        return {
-          el: form,
-          update: (current) => {
-            if (document.activeElement !== input) input.value = current;
-          },
-        };
-      }
-
-      function textField(section, name, field) {
-        const form = document.createElement("form");
-        form.className = "buttons";
-        const input = Object.assign(document.createElement("input"), { maxLength: field.maxLength, placeholder: "Name" });
-        const button = Object.assign(document.createElement("button"), { textContent: "Set" });
-        form.onsubmit = (event) => {
-          event.preventDefault();
-          client.set(section, { [name]: input.value.trim() });
-          input.blur();
-        };
-        form.append(input, button);
-        return {
-          el: form,
-          update: (current) => {
-            if (document.activeElement !== input) input.value = current;
-          },
-        };
-      }
-
-      const renderers = { choice: choiceField, time: timeField, text: textField };
-
-      /** The URL that sets this value, e.g. for a Stream Deck button. */
-      function apiUrl(section, name, value) {
-        return Object.assign(document.createElement("code"), {
-          textContent: `${location.origin}/api/${section}/set?${name}=${value}`,
-        });
-      }
-
-      // --- Page ---
-
-      for (const [section, fields] of Object.entries(schema)) {
-        if (section === "readings") continue; // the big switch at the top
-        const el = document.createElement("section");
-        el.innerHTML = `<h2>${section}</h2>`;
-        if (overlays.includes(section)) {
-          const url = `${location.origin}/overlay/${section}`;
-          el.insertAdjacentHTML("beforeend", `<a href="${url}" target="_blank">${url}</a>`);
-        }
-        if (section === "cameras") {
-          const links = Object.keys(fields).map((cam) => `<a href="/camera/${cam.slice(3)}" target="_blank">${cam}</a>`);
-          el.insertAdjacentHTML("beforeend", `<div>Camera pages: ${links.join(" · ")}</div>`);
-        }
-        for (const [name, field] of Object.entries(fields)) {
-          const { el: control, update } = renderers[field.kind](section, name, field);
-          const fieldEl = document.createElement("div");
-          fieldEl.className = "field";
-          fieldEl.append(name, " ", control);
-          el.append(fieldEl);
-          updaters.push((state) => update(state[section][name]));
-        }
-        main.append(el);
-      }
-
       // --- Reading: follow the reader and step the subtitles ---
 
       const { langs, readings, sets } = await fetch("/api/content/readings").then((res) => res.json());
-      const reading = document.createElement("section");
-      reading.className = "reading";
-      reading.hidden = true;
-      reading.innerHTML = `
-        <h2>Reading: <span class="reading-where"></span></h2>
-        <div class="reading-lines"></div>
-        <div class="buttons">
-          <button class="reading-prev">◀ Back</button>
-          <button class="primary reading-next-button">Next line ▶</button>
-        </div>
-        <p class="reading-hint">Press "Next line" (or → / Page Down, e.g. on a presenter clicker) as the reader starts the line in the blue box. ← / Page Up goes back.</p>`;
+      const reading = document.querySelector(".reading");
       reading.querySelector(".reading-prev").onclick = () => client.set("live", { step: "prev" });
       reading.querySelector(".reading-next-button").onclick = () => client.set("live", { step: "next" });
-      main.prepend(reading);
 
       function cueBlock(title, className, texts) {
         const block = document.createElement("div");
@@ -527,28 +657,26 @@
         return block;
       }
 
-      updaters.push((state) => {
-        const { reading: which, cue } = state.live;
+      updaters.push((current) => {
+        const { reading: which, cue } = current.live;
         reading.hidden = which === "off";
         if (reading.hidden) return;
-        const name = sets[state.readings.set][which];
+        const name = sets[current.readings.set][which];
         // Step 0 is the Bible reference alone; the lines follow from the announcement on.
         const { label, reference, cues } = readings[name];
         const steps = [Object.fromEntries(langs.map((lang) => [lang, `${label[lang]} · ${reference[lang]}`])), ...cues];
         const index = Number(cue);
         const where = index === 0 ? "Bible reference" : `line ${index} of ${steps.length - 1}`;
-        reading.querySelector(".reading-where").textContent = `${name}, ${where}`;
+        reading.querySelector(".reading-where").textContent = `${reference.de}, ${where}`;
         reading.querySelector(".reading-lines").replaceChildren(
           cueBlock(index === 0 ? "On screen: the Bible reference" : "Being read", "reading-now", steps[index]),
           cueBlock(index + 1 < steps.length ? "Next: press when this starts" : "Next: ends the subtitles", "reading-next", steps[index + 1]),
         );
       });
-      if (state) updaters.at(-1)(state); // the state may have arrived while the readings loaded
 
-      // --- Real or test readings: a big switch at the top ---
+      // --- Real or test readings ---
 
-      const toggle = document.createElement("div");
-      toggle.className = "set-toggle";
+      const toggle = document.querySelector(".set-toggle");
       const titles = { actual: "Mass", test: "Test" };
       const setButtons = Object.entries(sets).map(([set, { first, gospel }]) => {
         const button = Object.assign(document.createElement("button"), {
@@ -561,14 +689,13 @@
         return button;
       });
       toggle.append("Readings:", ...setButtons);
-      document.querySelector("h1").append(toggle);
-
-      updaters.push((state) => {
-        const { set } = state.readings;
+      updaters.push((current) => {
+        const { set } = current.readings;
         document.documentElement.classList.toggle("test-mode", set === "test");
         for (const button of setButtons) button.classList.toggle("active", button.dataset.set === set);
       });
-      if (state) updaters.at(-1)(state);
+
+      if (state) updaters.forEach((update) => update(state)); // the state may have arrived while the readings loaded
 
       document.addEventListener("keydown", (event) => {
         if (!state || state.live.reading === "off") return;
