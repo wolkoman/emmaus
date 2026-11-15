@@ -57,11 +57,15 @@ const store = createStore({
     startTime: time(defaultBroadcastTime()),
     resumeTime: time(defaultResumeTime()),
     trailer: choice(["off", "play"]),
+    /** `hide` closes the camera frame and spreads the texts over the screen, so no picture from the church goes out before the Mass. */
+    camera: choice(["show", "hide"]),
     /** Background music (public/media/music.mp3), looped; it gives way while the trailer plays. */
     music: choice(["off", "play"]),
   },
   /** Operator names, shown in the chat and usable as @name. */
   cameras: Object.fromEntries(CAMERAS.map((cam) => [cam, text()])),
+  /** Frames per second of the program picture on the camera pages. */
+  picture: { fps: choice(["1", "2", "5", "10"]) },
   /** Owned by the ATEM: which input is on air. */
   tally: Object.fromEntries(CAMERAS.map((cam) => [cam, choice(["off", "preview", "program"], { readOnly: true })])),
 });
@@ -177,24 +181,25 @@ const chat = createChat({
 
 // --- Program picture ---
 
-/** A small, low-rate snapshot of the program for the camera pages; OBS is only asked while someone watches. */
-const PICTURE = { intervalMs: 1000, width: 640, height: 360, quality: 50 };
+/** A small snapshot of the program for the camera pages, `picture.fps` times a second; OBS is only asked while someone watches. */
+const PICTURE = { width: 640, height: 360, quality: 50 };
 const PICTURE_TOPIC = "program-picture";
-let takingPicture = false;
 
-setInterval(async () => {
+async function takePicture() {
+  const startedAt = Date.now();
   const watched = server.subscriberCount(PICTURE_TOPIC) > 0;
-  if (!watched || takingPicture || store.state.obs.connection !== "online") return;
-  takingPicture = true;
-  try {
-    const image = await obs.programSnapshot(PICTURE);
-    server.publish(PICTURE_TOPIC, encode({ type: "programPicture", image, at: Date.now() }));
-  } catch {
-    // OBS is switching or reconnecting; the next tick tries again.
-  } finally {
-    takingPicture = false;
+  if (watched && store.state.obs.connection === "online") {
+    try {
+      const image = await obs.programSnapshot(PICTURE);
+      server.publish(PICTURE_TOPIC, encode({ type: "programPicture", image, at: Date.now() }));
+    } catch {
+      // OBS is switching or reconnecting; the next tick tries again.
+    }
   }
-}, PICTURE.intervalMs);
+  const intervalMs = 1000 / Number(store.state.picture.fps);
+  setTimeout(takePicture, Math.max(0, intervalMs - (Date.now() - startedAt)));
+}
+setTimeout(takePicture, 1000);
 
 // --- Messages from pages ---
 

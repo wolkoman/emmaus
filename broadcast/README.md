@@ -47,7 +47,7 @@ public/             what browsers load: control page, camera page, overlays, sha
 ```
 
 **State** is a set of sections (`obs`, `atem`, `live`, `prelive`, `cameras`,
-`tally`), each with string fields. The schema in `main.ts` says what each field
+`picture`, `tally`), each with string fields. The schema in `main.ts` says what each field
 may hold (`choice` or `time`) and is sent to the control page, which renders
 itself from it.
 
@@ -79,7 +79,7 @@ connect without an id and only get the state.
 | server → client | `{"type":"chatMessage","message":{…}}`         | a new chat message (`id`, `from`, `text`, `at`, questions also `question`) |
 | server → client | `{"type":"chatUpdate","message":{…}}`          | a message changed (a question got an answer) |
 | server → client | `{"type":"typing","clients":["cam2"]}`         | who is typing right now                      |
-| server → client | `{"type":"programPicture","image":"data:…"}`   | snapshot of the program, ~1/s while subscribed |
+| server → client | `{"type":"programPicture","image":"data:…"}`   | snapshot of the program, `picture.fps` per second while subscribed |
 | client → server | `{"type":"set","section":"live","patch":{…}}`  | change fields of one section                 |
 | client → server | `{"type":"chat","text":"…"}`                   | send a chat message (chat clients only)      |
 | client → server | `{"type":"ask","text":"…","to":["cam1"],"options":["Yes","No"]}` | ask cameras a question (director only) |
@@ -200,9 +200,9 @@ remembered on each phone:
 - **Sounds**: a soft tone when the camera goes to preview, two loud
   rising tones when it goes live.
 - **Program picture** (on by default): what is on air as a 640×360
-  JPEG about once a second, up to a second behind; tap it to fill the screen.
-  The server only asks OBS for pictures while at least one phone shows them
-  (`PICTURE` in `main.ts`). It is a snapshot of the program scene, so during a
+  JPEG, once a second by default (1 to 10 fps, set under Cameras on the
+  control page); tap it to fill the screen. The server only asks OBS for
+  pictures while at least one phone shows them (`PICTURE` in `main.ts`). It is a snapshot of the program scene, so during a
   transition it already shows the target scene.
 - **Keep screen awake** (on by default): the phone's screen stays on while the
   page is open, so it keeps receiving. It uses the browser's Wake Lock where
@@ -340,6 +340,7 @@ else clears away; back to `prelive` reverses it.
 | `startTime`  | Mass start from `livestream.ts`   | Today's broadcast start for the countdown; "starting shortly" once it has passed             |
 | `resumeTime` | Meeting start from `livestream.ts` | Where the pause counts down to ("The broadcast continues in N minutes")                     |
 | `trailer`   | `off`                           | `play` shows the trailer in the camera frame with Croatian, Italian and English subtitles; back to `off` when it ends |
+| `camera`    | `show`                          | `hide` closes the camera frame and moves the texts into two columns over the whole screen (back to the frame while the trailer plays); going live opens it as usual. The ATEM's sound still goes out |
 | `music`     | `off`                           | `play` fades in `public/media/music.mp3`, looped; it fades out while the trailer plays and back in after it; going live stops it |
 
 Title and date come from `app/carlo/i18n.ts` and `app/carlo/livestream.ts`, the

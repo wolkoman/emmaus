@@ -55,7 +55,7 @@
         width: 1152px;
         height: 648px;
         box-shadow: 0 24px 60px rgb(0 0 0 / 0.35);
-        transition-property: left, top, width, height;
+        transition-property: left, top, width, height, box-shadow;
         transition-duration: var(--move-ms);
         transition-timing-function: var(--move-ease);
       }
@@ -250,6 +250,50 @@
       .sizer {
         visibility: hidden;
       }
+      /* "Live picture: hide": the frame closes and the texts move into two columns over the whole screen. */
+      .info,
+      .broadcast,
+      .film,
+      .parish {
+        transition-property: opacity, visibility, transform, left, top, bottom, width;
+        transition-duration: 500ms, 500ms, var(--move-ms), var(--move-ms), var(--move-ms), var(--move-ms), var(--move-ms);
+        transition-timing-function: ease, ease, var(--move-ease), var(--move-ease), var(--move-ease), var(--move-ease), var(--move-ease);
+      }
+      body.camera-hidden:not(.on-air) .backdrop {
+        clip-path: path(evenodd, "M0 0H1920V1080H0Z M1264 420H1264V420H1264Z");
+      }
+      body.full .info {
+        left: 160px;
+        top: 160px;
+        width: 760px;
+      }
+      body.full .broadcast {
+        left: 1040px;
+        top: 160px;
+      }
+      body.full .film {
+        left: 1040px;
+        top: 300px;
+        width: 720px;
+      }
+      body.camera-hidden:not(.on-air) .camera {
+        box-shadow: none;
+      }
+      body.full .film {
+        grid-template-columns: 1fr;
+      }
+      body.full .film-title,
+      body.full .film-more {
+        grid-area: auto;
+      }
+      body.full .film-more {
+        grid-row: 3;
+      }
+      body.full .parish {
+        left: 160px;
+        bottom: 120px;
+      }
+
       /* For loading straight into a scene: take the end state without animating. */
       .instant,
       .instant * {
@@ -466,6 +510,10 @@
             resumeTime = state.prelive.resumeTime;
             screen = state.prelive.screen;
             for (const name of ["before", "pause", "end"]) document.body.classList.toggle(`screen-${name}`, screen === name);
+            // Without the camera the frame closes; the texts take the whole screen except while the trailer needs the frame.
+            const hidden = state.prelive.camera === "hide";
+            document.body.classList.toggle("camera-hidden", hidden);
+            document.body.classList.toggle("full", hidden && state.prelive.trailer !== "play");
             setTrailer(state.prelive.trailer === "play");
             setMusic(state.prelive.music === "play" && state.prelive.trailer !== "play");
             // A page loading mid-broadcast takes the current scene without animating.

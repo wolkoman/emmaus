@@ -98,7 +98,8 @@
         color: var(--muted);
         margin: 0 0 12px;
       }
-      .row + .row {
+      .row + .row,
+      .cameras + .row {
         margin-top: 14px;
       }
       .label {
@@ -426,6 +427,11 @@
               <label><span class="label">Resumes after pause</span><input type="time" data-field="prelive.resumeTime" /></label>
             </div>
             <div class="row">
+              <span class="label">Live picture in the frame</span>
+              <div class="segments" data-field="prelive.camera"></div>
+              <p class="hint">Hidden, the frame closes and the texts fill the screen; the camera comes back on Live. Church sound still goes out.</p>
+            </div>
+            <div class="row">
               <span class="label">Trailer</span>
               <div class="segments" data-field="prelive.trailer"></div>
             </div>
@@ -440,6 +446,11 @@
         <section>
           <h2>Cameras</h2>
           <div class="cameras"></div>
+          <div class="row">
+            <span class="label">Program picture on the phones</span>
+            <div class="segments" data-field="picture.fps"></div>
+            <p class="hint">More frames load OBS and the Wi-Fi more; phones only get what OBS can deliver.</p>
+          </div>
         </section>
       </main>
 
@@ -487,7 +498,9 @@
         "live.communion": { options: { off: "Off", prayer: "Prayer", carlo: "Carlo quote" }, onAir: ["prayer", "carlo"] },
         "prelive.screen": { options: { before: "Before Mass", pause: "Pause", end: "End" } },
         "prelive.trailer": { options: { off: "Stop", play: "Play" }, onAir: ["play"] },
+        "prelive.camera": { options: { show: "Show", hide: "Hide" } },
         "prelive.music": { options: { off: "Stop", play: "Play" }, onAir: ["play"] },
+        "picture.fps": { options: { 1: "1 fps", 2: "2 fps", 5: "5 fps", 10: "10 fps" } },
       };
 
       const { schema } = await fetch("/api/state").then((res) => res.json());
