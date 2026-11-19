@@ -1,6 +1,8 @@
 const config = {
   output: "standalone",
   cacheComponents: true,
+  // Match no bot: Next would otherwise bypass the cache for link-preview bots and render each hit on Vercel.
+  htmlLimitedBots: /^$/,
   // Dev only (ignored in prod builds): allow accessing the dev server through
   // an ngrok tunnel, e.g. so a PDF render job can fetch a local print route.
   // Without this, Next blocks cross-origin requests to dev assets and the

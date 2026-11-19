@@ -32,6 +32,12 @@
   `node_modules/next` matches `bun.lock` (`bun install --frozen-lockfile`
   after pulling; a stale 16.2.7 made it hang pages), then stop the server
   and delete `.next`.
+- `htmlLimitedBots: /^$/` in `next.config.js` keeps link-preview bots
+  (Facebook, WhatsApp, Bing) on the cached page; Next's default made each of
+  their hits a full render and used up the Vercel Hobby CPU quota. Cost:
+  pages whose `generateMetadata` depends on the URL (articles, `/[slug]`,
+  videos) only have their og tags in the body, so shared previews may lack
+  title and image.
 - `bun add` on Manuel's machine writes the StepSecurity proxy URL into every
   `bun.lock` entry; Vercel can't reach it (401) and the deploy fails. After
   adding packages, replace those URLs with `""` (default registry) before
