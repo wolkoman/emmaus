@@ -398,8 +398,8 @@
           <section>
             <h2>Live</h2>
             <div class="row">
-              <span class="label">LIVE indicator</span>
-              <div class="segments" data-field="live.mode"></div>
+              <span class="label">Logo</span>
+              <div class="segments" data-field="live.logo"></div>
             </div>
             <div class="row">
               <span class="label">Name banner</span>
@@ -492,7 +492,7 @@
       /** Button labels per field; the values are the server's. "onAir" values light up red. */
       const FIELDS = {
         "obs.scene": { options: { prelive: "Pre-Live", live: "Live" }, onAir: ["live"] },
-        "live.mode": { options: { off: "Off", on: "On" }, onAir: ["on"] },
+        "live.logo": { options: { grey: "Grey", color: "Colour + name" }, onAir: ["color"] },
         "live.banner": { options: { off: "Off", priest: "Pfarrer", mother: "Mutter" }, onAir: ["priest", "mother"] },
         "live.reading": { options: { off: "Off", first: "First reading", gospel: "Gospel" }, onAir: ["first", "gospel"] },
         "live.communion": { options: { off: "Off", prayer: "Prayer", carlo: "Carlo quote" }, onAir: ["prayer", "carlo"] },

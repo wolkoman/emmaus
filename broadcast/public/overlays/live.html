@@ -24,66 +24,65 @@
         overflow: hidden;
       }
 
-      /* --- Live indicator, top right --- */
+      /* --- Station logo, top right: a grey bug, or in colour with the parish name --- */
 
-      .live {
-        --step: 70ms;
+      .bug {
         position: absolute;
         top: 56px;
         right: 64px;
         display: flex;
         align-items: center;
-        gap: 16px;
+        opacity: 0;
+        transition: opacity 600ms ease;
+      }
+
+      .bug-logo {
+        width: 88px;
+        height: 88px;
+        filter: grayscale(1) drop-shadow(0 1px 4px rgb(0 0 0 / 0.35));
+        opacity: 0.6;
+        transition:
+          filter 800ms ease,
+          opacity 800ms ease;
+      }
+
+      /* The name opens to the right of the logo, which moves left to make room. */
+      .bug-name {
+        max-width: 0;
+        overflow: hidden;
+        transition: max-width 500ms cubic-bezier(0.4, 0, 1, 1) 150ms;
+      }
+
+      .bug-name span {
+        display: block;
+        padding: 0.3em 0 0.3em 24px;
         color: #fff;
         font: 700 40px/1 "Source Sans 3", -apple-system, "Helvetica Neue", Arial, sans-serif;
+        white-space: nowrap;
         text-shadow:
           0 1px 2px rgb(0 0 0 / 0.45),
           0 0 12px rgb(0 0 0 / 0.25);
-      }
-
-      .dot {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: #e3172d;
-        box-shadow: 0 1px 4px rgb(0 0 0 / 0.35);
         opacity: 0;
-        transform: scale(0.4);
-        transition:
-          opacity 300ms ease,
-          transform 300ms cubic-bezier(0.4, 0, 1, 1);
-        transition-delay: calc(4 * var(--step) + 200ms);
+        transition: opacity 300ms ease;
       }
 
-      .word {
-        display: flex;
-        gap: 0.06em;
-        /* Clip only at the top so letters slide up behind an edge. */
-        clip-path: inset(0 -1em -1em -1em);
-      }
-
-      .letter {
-        display: inline-block;
-        opacity: 0;
-        transform: translateY(-0.8em);
-        transition:
-          opacity 380ms ease,
-          transform 380ms cubic-bezier(0.4, 0, 1, 1);
-        transition-delay: calc(var(--i) * var(--step));
-      }
-
-      .live.is-on .dot {
+      .bug.is-on {
         opacity: 1;
-        transform: none;
-        transition-timing-function: ease, cubic-bezier(0.2, 0.7, 0.2, 1);
-        transition-delay: 0ms;
       }
 
-      .live.is-on .letter {
+      .bug.color .bug-logo {
+        filter: grayscale(0) drop-shadow(0 1px 4px rgb(0 0 0 / 0.35));
         opacity: 1;
-        transform: none;
-        transition-timing-function: ease, cubic-bezier(0.2, 0.7, 0.2, 1);
-        transition-delay: calc(120ms + var(--i) * var(--step));
+      }
+
+      .bug.color .bug-name {
+        max-width: var(--name-width, 800px);
+        transition: max-width 600ms cubic-bezier(0.2, 0.7, 0.2, 1) 300ms;
+      }
+
+      .bug.color .bug-name span {
+        opacity: 1;
+        transition: opacity 400ms ease 600ms;
       }
 
       /* --- Lower third, bottom left --- */
@@ -338,14 +337,9 @@
         <div class="communion-author" style="--i: 2"></div>
       </div>
     </div>
-    <div class="live">
-      <span class="dot"></span>
-      <span class="word">
-        <span class="letter" style="--i: 0">L</span>
-        <span class="letter" style="--i: 1">I</span>
-        <span class="letter" style="--i: 2">V</span>
-        <span class="letter" style="--i: 3">E</span>
-      </span>
+    <div class="bug">
+      <img class="bug-logo" src="/logo.svg" alt="" />
+      <div class="bug-name"><span>Pfarre Emmaus am Wienerberg</span></div>
     </div>
     <div class="subtitles"></div>
     <div class="lower-third">
@@ -384,7 +378,10 @@
       /** How long the lower third takes to hide (see the transitions above). */
       const OUT_MS = 600;
 
-      const live = document.querySelector(".live");
+      const bug = document.querySelector(".bug");
+      document.fonts.ready.then(() => {
+        bug.style.setProperty("--name-width", `${bug.querySelector(".bug-name span").scrollWidth}px`);
+      });
       const lowerThird = document.querySelector(".lower-third");
       const name = lowerThird.querySelector(".name");
       const role = lowerThird.querySelector(".role");
@@ -644,8 +641,9 @@
         on: {
           state: ({ state }) => {
             showCommunion(state.live.communion);
-            // A person banner always comes with the LIVE indicator.
-            live.classList.toggle("is-on", state.live.mode === "on" || state.live.banner !== "off");
+            // This page is nested in Pre-Live too, where the logo stays hidden.
+            bug.classList.toggle("is-on", state.obs.scene === "live");
+            bug.classList.toggle("color", state.live.logo === "color");
             showBanner(state.live.banner);
             const reading = state.live.reading === "off" ? "off" : sets[state.readings.set][state.live.reading];
             showReading(reading, state.live.cue);

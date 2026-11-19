@@ -161,7 +161,7 @@ curl 'http://localhost:4321/api/obs/set?scene=live'
 ```
 
 ```bash
-curl -X POST -H 'content-type: application/json' -d '{"mode":"on"}' http://localhost:4321/api/live/set
+curl -X POST -H 'content-type: application/json' -d '{"logo":"color"}' http://localhost:4321/api/live/set
 ```
 
 `GET /api/state` returns schema, state and overlay pages. Rejected changes get a
@@ -246,12 +246,13 @@ Everything shown over the live picture is in this one page, so it needs no
 further browser sources; new overlays for the live picture go here too. It is
 nested in `Pre-Live` as well, so show a banner only once the scene is `live`.
 
-**`mode`**: red dot and "LIVE", top right
+**`logo`**: station logo, top right, like a TV channel's. It is always shown
+while `obs.scene` is `live` and fades out in `Pre-Live`.
 
-| `mode` | Effect                                                                        |
-| ------ | ----------------------------------------------------------------------------- |
-| `off`  | Letters slide up and fade out one by one, then the dot fades (initial state)  |
-| `on`   | Dot appears, then the letters drop in one by one                              |
+| `logo`  | Effect                                                                  |
+| ------- | ----------------------------------------------------------------------- |
+| `grey`  | The logo, grey and half transparent (initial state)                     |
+| `color` | The logo turns colour and moves left; the parish name opens to its right |
 
 **`banner`**: lower third with name and role, bottom left. The texts are in
 `BANNERS` in `public/overlays/live.html`.
@@ -267,8 +268,7 @@ English; `ROLE_MS`) and the panel keeps the width of the longest one.
 
 The panel wipes open from the left, then name and role rise; hiding reverses
 it. Switching between two banners hides the first before the second comes in.
-While a banner is shown the LIVE indicator is shown too, even with `mode`
-`off`; it goes again with the banner. A banner hides itself after 12 seconds, once every language has shown
+A banner hides itself after 12 seconds, once every language has shown
 (`BANNER_MS` in `main.ts`); show it again when the person appears again.
 
 **`reading`**, **`cue`**, **`step`**: subtitles for the readings, a band

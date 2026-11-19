@@ -41,7 +41,8 @@ const store = createStore({
   },
   /** `banner` is the lower third; its texts are in the live overlay page. `reading` shows subtitles, one `cue` at a time. */
   live: {
-    mode: choice(["off", "on"]),
+    /** Station logo, top right, always shown in the live scene: grey, or in colour with the parish name. */
+    logo: choice(["grey", "color"]),
     banner: choice(["off", "priest", "mother"]),
     reading: choice(["off", "first", "gospel"]),
     cue: choice(CUES, { readOnly: true }),
