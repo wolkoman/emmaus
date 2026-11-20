@@ -438,7 +438,11 @@
             <div class="row">
               <span class="label">Music</span>
               <div class="segments" data-field="prelive.music"></div>
-              <p class="hint">Trailer and music stop when the scene switches to Live.</p>
+            </div>
+            <div class="row">
+              <span class="label">Announcement</span>
+              <div class="segments" data-field="prelive.announce"></div>
+              <p class="hint">Matches the screen: welcome, pause or thanks at the end; once in German, Croatian, Italian and English, the music quieter meanwhile. Trailer, music and announcement stop when the scene switches to Live.</p>
             </div>
           </section>
         </div>
@@ -493,11 +497,12 @@
       const FIELDS = {
         "obs.scene": { options: { prelive: "Pre-Live", live: "Live" }, onAir: ["live"] },
         "live.logo": { options: { grey: "Grey", color: "Colour + name" }, onAir: ["color"] },
-        "live.banner": { options: { off: "Off", priest: "Pfarrer", mother: "Mutter" }, onAir: ["priest", "mother"] },
+        "live.banner": { options: { off: "Off", priest: "Pfarrer", mother: "Mutter", healed: "Mijo Grgić" }, onAir: ["priest", "mother", "healed"] },
         "live.reading": { options: { off: "Off", first: "First reading", gospel: "Gospel" }, onAir: ["first", "gospel"] },
         "live.communion": { options: { off: "Off", prayer: "Prayer", carlo: "Carlo quote" }, onAir: ["prayer", "carlo"] },
         "prelive.screen": { options: { before: "Before Mass", pause: "Pause", end: "End" } },
         "prelive.trailer": { options: { off: "Stop", play: "Play" }, onAir: ["play"] },
+        "prelive.announce": { options: { off: "Stop", play: "Play" }, onAir: ["play"] },
         "prelive.camera": { options: { show: "Show", hide: "Hide" } },
         "prelive.music": { options: { off: "Stop", play: "Play" }, onAir: ["play"] },
         "picture.fps": { options: { 1: "1 fps", 2: "2 fps", 5: "5 fps", 10: "10 fps" } },

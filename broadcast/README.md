@@ -262,6 +262,7 @@ while `obs.scene` is `live` and fades out in `Pre-Live`.
 | `off`    | Nothing (initial state)                               |
 | `priest` | Dr. Zvonko Brezovski, Pfarrer, Pfarre Emmaus am Wienerberg |
 | `mother` | Antonia Salzano Acutis, Mutter des hl. Carlo Acutis   |
+| `healed` | Mijo Grgić, Genesen nach dem Gebet um die Fürsprache des hl. Carlo Acutis |
 
 The role line changes language every 3 seconds (German, Croatian, Italian,
 English; `ROLE_MS`) and the panel keeps the width of the longest one.
@@ -342,6 +343,7 @@ else clears away; back to `prelive` reverses it.
 | `trailer`   | `off`                           | `play` shows the trailer in the camera frame with Croatian, Italian and English subtitles; back to `off` when it ends |
 | `camera`    | `show`                          | `hide` closes the camera frame and moves the texts into two columns over the whole screen (back to the frame while the trailer plays); going live opens it as usual. The ATEM's sound still goes out |
 | `music`     | `off`                           | `play` fades in `public/media/music.mp3`, looped; it fades out while the trailer plays and back in after it; going live stops it |
+| `announce`  | `off`                           | `play` speaks the current screen's announcement (`before`: welcome, `pause`: the meeting follows, `end`: thanks) once in German, Croatian, Italian and English, the music dipping to 20% under it; back to `off` when it ends. Starting it stops the trailer and the other way round; going live stops it |
 
 Title and date come from `app/carlo/i18n.ts` and `app/carlo/livestream.ts`, the
 same source as the website's `/carlo` page; the other texts are in
@@ -372,6 +374,31 @@ gh release download broadcast-media --repo wolkoman/emmaus --dir broadcast/publi
 ```
 
 **Music**: `public/media/music.mp3`; any MP3 works.
+
+**Announcements**: `public/media/announce-<screen>-<lang>.mp3` (`before`,
+`pause`, `end`; `de`, `hr`, `it`, `en`), generated with ElevenLabs from these texts (voice Daniel `onwK4e9ZLuTAKqWW03F9`,
+model `eleven_multilingual_v2`, stability 0.6). A missing file is skipped.
+
+`before`:
+
+- de: Herzlich willkommen zum Livestream aus der Pfarre Emmaus am Wienerberg in Wien. In wenigen Minuten feiern wir die Heilige Messe zu Ehren des heiligen Carlo Acutis, gemeinsam mit seiner Mutter Antonia Salzano Acutis. Schön, dass Sie mit uns verbunden sind.
+- hr: Dobro došli u prijenos uživo iz župe Emmaus am Wienerberg u Beču. Za nekoliko minuta slavimo svetu misu u čast svetoga Carla Acutisa, zajedno s njegovom majkom Antonijom Salzano Acutis. Drago nam je što ste povezani s nama.
+- it: Benvenuti alla diretta dalla parrocchia Emmaus am Wienerberg di Vienna. Tra pochi minuti celebriamo la Santa Messa in onore di San Carlo Acutis, insieme alla sua mamma, Antonia Salzano Acutis. Grazie di essere con noi.
+- en: Welcome to the livestream from the parish of Emmaus am Wienerberg in Vienna. In a few minutes we begin Holy Mass in honour of Saint Carlo Acutis, together with his mother, Antonia Salzano Acutis. Thank you for joining us.
+
+`pause`:
+
+- de: Danke, dass Sie mit uns die Heilige Messe gefeiert haben. In wenigen Minuten geht es hier weiter mit der Begegnung mit Antonia Salzano Acutis, der Mutter von Carlo. Wir freuen uns, wenn Sie dabei bleiben.
+- hr: Hvala vam što ste s nama slavili svetu misu. Za nekoliko minuta ovdje nastavljamo susretom s Antonijom Salzano Acutis, Carlovom majkom. Radujemo se ako ostanete s nama.
+- it: Grazie per aver celebrato con noi la Santa Messa. Tra pochi minuti continuiamo qui con l'incontro con Antonia Salzano Acutis, la mamma di Carlo. Saremo felici se resterete con noi.
+- en: Thank you for celebrating Holy Mass with us. In a few minutes we continue here with the meeting with Antonia Salzano Acutis, Carlo's mother. We hope you will stay with us.
+
+`end`:
+
+- de: Danke, dass Sie heute mit uns gefeiert haben, bei der Heiligen Messe und bei der Begegnung mit Antonia Salzano Acutis. Mehr über das Leben von Carlo erzählt der Film „Der Millennial-Heilige“. Bleiben wir im Gebet miteinander verbunden, mit dem heiligen Carlo Acutis als Fürsprecher.
+- hr: Hvala vam što ste danas slavili s nama, na svetoj misi i na susretu s Antonijom Salzano Acutis. Više o Carlovu životu donosi film „Carlo Acutis: The Millennial Saint“. Ostanimo povezani u molitvi, uz zagovor svetoga Carla Acutisa.
+- it: Grazie per aver celebrato con noi oggi, nella Santa Messa e nell'incontro con Antonia Salzano Acutis. La vita di Carlo è raccontata nel film “Carlo Acutis. Il giovane santo”. Restiamo uniti nella preghiera, con l'intercessione di San Carlo Acutis.
+- en: Thank you for celebrating with us today, at Holy Mass and at the meeting with Antonia Salzano Acutis. To learn more about Carlo's life, watch the film “Carlo Acutis: The Millennial Saint”. Let us stay united in prayer, with Saint Carlo Acutis interceding for us.
 
 **Trailer**: `public/media/trailer.mp4` is Kinostar's 50-second German
 trailer, originally fetched with

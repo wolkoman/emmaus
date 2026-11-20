@@ -43,7 +43,7 @@ const store = createStore({
   live: {
     /** Station logo, top right, always shown in the live scene: grey, or in colour with the parish name. */
     logo: choice(["grey", "color"]),
-    banner: choice(["off", "priest", "mother"]),
+    banner: choice(["off", "priest", "mother", "healed"]),
     reading: choice(["off", "first", "gospel"]),
     cue: choice(CUES, { readOnly: true }),
     step: choice(["prev", "next"], { action: true }),
@@ -62,6 +62,8 @@ const store = createStore({
     camera: choice(["show", "hide"]),
     /** Background music (public/media/music.mp3), looped; it gives way while the trailer plays. */
     music: choice(["off", "play"]),
+    /** The current screen's spoken announcement (public/media/announce-<screen>-<lang>.mp3) in all four languages once; the music dips under it. */
+    announce: choice(["off", "play"]),
   },
   /** Operator names, shown in the chat and usable as @name. */
   cameras: Object.fromEntries(CAMERAS.map((cam) => [cam, text()])),
@@ -86,7 +88,7 @@ const obs = connectObs({
 
 function sceneChanged(scene: string) {
   store.apply("obs", { scene });
-  if (scene === "live") store.apply("prelive", { trailer: "off", music: "off" });
+  if (scene === "live") store.apply("prelive", { trailer: "off", music: "off", announce: "off" });
 }
 
 // --- ATEM ---
@@ -121,6 +123,19 @@ store.subscribe((state) => {
   banner = state.live.banner;
   clearTimeout(bannerTimer);
   if (banner !== "off") bannerTimer = setTimeout(() => store.apply("live", { banner: "off" }), BANNER_MS);
+});
+
+// --- Pre-live sound ---
+
+// Trailer and announcement both speak, so starting one stops the other.
+let { trailer, announce } = store.state.prelive;
+
+store.subscribe((state) => {
+  const startedTrailer = state.prelive.trailer === "play" && trailer !== "play";
+  const startedAnnounce = state.prelive.announce === "play" && announce !== "play";
+  ({ trailer, announce } = state.prelive);
+  if (startedTrailer && announce === "play") store.apply("prelive", { announce: "off" });
+  else if (startedAnnounce && trailer === "play") store.apply("prelive", { trailer: "off" });
 });
 
 // --- Changes from clients ---

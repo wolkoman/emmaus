@@ -200,7 +200,7 @@
         bottom: 96px;
         width: 528px;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 20px;
       }
       .parish img {
@@ -344,6 +344,7 @@
 
     <video class="video" src="/media/trailer.mp4" preload="auto" playsinline></video>
     <audio class="music" src="/media/music.mp3" preload="auto" loop></audio>
+    <audio class="announce" preload="auto"></audio>
     <div class="subs"></div>
 
     <div class="film">
@@ -472,10 +473,10 @@
       const music = document.querySelector(".music");
       let musicFade;
 
-      /** Fades the music in or out; paused, it resumes where it stopped. */
-      function setMusic(on) {
-        const target = on ? 1 : 0;
-        if (on && music.paused) {
+      /** Fades the music to a volume; at 0 it pauses and later resumes where it stopped. */
+      function setMusic(target) {
+        if (target === music.volume && !music.paused) return;
+        if (target > 0 && music.paused) {
           music.volume = 0;
           music.play().catch((error) => console.warn("music:", error));
         }
@@ -486,6 +487,57 @@
           if (music.volume !== target) return;
           clearInterval(musicFade);
           if (target === 0) music.pause();
+        }, 50);
+      }
+
+      // --- Announcement ---
+
+      const ANNOUNCE_LANGS = ["de", "hr", "it", "en"];
+      /** Silence between two languages. */
+      const ANNOUNCE_GAP_MS = 800;
+      /** Music volume under the voice. */
+      const MUSIC_UNDER_VOICE = 0.2;
+      const announce = document.querySelector(".announce");
+      let announceIndex = -1;
+      /** Each screen has its own recording (announce-before-de.mp3, announce-pause-de.mp3, ...), chosen when it starts. */
+      let announceScreen;
+      let announceGap;
+      let announceFade;
+
+      function playAnnounce(index) {
+        announceIndex = index;
+        if (index >= ANNOUNCE_LANGS.length) {
+          client.set("prelive", { announce: "off" });
+          return;
+        }
+        announce.src = `/media/announce-${announceScreen}-${ANNOUNCE_LANGS[index]}.mp3`;
+        announce.volume = 1;
+        announce.play().catch((error) => console.warn("announce:", error));
+      }
+      announce.onended = () => {
+        announceGap = setTimeout(() => playAnnounce(announceIndex + 1), ANNOUNCE_GAP_MS);
+      };
+      // A missing language file is skipped rather than stopping the others.
+      announce.onerror = () => {
+        console.warn(`announce: ${announce.src} could not be played`);
+        playAnnounce(announceIndex + 1);
+      };
+
+      function setAnnounce(play) {
+        if (play === announceIndex >= 0) return;
+        clearTimeout(announceGap);
+        clearInterval(announceFade);
+        if (play) {
+          announceScreen = screen;
+          playAnnounce(0);
+          return;
+        }
+        announceIndex = -1;
+        announceFade = setInterval(() => {
+          announce.volume = Math.max(0, announce.volume - 0.1);
+          if (announce.volume > 0) return;
+          clearInterval(announceFade);
+          announce.pause();
         }, 50);
       }
 
@@ -515,7 +567,14 @@
             document.body.classList.toggle("camera-hidden", hidden);
             document.body.classList.toggle("full", hidden && state.prelive.trailer !== "play");
             setTrailer(state.prelive.trailer === "play");
-            setMusic(state.prelive.music === "play" && state.prelive.trailer !== "play");
+            setAnnounce(state.prelive.announce === "play");
+            const musicVolume =
+              state.prelive.music !== "play" || state.prelive.trailer === "play"
+                ? 0
+                : state.prelive.announce === "play"
+                  ? MUSIC_UNDER_VOICE
+                  : 1;
+            setMusic(musicVolume);
             // A page loading mid-broadcast takes the current scene without animating.
             setOnAir(state.obs.scene === "live", { animate: !firstState });
             firstState = false;
