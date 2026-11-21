@@ -1,5 +1,6 @@
 import { formatDay, formatTime, LIVE_TEXT } from "@/app/carlo/i18n";
 import { LIVESTREAM } from "@/app/carlo/livestream";
+import { StreamEmbed } from "@/app/carlo/LiveStatus";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,7 +8,8 @@ import { PiArrowRightBold } from "react-icons/pi";
 
 /**
  * Homepage banner right below the hero that points visitors to /carlo.
- * Kept short on purpose: programme, tickets and directions live on /carlo only.
+ * Kept short on purpose: programme, tickets and directions live on /carlo only;
+ * the livestream player is shown here too, so visitors can watch right away.
  */
 export function CarloTeaser() {
   const text = LIVE_TEXT.de;
@@ -66,6 +68,12 @@ export function CarloTeaser() {
           </Button>
         </Link>
       </div>
+
+      {LIVESTREAM.streamUrl && (
+        <div className="px-5 pb-5 md:col-span-2 lg:px-6 lg:pb-6">
+          <StreamEmbed url={LIVESTREAM.streamUrl} />
+        </div>
+      )}
     </section>
   );
 }
