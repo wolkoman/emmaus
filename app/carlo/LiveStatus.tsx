@@ -9,8 +9,6 @@ const SECOND = 1000;
 const MINUTE = 60 * SECOND;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
-// "Der Stream startet hier kurz vor Beginn": show the embed a bit early.
-const EMBED_LEAD = 15 * MINUTE;
 
 export function LiveStatus(props: {
   lang: LiveLang;
@@ -25,8 +23,8 @@ export function LiveStatus(props: {
   if (now === undefined) return <Countdown lang={lang} />;
   if (now >= start + LIVESTREAM_ENDS_AFTER)
     return <Ended lang={lang} url={props.recordingUrl} />;
-  if (props.streamUrl && now >= start - EMBED_LEAD)
-    return <Stream lang={lang} url={props.streamUrl} />;
+  // As soon as a stream URL is set, YouTube's own "scheduled" preview replaces the countdown.
+  if (props.streamUrl) return <Stream lang={lang} url={props.streamUrl} />;
   if (now >= start) return <StartingSoon lang={lang} />;
   return <Countdown lang={lang} remaining={start - now} />;
 }
@@ -140,22 +138,28 @@ function StartingSoon({ lang }: { lang: LiveLang }) {
   );
 }
 
-function Stream({ lang, url }: { lang: LiveLang; url: string }) {
+/** The embedded YouTube player, or nothing for links that can't be embedded. */
+export function StreamEmbed({ url }: { url: string }) {
   const embedUrl = youTubeEmbedUrl(url);
+  if (!embedUrl) return null;
+  return (
+    <Player>
+      <iframe
+        src={embedUrl}
+        title="Livestream"
+        allow="autoplay; encrypted-media; picture-in-picture; web-share"
+        allowFullScreen
+        referrerPolicy="strict-origin-when-cross-origin"
+        className="absolute inset-0 size-full"
+      />
+    </Player>
+  );
+}
+
+function Stream({ lang, url }: { lang: LiveLang; url: string }) {
   return (
     <div className="flex flex-col gap-4">
-      {embedUrl && (
-        <Player>
-          <iframe
-            src={embedUrl}
-            title="Livestream"
-            allow="autoplay; encrypted-media; picture-in-picture; web-share"
-            allowFullScreen
-            referrerPolicy="strict-origin-when-cross-origin"
-            className="absolute inset-0 size-full"
-          />
-        </Player>
-      )}
+      <StreamEmbed url={url} />
       <div className="text-center">
         <LinkButton href={url}>{LIVE_TEXT[lang].openStream}</LinkButton>
       </div>

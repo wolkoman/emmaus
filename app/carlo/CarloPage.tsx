@@ -156,6 +156,18 @@ export function CarloPage({ lang }: { lang: LiveLang }) {
           </div>
 
           <h2 className="mt-20 text-3xl font-bold lg:mt-28 lg:text-4xl">
+            {text.livestreamHeading}
+          </h2>
+          <div className="mt-6">
+            <LiveStatus
+              lang={lang}
+              start={LIVESTREAM.start}
+              streamUrl={LIVESTREAM.streamUrl}
+              recordingUrl={LIVESTREAM.recordingUrl}
+            />
+          </div>
+
+          <h2 className="mt-20 text-3xl font-bold lg:mt-28 lg:text-4xl">
             {text.practical.heading}
           </h2>
           <div className="mt-6 grid gap-8 text-lg md:grid-cols-2 md:gap-12 lg:text-xl">
@@ -181,18 +193,6 @@ export function CarloPage({ lang }: { lang: LiveLang }) {
                 </Button>
               </a>
             </div>
-          </div>
-
-          <h2 className="mt-20 text-3xl font-bold lg:mt-28 lg:text-4xl">
-            {text.livestreamHeading}
-          </h2>
-          <div className="mt-6">
-            <LiveStatus
-              lang={lang}
-              start={LIVESTREAM.start}
-              streamUrl={LIVESTREAM.streamUrl}
-              recordingUrl={LIVESTREAM.recordingUrl}
-            />
           </div>
         </div>
       </div>
